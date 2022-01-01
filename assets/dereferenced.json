@@ -180,16 +180,12 @@
                             },
                             "country": {
                               "type": "string",
-                              "description": "country",
+                              "description": "country        ",
                               "example": "USA"
                             }
                           },
                           "required": [
-                            "id",
-                            "userType",
-                            "email",
-                            "firstname",
-                            "lastname"
+                            "userId"
                           ]
                         }
                       },
@@ -376,16 +372,12 @@
                             },
                             "country": {
                               "type": "string",
-                              "description": "country",
+                              "description": "country        ",
                               "example": "USA"
                             }
                           },
                           "required": [
-                            "id",
-                            "userType",
-                            "email",
-                            "firstname",
-                            "lastname"
+                            "userId"
                           ]
                         }
                       },
@@ -495,7 +487,6 @@
                               "ownerId",
                               "name",
                               "status",
-                              "withhold",
                               "instructions"
                             ],
                             "properties": {
@@ -4418,16 +4409,12 @@
                                   },
                                   "country": {
                                     "type": "string",
-                                    "description": "country",
+                                    "description": "country        ",
                                     "example": "USA"
                                   }
                                 },
                                 "required": [
-                                  "id",
-                                  "userType",
-                                  "email",
-                                  "firstname",
-                                  "lastname"
+                                  "userId"
                                 ]
                               }
                             },
@@ -4534,16 +4521,12 @@
                                   },
                                   "country": {
                                     "type": "string",
-                                    "description": "country",
+                                    "description": "country        ",
                                     "example": "USA"
                                   }
                                 },
                                 "required": [
-                                  "id",
-                                  "userType",
-                                  "email",
-                                  "firstname",
-                                  "lastname"
+                                  "userId"
                                 ]
                               }
                             },
@@ -4639,7 +4622,6 @@
                             "ownerId",
                             "name",
                             "status",
-                            "withhold",
                             "instructions"
                           ],
                           "properties": {
@@ -8562,16 +8544,12 @@
                                 },
                                 "country": {
                                   "type": "string",
-                                  "description": "country",
+                                  "description": "country        ",
                                   "example": "USA"
                                 }
                               },
                               "required": [
-                                "id",
-                                "userType",
-                                "email",
-                                "firstname",
-                                "lastname"
+                                "userId"
                               ]
                             }
                           },
@@ -8678,16 +8656,12 @@
                                 },
                                 "country": {
                                   "type": "string",
-                                  "description": "country",
+                                  "description": "country        ",
                                   "example": "USA"
                                 }
                               },
                               "required": [
-                                "id",
-                                "userType",
-                                "email",
-                                "firstname",
-                                "lastname"
+                                "userId"
                               ]
                             }
                           },
@@ -8753,7 +8727,6 @@
                             "ownerId",
                             "name",
                             "status",
-                            "withhold",
                             "instructions"
                           ],
                           "properties": {
@@ -12676,16 +12649,12 @@
                                 },
                                 "country": {
                                   "type": "string",
-                                  "description": "country",
+                                  "description": "country        ",
                                   "example": "USA"
                                 }
                               },
                               "required": [
-                                "id",
-                                "userType",
-                                "email",
-                                "firstname",
-                                "lastname"
+                                "userId"
                               ]
                             }
                           },
@@ -12792,16 +12761,12 @@
                                 },
                                 "country": {
                                   "type": "string",
-                                  "description": "country",
+                                  "description": "country        ",
                                   "example": "USA"
                                 }
                               },
                               "required": [
-                                "id",
-                                "userType",
-                                "email",
-                                "firstname",
-                                "lastname"
+                                "userId"
                               ]
                             }
                           },
@@ -13208,16 +13173,12 @@
               },
               "country": {
                 "type": "string",
-                "description": "country",
+                "description": "country        ",
                 "example": "USA"
               }
             },
             "required": [
-              "id",
-              "userType",
-              "email",
-              "firstname",
-              "lastname"
+              "userId"
             ]
           }
         },
@@ -13270,16 +13231,12 @@
           },
           "country": {
             "type": "string",
-            "description": "country",
+            "description": "country        ",
             "example": "USA"
           }
         },
         "required": [
-          "id",
-          "userType",
-          "email",
-          "firstname",
-          "lastname"
+          "userId"
         ]
       },
       "SuccessfulLogin": {
@@ -13381,16 +13338,12 @@
                   },
                   "country": {
                     "type": "string",
-                    "description": "country",
+                    "description": "country        ",
                     "example": "USA"
                   }
                 },
                 "required": [
-                  "id",
-                  "userType",
-                  "email",
-                  "firstname",
-                  "lastname"
+                  "userId"
                 ]
               }
             },
@@ -22826,7 +22779,6 @@
           "ownerId",
           "name",
           "status",
-          "withhold",
           "instructions"
         ],
         "properties": {
@@ -26796,7 +26748,6 @@
               "ownerId",
               "name",
               "status",
-              "withhold",
               "instructions"
             ],
             "properties": {
@@ -30719,16 +30670,12 @@
                   },
                   "country": {
                     "type": "string",
-                    "description": "country",
+                    "description": "country        ",
                     "example": "USA"
                   }
                 },
                 "required": [
-                  "id",
-                  "userType",
-                  "email",
-                  "firstname",
-                  "lastname"
+                  "userId"
                 ]
               }
             },
@@ -30835,16 +30782,12 @@
                   },
                   "country": {
                     "type": "string",
-                    "description": "country",
+                    "description": "country        ",
                     "example": "USA"
                   }
                 },
                 "required": [
-                  "id",
-                  "userType",
-                  "email",
-                  "firstname",
-                  "lastname"
+                  "userId"
                 ]
               }
             },
@@ -30900,7 +30843,6 @@
               "ownerId",
               "name",
               "status",
-              "withhold",
               "instructions"
             ],
             "properties": {

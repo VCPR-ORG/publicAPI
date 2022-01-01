@@ -465,16 +465,12 @@
           },
           "country": {
             "type": "string",
-            "description": "country",
+            "description": "country        ",
             "example": "USA"
           }
         },
         "required": [
-          "id",
-          "userType",
-          "email",
-          "firstname",
-          "lastname"
+          "userId"
         ]
       },
       "SuccessfulLogin": {
@@ -1611,7 +1607,6 @@
           "ownerId",
           "name",
           "status",
-          "withhold",
           "instructions"
         ],
         "properties": {
