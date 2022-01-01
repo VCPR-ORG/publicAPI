@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.3",
   "info": {
     "title": "VCPR.ORG Protocol Editor API",
     "version": "2.0.2",
@@ -67,7 +67,7 @@
                   },
                   "password": {
                     "type": "string",
-                    "description": "User password any characters or numbers allowed, with a minumum length of 10.",
+                    "description": "User password any characters or numbers allowed, with a minimum length of 10.",
                     "minLength": 6,
                     "example": "tVpass"
                   }
