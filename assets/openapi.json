@@ -984,7 +984,6 @@
             "type": "number",
             "minimum": 0,
             "default": 1,
-            "exclusiveMinimum": true,
             "example": 50
           },
           "symbol": {
@@ -1031,8 +1030,7 @@
             "type": "number",
             "description": "quantity of units specified by symbol",
             "minimum": 0,
-            "example": 3,
-            "exclusiveMinimum": true
+            "example": 3
           },
           "symbol": {
             "$ref": "#/components/schemas/VolumeUnit"
@@ -1069,8 +1067,7 @@
             "type": "number",
             "description": "number of units specified by symbol",
             "minimum": 0,
-            "example": 3,
-            "exclusiveMinimum": true
+            "example": 3
           },
           "symbol": {
             "$ref": "#/components/schemas/DimensionlessUnit"
