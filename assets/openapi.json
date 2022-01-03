@@ -181,11 +181,13 @@
               },
               "text/html": {
                 "schema": {
-                  "properties": {
-                    "prescription": {
-                      "$ref": "#/components/schemas/Prescription"
-                    }
-                  }
+                  "type": "string"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -340,6 +342,190 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/prescriptions/cases": {
+      "post": {
+        "operationId": "enrollCase",
+        "tags": [
+          "User"
+        ],
+        "summary": "user login",
+        "description": "Enroll a case",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Case"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success – recorded Protocol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "case": {
+                      "$ref": "#/components/schemas/Case"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      },
+      "get": {
+        "operationId": "myCases",
+        "tags": [
+          "Case"
+        ],
+        "summary": "renew token",
+        "description": "Get all current cases for this user",
+        "responses": {
+          "200": {
+            "description": "Success – token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cases": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Case"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/prescriptions/:rxId/cases": {
+      "get": {
+        "operationId": "myCases",
+        "tags": [
+          "Case"
+        ],
+        "summary": "renew token",
+        "description": "Get all current cases for this prescription and this user",
+        "parameters": [
+          {
+            "name": "rxId",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "prescription uuid",
+            "example": "gG3pBCR1GCMKm89c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success – token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cases": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Case"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/users/tasks": {
+      "post": {
+        "operationId": "executeCase",
+        "tags": [
+          "Case"
+        ],
+        "summary": "user login",
+        "description": "Enroll a case",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnimalTask"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success – recorded Protocol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "case": {
+                      "$ref": "#/components/schemas/Case"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      },
+      "get": {
+        "operationId": "myCases",
+        "tags": [
+          "Case"
+        ],
+        "summary": "renew token",
+        "description": "Get all current cases for this user",
+        "responses": {
+          "200": {
+            "description": "Success – token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "cases": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Case"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2196,6 +2382,547 @@
             "format": "date-time",
             "description": "date of last label change",
             "example": "2020-05-16T16:19:12Z"
+          }
+        }
+      },
+      "Case": {
+        "type": "object",
+        "required": [
+          "id",
+          "rxId",
+          "caseData",
+          "promiseData"
+        ],
+        "properties": {
+          "id": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "default": null,
+            "example": 123
+          },
+          "rxId": {
+            "type": "string",
+            "description": "UUID identifying the prescription",
+            "example": "gG3pBCR1GCMKm89c"
+          },
+          "caseData": {
+            "$ref": "#/components/schemas/Promise"
+          },
+          "promiseData": {
+            "description": "promises attached to this case",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Promise"
+            }
+          }
+        }
+      },
+      "CaseData": {
+        "description": "function to calculate dose size",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IdData"
+          },
+          {
+            "$ref": "#/components/schemas/WeightData"
+          },
+          {
+            "$ref": "#/components/schemas/PreferredDoseData"
+          },
+          {
+            "$ref": "#/components/schemas/PrefDoseRateData"
+          },
+          {
+            "$ref": "#/components/schemas/AnimalClassData"
+          }
+        ]
+      },
+      "IdData": {
+        "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime"
+        ],
+        "properties": {
+          "animalId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "morId": {
+            "description": "if false, comment is private to site managers",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "note": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is wonderful"
+          },
+          "initiationTime": {
+            "description": "ISO-8601-formatted datetime, time of the comment",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          }
+        }
+      },
+      "WeightData": {
+        "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime",
+          "weight"
+        ],
+        "properties": {
+          "animalId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "morId": {
+            "description": "if false, comment is private to site managers",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "note": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is wonderful"
+          },
+          "initiationTime": {
+            "description": "ISO-8601-formatted datetime, time of the comment",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "weight": {
+            "$ref": "#/components/schemas/MassQuantity"
+          }
+        }
+      },
+      "PreferredDoseData": {
+        "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime",
+          "preferredDose"
+        ],
+        "properties": {
+          "animalId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "morId": {
+            "description": "if false, comment is private to site managers",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "note": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is wonderful"
+          },
+          "initiationTime": {
+            "description": "ISO-8601-formatted datetime, time of the comment",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "preferredDose": {
+            "$ref": "#/components/schemas/DrugQuantity"
+          }
+        }
+      },
+      "PrefDoseRateData": {
+        "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime",
+          "preferredDose",
+          "weight"
+        ],
+        "properties": {
+          "animalId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "morId": {
+            "description": "if false, comment is private to site managers",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "note": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is wonderful"
+          },
+          "initiationTime": {
+            "description": "ISO-8601-formatted datetime, time of the comment",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "weight": {
+            "$ref": "#/components/schemas/MassQuantity"
+          },
+          "preferredDose": {
+            "$ref": "#/components/schemas/DrugQuantity"
+          }
+        }
+      },
+      "AnimalClassData": {
+        "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime"
+        ],
+        "properties": {
+          "animalId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "morId": {
+            "description": "if false, comment is private to site managers",
+            "type": "boolean",
+            "default": false,
+            "example": true
+          },
+          "note": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is wonderful"
+          },
+          "initiationTime": {
+            "description": "ISO-8601-formatted datetime, time of the comment",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "preferredDose": {
+            "$ref": "#/components/schemas/AnimalClass"
+          }
+        }
+      },
+      "AnimalClass": {
+        "type": "object",
+        "required": [
+          "animalClass",
+          "sizeFunction"
+        ],
+        "properties": {
+          "animalClass": {
+            "type": "string",
+            "description": "descrip",
+            "example": "Aardvark"
+          },
+          "sizeFunction": {
+            "$ref": "#/components/schemas/SizeFunction"
+          }
+        }
+      },
+      "AnimalTask": {
+        "description": "a task",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PTask"
+          },
+          {
+            "$ref": "#/components/schemas/WeightData"
+          }
+        ]
+      },
+      "PTask": {
+        "type": "object",
+        "required": [
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "act",
+          "animalId",
+          "doAt",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "caseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "morId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "vorId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "act": {
+            "description": "if false, comment is private to site managers",
+            "type": "string",
+            "example": "fix it"
+          },
+          "animalId": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this"
+          },
+          "doAt": {
+            "description": "ISO-8601-formatted datetime, time the task should be executed",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "executor": {
+            "description": "set nu",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PData"
+          }
+        }
+      },
+      "DoseTask": {
+        "type": "object",
+        "required": [
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "act",
+          "animalId",
+          "doAt",
+          "product",
+          "dose",
+          "route",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "caseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "morId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "vorId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "act": {
+            "description": "if false, comment is private to site managers",
+            "type": "string",
+            "example": "fix it"
+          },
+          "animalId": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this"
+          },
+          "product": {
+            "type": "string"
+          },
+          "dose": {
+            "$ref": "#/components/schemas/DrugQuantity"
+          },
+          "route": {
+            "type": "string"
+          },
+          "doAt": {
+            "description": "ISO-8601-formatted datetime, time the task should be executed",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "executor": {
+            "description": "set nu",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PData"
+          }
+        }
+      },
+      "TaskStatus": {
+        "type": "string",
+        "description": "task status",
+        "enum": [
+          "REQUIRED",
+          "SUGGESTED",
+          "DUE",
+          "OPTIONAL",
+          "OVERDUE",
+          "CANCELLED",
+          "REJECTED",
+          "RECALLED",
+          "EXECUTED",
+          "UNKNOWN"
+        ],
+        "example": "PRESCRIBED"
+      },
+      "PData": {
+        "description": "a task",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PDataNone"
+          },
+          {
+            "$ref": "#/components/schemas/PDataString"
+          },
+          {
+            "$ref": "#/components/schemas/PDataNumber"
+          },
+          {
+            "$ref": "#/components/schemas/PDataBoolean"
+          },
+          {
+            "$ref": "#/components/schemas/PDataMass"
+          }
+        ]
+      },
+      "PDataString": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "promiseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is"
+          }
+        }
+      },
+      "PDataNone": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "promiseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is"
+          }
+        }
+      },
+      "PDataBoolean": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "promiseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is"
+          }
+        }
+      },
+      "PDataMass": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "promiseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "$ref": "#/components/schemas/MassQuantity"
+          }
+        }
+      },
+      "PDataNumber": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "promiseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "number",
+            "description": "comment from a user",
+            "example": 123
           }
         }
       }
