@@ -543,7 +543,7 @@
     "schemas": {
       "UserType": {
         "type": "string",
-        "description": "an ordered list of User types associated with privilege levels:\n<br>\n* SAOR: a system administrator with top level privileges\n* VOR: a veterinarian who may create and prescribe protocols\n* MOR: a farm manager to whom protocols may be prescribed, and who may create Cases in a protocol\n* TOR: a farm technician who may execute assigned protocols for assigned cases\n* FARM: an account aggregating MOR and TOR Users\n* CLINIC: an account aggregating multiple VOR Users who work together\n* UNCONFIRMED: an account that has been requested but not confirmed by the owner\n* UNVOR: a User who requests VOR status, with neither email or admin approval\n* UNMOR: a User who requests MOR status but email not yet confirmed\n* PREVOR: a confirmed User who requests VOR status but still lacks either email confirmation or approval by admin\n* REMOVED: the record of a User who is no longer active and may not log in",
+        "description": "an ordered list of User types associated with privilege levels:\n<br>\n* SAOR: a system administrator with top level privileges\n* VOR: a veterinarian who may create and prescribe protocols\n* MOR: a farm manager to whom protocols may be prescribed, and who may create Cases in a protocol\n* TOR: a farm technician who may execute assigned protocols for assigned cases\n* FARM: an account aggregating MOR and TOR Users\n* CLINIC: an account aggregating multiple VOR Users who work together\n* UNCONFIRMED: an account that has been requested but not confirmed by the owner\n* UNVOR: a User who requests VOR status, with neither email or admin approval\n* UNMOR: a User who requests MOR status but email not yet confirmed\n* PREVOR: a confirmed User who requests VOR status but still lacks either email confirmation or approval by admin\n* REMOVED: the record of a User who is no longer active and may not log in\n",
         "enum": [
           "SAOR",
           "VOR",
@@ -557,12 +557,10 @@
           "UNMOR",
           "REMOVED"
         ],
-        "default": "MOR",
         "example": "VOR"
       },
       "User": {
         "description": "a User of a specific `usertype` class",
-        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -570,7 +568,7 @@
             "example": 1
           },
           "uname": {
-            "description": "identifies user, typically an email address",
+            "description": "username",
             "type": "string",
             "example": "testVOR"
           },
@@ -578,18 +576,15 @@
             "$ref": "#/components/schemas/UserType"
           },
           "email": {
-            "description": "email address of user",
             "type": "string",
             "format": "email",
             "example": "testVOR@dairysight.com"
           },
           "firstname": {
-            "description": "first part of user's name",
             "type": "string",
             "example": "Test"
           },
           "lastname": {
-            "description": "last part of user's name",
             "type": "string",
             "example": "Vet"
           },
@@ -597,9 +592,6 @@
             "type": "string",
             "description": "degree or qualifier following the name",
             "example": "DVM"
-          },
-          "address": {
-            "$ref": "#/components/schemas/Address"
           }
         },
         "required": [
@@ -607,56 +599,8 @@
           "userType",
           "email",
           "firstname",
-          "lastname"
-        ]
-      },
-      "Address": {
-        "description": "an address",
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "integer",
-            "description": "unique identifier for the User",
-            "example": 1
-          },
-          "busName": {
-            "description": "bussiness name, if appropriate",
-            "type": "string",
-            "example": "testVOR Clinic"
-          },
-          "address1": {
-            "description": "first line or street address",
-            "type": "string",
-            "example": "123 Main St."
-          },
-          "address2": {
-            "description": "second line of address, if needed",
-            "type": "string",
-            "example": "123 Main St."
-          },
-          "town": {
-            "description": "town or city",
-            "type": "string",
-            "example": "Anytown"
-          },
-          "state": {
-            "description": "state or province",
-            "type": "string",
-            "example": "Any State"
-          },
-          "zip": {
-            "type": "string",
-            "description": "zip or postal code",
-            "example": "12345-abcd"
-          },
-          "country": {
-            "type": "string",
-            "description": "country        ",
-            "example": "USA"
-          }
-        },
-        "required": [
-          "userId"
+          "lastname",
+          "suffix"
         ]
       },
       "SuccessfulLogin": {
@@ -681,7 +625,14 @@
             "description": "signature for file policy object",
             "example": "eyJleHBpcnkiOjE1Nzg3NTY2MDIsIm1heFNpemUiOjEwMDAwMDAwfQ=="
           }
-        }
+        },
+        "x-postman-variables": [
+          {
+            "type": "save",
+            "name": "token",
+            "path": ".token"
+          }
+        ]
       },
       "Error": {
         "type": "object",
@@ -704,7 +655,7 @@
           "status": {
             "type": "integer",
             "description": "HTTP status code",
-            "example": 400
+            "example": 404
           },
           "detail": {
             "type": "string",
@@ -715,70 +666,6 @@
             "type": "string",
             "description": "a URI that identifies the specific occurrence of the error",
             "example": "/login/log/abc123"
-          }
-        }
-      },
-      "Comment": {
-        "type": "object",
-        "required": [
-          "comment",
-          "public"
-        ],
-        "properties": {
-          "userId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "public": {
-            "description": "if false, comment is private to site managers",
-            "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "comment": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this is wonderful"
-          },
-          "created": {
-            "description": "ISO-8601-formatted datetime, time of the comment",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          }
-        }
-      },
-      "Relationship": {
-        "type": "string",
-        "description": "a link between two Users defining a relationship:\n\n- CLIENT: MOR User on right is a client of VOR User on left\n- EMPLOYEE: TOR User on right is an employee of MOR User on left\n- MEMBER: VOR User on right is a member of CLINIC on left, or MOR User on right is a manager of FARM on left\n",
-        "enum": [
-          "CLIENT",
-          "EMPLOYEE",
-          "MEMBER"
-        ],
-        "example": "CLIENT"
-      },
-      "ProtocolShare": {
-        "description": "share a protocol with another VOR User",
-        "type": "object",
-        "properties": {
-          "px-id": {
-            "type": "integer",
-            "description": "the `id` identifier of a Protocol",
-            "example": 1
-          },
-          "share-to": {
-            "type": "integer",
-            "description": "ID f a VOR User who may use the Protocol identified by pxId",
-            "example": 2
-          },
-          "clonable": {
-            "description": "whether User identified by `shareTo` has permission to create a clone and modify the clone",
-            "type": "boolean",
-            "default": false,
-            "example": true
           }
         }
       },
@@ -795,48 +682,66 @@
         ],
         "example": "PRESCRIBED"
       },
+      "Withhold": {
+        "description": "duration after last treatment during which some act is prohibited. Most often this restricts when meat or milk may be sold for food.",
+        "required": [
+          "duration",
+          "prohibition"
+        ],
+        "properties": {
+          "hoursMeat": {
+            "type": "number",
+            "example": 22,
+            "description": "number of hours that must pass between exposure and slaughter"
+          },
+          "hoursMilk": {
+            "type": "number",
+            "example": 5,
+            "description": "number of hours that must pass between exposure and extracting milk for consumption"
+          },
+          "note": {
+            "type": "string",
+            "description": "free-form text note",
+            "format": "html",
+            "example": "<p>improvement apparent</p>"
+          }
+        }
+      },
       "Instructions": {
         "description": "instructions to execute a protocol",
         "type": "object",
         "properties": {
           "considerations": {
-            "description": "things to consider",
             "type": "string",
             "format": "html",
             "example": "<p>This is just an example, not a real protocol.</p>"
           },
           "restrictions": {
-            "description": "restrictions applicable to this protocol",
             "type": "string",
             "format": "html",
             "example": "<p>Not for use on real animals.</p>"
           },
           "dothis": {
-            "description": "wqhat to do",
             "type": "string",
             "format": "html",
             "example": "<h3>Examinations to perform</h3>"
           },
           "recordthis": {
-            "description": "what to record",
             "type": "string",
             "format": "html",
             "example": "<p>record every step in your notebook.</p>"
           },
           "success": {
-            "description": "expectations if protocol is successful",
             "type": "string",
             "format": "html",
             "example": "<p>All problems are gone</p>"
           },
           "failure": {
-            "description": "indications of failure",
             "type": "string",
             "format": "html",
             "example": "<p>One or more problems remain</p>"
           },
           "references": {
-            "description": "references to consult for further information",
             "type": "string",
             "format": "html",
             "example": "<a href=\"https://en.wikipedia.org/wiki/Rickrolling\">Wikipedia</a>"
@@ -850,14 +755,12 @@
           "requireId": {
             "type": "boolean",
             "description": "the Case must include specific ID/s of animal/s to be enrolled",
-            "default": false,
-            "example": false
+            "default": false
           },
           "requireMor": {
             "type": "boolean",
             "description": "if true, the MOR enrolling the Case must be identified with a Signature",
-            "default": false,
-            "example": false
+            "default": false
           },
           "contraindications": {
             "description": "considerations that prohibit or suggest against use of this Protocol",
@@ -888,73 +791,62 @@
           }
         }
       },
-      "FDAspecies": {
+      "fdaSpecies": {
         "type": "array",
         "description": "a class of animals recognized by the FDA. In FDA literature this is called a \"species\", which conflicts with the typical usage of that word. \"fdaSpecies\" in the labeling domain usually corresponds with \"Eligibility\" in the Protocol domain.",
         "items": {
           "type": "string",
           "enum": [
-            "BeefCattle",
-            "Calves",
-            "CalvesNotVeal",
-            "Cats",
-            "Chickens",
-            "ChickensBroilers",
-            "ChickensNotLaying",
-            "ChickensReplacements",
-            "DairyCalves",
-            "DairyHeifers",
-            "DairyCattle",
-            "DairyCattleNonLactating",
-            "Dogs",
-            "Fish",
-            "Goats",
-            "Horses",
-            "Sheep",
-            "Swine",
-            "SwineBreeding",
-            "Turkeys",
-            "TurkeysGrowing",
-            "TurkeysMeatProducing",
-            "TurkeysNotLaying",
-            "Catfish",
-            "Gamebirds",
-            "Llamas",
-            "Salmon",
-            "Emus",
-            "Bison",
-            "Other",
-            "Unidentified"
+            "beef_cattle",
+            "veal",
+            "dairy_cattle",
+            "cats",
+            "dogs",
+            "horses",
+            "fish",
+            "goats",
+            "sheep",
+            "chickens",
+            "turkeys",
+            "swine",
+            "catfish",
+            "gamebirds",
+            "llamas",
+            "salmon",
+            "emus",
+            "bison",
+            "other",
+            "unidentified"
           ],
-          "example": "ChickensBroilers"
+          "example": [
+            "beef_cattle",
+            "dairy_cattle"
+          ]
         }
       },
       "Eligibility": {
         "description": "A class of animal for which a protocol may be used. Normally the `name` field is all that is shown in the UI, but the `id` is used internally to identify each Eligibility, which should be treated as an immutable object. Changes to the array of Eligibilities in a Protocol are done by changing the array of `id` numbers. Changes to other fields will have no effect at the persistent layer.\n",
         "type": "object",
         "required": [
-          "id",
-          "name",
-          "fdaSpecies"
+          "id"
         ],
         "properties": {
           "id": {
-            "description": "identifier",
+            "description": "wip",
             "type": "integer",
-            "example": 15
+            "example": 1
           },
           "name": {
             "description": "A type of animal which is eligible to be treated using a protocol having this Eligibility",
             "type": "string",
-            "example": "Chickens - Broilers"
+            "example": "Beef Cattle"
           },
           "fdaSpecies": {
-            "$ref": "#/components/schemas/FDAspecies"
+            "$ref": "#/components/schemas/fdaSpecies"
           }
         }
       },
       "DoseId": {
-        "type": "object",
         "properties": {
           "doseId": {
             "type": "integer",
@@ -972,11 +864,11 @@
         "properties": {
           "_type": {
             "type": "string",
-            "description": "class of SequenceFunction",
+            "description": "wip",
             "enum": [
-              "models.api.v1.SeqSingleDose"
+              "models.SeqSingleDose"
             ],
-            "example": "models.api.v1.SeqSingleDose"
+            "example": "models.SeqSingleDose"
           }
         }
       },
@@ -990,25 +882,24 @@
         "type": "object",
         "properties": {
           "_type": {
-            "description": "class of SequenceFunction",
             "type": "string",
             "enum": [
-              "models.api.v1.SeqPerDay"
-            ],
-            "example": "models.api.v1.SeqPerDay"
+              "models.SeqPerDay"
+            ]
           },
           "frequency": {
-            "description": "how many doses per day",
             "type": "integer",
-            "default": 1,
-            "example": 1
+            "default": 1
           },
           "totalDoses": {
-            "description": "total number of doses",
             "type": "integer",
-            "default": 1,
-            "example": 1
+            "default": 1
           }
+        },
+        "example": {
+          "totalDoses": 3,
+          "_type": "models.SeqPerDay",
+          "frequency": 2
         }
       },
       "SeqPerDayRange": {
@@ -1024,25 +915,20 @@
           "_type": {
             "type": "string",
             "enum": [
-              "models.api.v1.SeqPerDayRange"
+              "models.SeqPerDayRange"
             ],
-            "description": "class of SequenceFunction",
-            "example": "models.api.v1.SeqPerDayRange"
+            "example": "models.SeqPerDayRange"
           },
           "frequency": {
-            "description": "how many doses per day",
             "type": "integer",
             "default": 1,
             "example": 2
           },
           "minDoses": {
-            "description": "minimum number of doses to give",
             "type": "integer",
-            "default": 3,
-            "example": 4
+            "default": 3
           },
           "maxDoses": {
-            "description": "maximum number of doses to give",
             "type": "integer",
             "default": 1,
             "example": 9
@@ -1052,22 +938,19 @@
       "SeqInterval": {
         "required": [
           "_type",
-          "totalDoses",
-          "interval"
+          "totalDoses interval"
         ],
         "description": "a series of equally-spaced doses specified by the total number of doses and time between sequential doses",
         "type": "object",
         "properties": {
           "_type": {
-            "description": "class of SequenceFunction",
             "type": "string",
             "enum": [
-              "models.api.v1.SeqInterval"
+              "models.SeqInterval"
             ],
-            "example": "models.api.v1.SeqInterval"
+            "example": "models.SeqInterval"
           },
           "totalDoses": {
-            "description": "total number of doses",
             "type": "integer",
             "default": 1,
             "example": 3
@@ -1090,12 +973,11 @@
         "type": "object",
         "properties": {
           "_type": {
-            "description": "class of SequenceFunction",
             "type": "string",
             "enum": [
-              "models.api.v1.SeqSeries"
+              "models.SeqSeries"
             ],
-            "example": "models.api.v1.SeqSeries"
+            "example": "models.SeqSeries"
           },
           "intervals": {
             "type": "array",
@@ -1154,22 +1036,18 @@
           "value",
           "symbol"
         ],
-        "type": "object",
-        "description": "a quantity of weight or mass",
         "properties": {
           "dimension": {
-            "description": "must always be \"Mass\"",
             "type": "string",
             "enum": [
               "Mass"
-            ],
-            "example": "Mass"
+            ]
           },
           "value": {
-            "description": "quantity of units specified by symbol",
             "type": "number",
             "minimum": 0,
             "default": 1,
+            "exclusiveMinimum": true,
             "example": 50
           },
           "symbol": {
@@ -1202,11 +1080,10 @@
           "value",
           "symbol"
         ],
-        "type": "object",
         "properties": {
           "dimension": {
             "type": "string",
-            "description": "must always be \"Volume\"",
+            "description": "wip",
             "example": "Volume",
             "enum": [
               "Volume"
@@ -1214,9 +1091,9 @@
           },
           "value": {
             "type": "number",
-            "description": "quantity of units specified by symbol",
             "minimum": 0,
-            "example": 3
+            "example": 3,
+            "exclusiveMinimum": true
           },
           "symbol": {
             "$ref": "#/components/schemas/VolumeUnit"
@@ -1239,10 +1116,8 @@
           "value",
           "symbol"
         ],
-        "type": "object",
         "properties": {
           "dimension": {
-            "description": "must always be Dimensionless",
             "type": "string",
             "example": "Dimensionless",
             "enum": [
@@ -1251,9 +1126,9 @@
           },
           "value": {
             "type": "number",
-            "description": "number of units specified by symbol",
             "minimum": 0,
-            "example": 3
+            "example": 3,
+            "exclusiveMinimum": true
           },
           "symbol": {
             "$ref": "#/components/schemas/DimensionlessUnit"
@@ -1264,7 +1139,6 @@
         "required": [
           "quantity"
         ],
-        "type": "object",
         "properties": {
           "quantity": {
             "oneOf": [
@@ -1294,15 +1168,12 @@
           "_type",
           "dose"
         ],
-        "type": "object",
         "properties": {
           "_type": {
             "type": "string",
-            "description": "class of sizeFunction",
             "enum": [
-              "models.api.v1.FixedDoseFunction"
-            ],
-            "example": "models.api.v1.FixedDoseFunction"
+              "models.FixedDoseFunction"
+            ]
           },
           "dose": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -1316,7 +1187,7 @@
               "symbol": "ml"
             }
           },
-          "_type": "models.api.v1.FixedDoseFunction"
+          "_type": "models.FixedDoseFunction"
         }
       },
       "DoseByWeightFunction": {
@@ -1326,15 +1197,12 @@
           "dose",
           "perUnit"
         ],
-        "type": "object",
         "properties": {
           "_type": {
             "type": "string",
-            "description": "class of sizeFunction",
             "enum": [
-              "models.api.v1.DoseByWeightFunction"
-            ],
-            "example": "models.api.v1.DoseByWeightFunction"
+              "models.DoseByWeightFunction"
+            ]
           },
           "dose": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -1356,7 +1224,7 @@
             "value": 1,
             "symbol": "kg"
           },
-          "_type": "models.api.v1.DoseByWeightFunction"
+          "_type": "models.DoseByWeightFunction"
         }
       },
       "LoadingDoseByWeightFunction": {
@@ -1367,15 +1235,12 @@
           "followDose",
           "perUnit"
         ],
-        "type": "object",
         "properties": {
           "_type": {
             "type": "string",
-            "description": "class of sizeFunction",
             "enum": [
-              "models.api.v1.DoseByWeightFunction"
-            ],
-            "example": "models.api.v1.DoseByWeightFunction"
+              "models.DoseByWeightFunction"
+            ]
           },
           "firstDose": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -1400,7 +1265,7 @@
               "symbol": "ml"
             }
           },
-          "_type": "models.api.v1.LoadingDoseByWeightFunction",
+          "_type": "models.LoadingDoseByWeightFunction",
           "firstDose": {
             "quantity": {
               "dimension": "volume",
@@ -1415,7 +1280,6 @@
           "min",
           "max"
         ],
-        "type": "object",
         "properties": {
           "min": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -1447,15 +1311,13 @@
           "_type",
           "range"
         ],
-        "type": "object",
         "properties": {
           "_type": {
             "type": "string",
-            "description": "class of sizeFunction",
             "enum": [
-              "models.api.v1.DoseRangeFunction"
+              "models.DoseRangeFunction"
             ],
-            "example": "models.api.v1.DoseRangeFunction"
+            "example": "models.DoseRangeFunction"
           },
           "range": {
             "$ref": "#/components/schemas/DrugQuantityRange"
@@ -1469,15 +1331,12 @@
           "range",
           "perUnit"
         ],
-        "type": "object",
         "properties": {
           "_type": {
             "type": "string",
-            "description": "class of sizeFunction",
             "enum": [
-              "models.api.v1.DoseRangeByWeightFunction"
-            ],
-            "example": "models.api.v1.DoseRangeByWeightFunction"
+              "models.DoseRangeByWeightFunction"
+            ]
           },
           "range": {
             "$ref": "#/components/schemas/DrugQuantityRange"
@@ -1492,7 +1351,7 @@
             "value": 1,
             "symbol": "kg"
           },
-          "_type": "models.api.v1.DoseRangeByWeightFunction",
+          "_type": "models.DoseRangeByWeightFunction",
           "range": {
             "min": {
               "quantity": {
@@ -1532,7 +1391,6 @@
         ]
       },
       "DoseFunctions": {
-        "type": "object",
         "properties": {
           "sequenceFunction": {
             "$ref": "#/components/schemas/SequenceFunction"
@@ -1547,7 +1405,6 @@
         "type": "object",
         "properties": {
           "code": {
-            "description": "short code name",
             "type": "string",
             "maxLength": 15,
             "example": "Example-code"
@@ -1563,7 +1420,7 @@
         ]
       },
       "Treatment": {
-        "description": "describes a series of one or more doses of a single product. sizeFunction and sequenceFunction are polymorphic and may depend on additional data available when a Case is initiated. For example animal weight or other data may be needed.",
+        "description": "describes a series of one or more doses of a single product in terms of a sizeFunction (which specifies dose quantity) and a SequenceFunction (which specifies when the doses should be given). These functions are polymorphic and may depend on additional data which only is available when a protocol is assigned to a specific Case. For example, the initiation time will likely be needed to calculate the dose sequence and animal weight or other data may be needed to calculate dose size.",
         "type": "object",
         "required": [
           "product",
@@ -1573,7 +1430,7 @@
         ],
         "properties": {
           "id": {
-            "description": "If null, a new database record will be created, otherwise updated,",
+            "description": "key value created by the database. If `id` is null or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
             "type": "string",
             "example": "B-123"
           },
@@ -1621,18 +1478,18 @@
           },
           "wtMeatHrs": {
             "type": "integer",
-            "description": "hours after treatment when meat must not be sold",
+            "description": "wip",
             "example": "wip"
           },
           "wtMilkHrs": {
             "type": "integer",
-            "description": "hours after treatment when milk must not be sold",
+            "description": "wip",
             "example": "wip"
           },
           "wtNote": {
             "type": "string",
-            "description": "additional information related to withholding",
-            "example": "not for use in cattle over 20 months age"
+            "description": "wip",
+            "example": "wip"
           },
           "nada": {
             "description": "NADA or ANADA as specified by the FDA",
@@ -1647,24 +1504,17 @@
             }
           },
           "note": {
-            "description": "general note about the treatment",
             "type": "string",
             "format": "html",
             "example": "<p>a free-form note</p>"
           },
           "amduca": {
             "$ref": "#/components/schemas/AmducaClass"
-          },
-          "sequencefunction": {
-            "$ref": "#/components/schemas/SequenceFunction"
-          },
-          "sizefunction": {
-            "$ref": "#/components/schemas/SizeFunction"
           }
         }
       },
       "Diagnosis": {
-        "description": "a medical diagnosis for which a Protocol may be used. Normally the `name` field is all that is shown in the UI, but the `id` is used internally to identify each Diagnosis, which should be treated as an immutable object. Changes to the array of Diagnoses in a Protocol are achieved by changing the array of `id` numbers. Changes to other fields will have no effect at the persistent layer.",
+        "description": "a medical diagnosis for which a Protocol may be used. Normally the `name` field is all that is shown in the UI, but the `id` is used internally to identify each Diagnosis, which should be treated as an immutable object. Changes to the array of Diagnoses in a Protocol are achieved by changing the array of `id` numbers. Changes to other fields will have no effect at the persistent layer.\n",
         "type": "object",
         "properties": {
           "id": {
@@ -1691,7 +1541,7 @@
         "required": [
           "_type",
           "name",
-          "descrip",
+          "description",
           "query",
           "when"
         ],
@@ -1700,86 +1550,70 @@
             "description": "server data type to which this Promise will be mapped",
             "type": "string",
             "enum": [
-              "models.api.v1.IdPromise",
-              "models.api.v1.AffirmationPromise",
-              "models.api.v1.BooleanPromise",
-              "models.api.v1.StringPromise",
-              "models.api.v1.MassPromise",
-              "models.api.v1.CategoryPromise"
-            ],
-            "example": "models.api.v1.IdPromise"
+              "models.IdPromise",
+              "models.AffirmationPromise",
+              "models.BooleanPromise",
+              "models.StringPromise",
+              "models.MassPromise",
+              "models.CategoryPromise"
+            ]
           },
           "id": {
             "description": "UUID assigned to the promise itself by the server",
-            "type": "number",
-            "format": "integer",
-            "example": 1
+            "type": "string",
+            "format": "uuid"
           },
           "name": {
             "description": "promise name for the doctor",
-            "type": "string",
-            "example": "Still in herd? 14d"
+            "type": "string"
           },
           "descrip": {
             "description": "promise description for the client",
-            "type": "string",
-            "example": "Require identification of each case enrolled"
+            "type": "string"
           },
           "query": {
             "description": "question to be answered by client",
             "type": "string",
-            "format": "html",
-            "example": "Is this animal still in the herd?"
+            "format": "html"
           },
           "when": {
             "description": "ISO-8601 duration from initiation when promise must be fulfilled",
             "type": "string",
             "format": "duration",
-            "default": "PT0H",
-            "example": "PT72H"
+            "default": "PT0H"
           },
           "response": {
             "description": "data supplied by the client to fulfill promise",
-            "type": "string",
-            "example": "something"
+            "type": "string"
           },
           "responseBy": {
             "description": "User ID of person supplying response data",
-            "type": "integer",
-            "example": 123
+            "type": "integer"
           },
           "responseTime": {
             "description": "timestamp for response data",
-            "type": "string",
-            "example": "PT72H"
+            "type": "string"
           },
           "notify": {
             "description": "notify prescribing doctor when completed",
             "type": "boolean",
-            "default": false,
-            "example": true
+            "default": false
           },
           "sigRequired": {
             "description": "require signature of respondant",
             "type": "boolean",
-            "default": false,
-            "example": false
+            "default": false
           }
         }
       },
       "Metadata": {
         "description": "(for future development)",
-        "type": "object",
         "properties": {
           "key": {
-            "type": "string",
-            "description": "key to this item",
-            "example": "rating"
+            "type": "string"
           },
           "value": {
-            "type": "string",
-            "description": "vallue associated with key",
-            "example": "good"
+            "type": "string"
           }
         }
       },
@@ -1790,14 +1624,14 @@
           "ownerId",
           "name",
           "status",
+          "withhold",
           "instructions"
         ],
         "properties": {
           "id": {
-            "description": "key value created by the database. If zero or null a new record will be created.",
+            "description": "key value created by the database. If `id` is zero or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
             "type": "integer",
-            "format": "int64",
-            "example": 12345
+            "format": "int64"
           },
           "ownerId": {
             "description": "the `id` key of the VOR User who owns the protocol.",
@@ -1805,12 +1639,12 @@
             "example": 1
           },
           "name": {
-            "description": "descriptive name of the protocol",
+            "description": "wip",
             "type": "string",
             "example": "wip"
           },
           "shortname": {
-            "description": "short name for protocol",
+            "description": "wip",
             "type": "string",
             "example": "wip"
           },
@@ -1830,34 +1664,17 @@
             "$ref": "#/components/schemas/ProtocolStatus"
           },
           "vetNote": {
-            "description": "note visible only to the prescribing vet",
-            "type": "string",
-            "example": "consider prescribing protocol x instead"
+            "type": "string"
           },
-          "wtMeatHrs": {
-            "type": "number",
-            "example": 22,
-            "description": "number of hours that must pass between exposure and slaughter"
-          },
-          "wtMilkHrs": {
-            "type": "number",
-            "example": 5,
-            "description": "number of hours that must pass between exposure and extracting milk for consumption"
+          "withhold": {
+            "$ref": "#/components/schemas/Withhold"
           },
           "instructions": {
             "$ref": "#/components/schemas/Instructions"
           },
           "shareAll": {
-            "description": "share this protocol with all other vets using the system?",
             "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "shareClonable": {
-            "description": "when shared to another vet, may the recipient create and alter a clone?",
-            "type": "boolean",
-            "default": false,
-            "example": true
+            "default": false
           },
           "caseDefinition": {
             "$ref": "#/components/schemas/CaseDefinition"
@@ -1905,139 +1722,29 @@
           }
         }
       },
-      "Px": {
-        "description": "the flattened subset of a Protocol which can be retrieved from the Px database table alone, without additional queries.",
-        "type": "object",
-        "required": [
-          "ownerId",
-          "name",
-          "created",
-          "edited",
-          "status",
-          "shareAll"
-        ],
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "unique identifier for Protocol",
-            "example": 0
-          },
-          "ownerId": {
-            "type": "integer",
-            "description": "unique identifier for User that owns this Protocol",
-            "example": 0
-          },
-          "name": {
-            "type": "string",
-            "description": "user-friendly identifier for the Protocol",
-            "example": "example protocol"
-          },
-          "shortname": {
-            "type": "string",
-            "description": "Short name for the Protocol",
-            "example": "EXamp"
-          },
-          "created": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO-8601 timestamp for Protocol creation",
-            "example": "2020-01-10T22:20:39Z"
-          },
-          "edited": {
-            "type": "string",
-            "format": "date-time",
-            "description": "ISO-8601 timestamp for Protocol update",
-            "example": "2020-02-10T22:20:39Z"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ProtocolStatus"
-          },
-          "vetNote": {
-            "type": "string",
-            "description": "note visible only to the prescribing vet",
-            "example": "consider prescribing protocol x instead"
-          },
-          "wtMeatHrs": {
-            "type": "integer",
-            "description": "number of hours that meat may not be sold for food after last treatment",
-            "example": 72
-          },
-          "wtMilkHrs": {
-            "type": "integer",
-            "description": "number of hours that milk may not be sold for food after last treatment",
-            "example": 72
-          },
-          "wtNote": {
-            "type": "string",
-            "description": "note regarding withholding",
-            "example": "Not for use in horses intended for food."
-          },
-          "considerations": {
-            "type": "string",
-            "format": "html",
-            "description": "free-form text specifying special considerations in choosing or using a protocol",
-            "example": "<p>think first</p>"
-          },
-          "restrictions": {
-            "type": "string",
-            "format": "html",
-            "description": "free-form text note specifying restrictions",
-            "example": "<p>not suitable in pregnancy</p>"
-          },
-          "dothis": {
-            "type": "string",
-            "format": "html",
-            "description": "free-form text specifying actions to be completed",
-            "example": "<p>execute protocol</p>"
-          },
-          "recordthis": {
-            "type": "string",
-            "format": "html",
-            "description": "free-form text specifying data to record",
-            "example": "case data"
-          },
-          "success": {
-            "type": "string",
-            "format": "html",
-            "description": "describes a successful outcome of the protocol",
-            "example": "<p>good</p>"
-          },
-          "failure": {
-            "type": "string",
-            "format": "html",
-            "description": "describes a failure of the protocol",
-            "example": "<p>bad</p>"
-          },
-          "references": {
-            "type": "string",
-            "format": "html",
-            "description": "wip references related to the disease or treatment",
-            "example": "<a href=\"https://en.wikipedia.org/wiki/Rickrolling\">Wikipedia</a>"
-          },
-          "shareAll": {
-            "type": "boolean",
-            "default": false,
-            "example": true,
-            "description": "switch to determine whether this Protocol may be shared with all VOR users"
-          }
-        }
-      },
       "Prescription": {
-        "type": "object",
+        "required": [
+          "size",
+          "unit"
+        ],
         "properties": {
           "rxId": {
             "type": "string",
-            "description": "UUID identifying the prescription",
+            "description": "wip",
             "example": "gG3pBCR1GCMKm89c"
           },
           "protocol": {
             "$ref": "#/components/schemas/Protocol"
           },
-          "vor": {
-            "$ref": "#/components/schemas/User"
+          "vorId": {
+            "type": "integer",
+            "description": "wip",
+            "example": "aZ3pBCR1GCMKm89c"
           },
-          "mor": {
-            "$ref": "#/components/schemas/User"
+          "morId": {
+            "type": "integer",
+            "description": "wip",
+            "example": "tP3pBCR1GCMKm89c"
           },
           "refills": {
             "type": "integer",
@@ -2058,330 +1765,14 @@
             "example": "2021-08-10T10:30:37Z"
           },
           "metadata": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "description": "additional data",
-              "example": "12345abc"
-            }
+            "type": "string",
+            "description": "wip",
+            "example": "wip"
           },
           "status": {
             "type": "string",
-            "description": "status code",
-            "example": "DEPRECATED"
-          }
-        }
-      },
-      "PrescriptionRequest": {
-        "description": "a Prescription request, before it is recorded and timestamped",
-        "type": "object",
-        "properties": {
-          "protocol": {
-            "$ref": "#/components/schemas/Protocol"
-          },
-          "morId": {
-            "type": "integer",
-            "description": "id of MOR prescribed to",
-            "example": 22
-          },
-          "expiration": {
-            "type": "string",
-            "format": "date-time",
-            "description": "expiration date",
-            "example": "2021-08-10T10:30:37Z"
-          },
-          "metadata": {
-            "type": "string",
-            "description": "additional data",
-            "example": " "
-          },
-          "status": {
-            "type": "string",
-            "description": "prescription status",
-            "example": "PRESCRIBED"
-          }
-        },
-        "example": {
-          "protocol": {
-            "ownerId": 0,
-            "name": "example protocol",
-            "shortname": "EXamp",
-            "created": "2020-01-10T22:20:39Z",
-            "edited": "2020-01-10T22:20:39Z",
-            "status": "UNKNOWN",
-            "withhold": {
-              "hoursMeat": 0,
-              "hoursMilk": 0,
-              "note": ""
-            },
-            "instructions": {
-              "considerations": "think first",
-              "restrictions": "always",
-              "dothis": "execute protocol",
-              "recordthis": "case data",
-              "success": "good",
-              "failure": "bad",
-              "references": "ref"
-            },
-            "shareAll": false,
-            "shareClonable": false,
-            "caseDefinition": {
-              "pxId": 0,
-              "requireID": true,
-              "requireMOR": true,
-              "medical": "really sick",
-              "economic": "client in credit"
-            },
-            "treatments": [
-              {
-                "id": 0,
-                "ownerId": 0,
-                "description": "sample treatment",
-                "note": "this is an off-label Treatment",
-                "eligibilities": [
-                  {
-                    "id": 1,
-                    "name": "Beef Cattle",
-                    "fda": "beef_cattle"
-                  }
-                ],
-                "tags": [
-                  {
-                    "id": 1,
-                    "code": "EXAMPLE"
-                  }
-                ],
-                "product": "MiracleMed",
-                "_dose": "3.0 ml per kg repeat in 6 hours and again in 24 hours",
-                "route": "intr-corporeal",
-                "sequenceFunction": {
-                  "intervals": [
-                    "PT6H",
-                    "PT24H"
-                  ],
-                  "_type": "models.api.v1.SeqSeries"
-                },
-                "sizeFunction": {
-                  "dose": {
-                    "quantity": {
-                      "dimension": "Volume",
-                      "value": 3,
-                      "symbol": "ml"
-                    }
-                  },
-                  "perUnit": {
-                    "dimension": "Mass",
-                    "value": 1,
-                    "symbol": "kg"
-                  },
-                  "_type": "models.api.v1.DoseByWeightFunction"
-                },
-                "doseNote": "some note on dose",
-                "wtMeatHrs": 22,
-                "wtMilkHrs": 5,
-                "wtNote": "example"
-              }
-            ],
-            "tags": [
-              {
-                "id": 1,
-                "code": "EXAMPLE"
-              }
-            ],
-            "diagnoses": [
-              {
-                "id": 8,
-                "code": "PAIN",
-                "name": "Pain/inflammation (musculoskeletal), treatment"
-              }
-            ],
-            "eligibilities": [
-              {
-                "id": 1,
-                "name": "Beef Cattle",
-                "fda": "BeefCattle"
-              }
-            ],
-            "promises": [
-              {
-                "id": 1,
-                "name": "test user",
-                "code": "EXAMPLE"
-              }
-            ]
-          },
-          "morId": 0,
-          "status": "DEPRECATED",
-          "metadata": []
-        }
-      },
-      "LabelClaim": {
-        "type": "object",
-        "required": [
-          "id",
-          "fdaSpecies",
-          "diagnosis",
-          "dxId",
-          "dxCode",
-          "product",
-          "route",
-          "wtMeatHrs",
-          "wtMilkHrs"
-        ],
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "unique identifier for label",
-            "example": 1
-          },
-          "fdaSpecies": {
-            "$ref": "#/components/schemas/FDAspecies"
-          },
-          "diagnosis": {
-            "type": "string",
-            "description": "label diagnosis",
-            "example": "pain (colic), symptomatic treatment"
-          },
-          "dxId": {
-            "type": "integer",
-            "description": "id of label diagnosis",
-            "example": 2002
-          },
-          "dxCode": {
-            "type": "string",
-            "description": "code of label diagnosis",
-            "example": "2002"
-          },
-          "product": {
-            "type": "string",
-            "description": "product trade name",
-            "example": "Prevail™ Flunixin Meglumine Injection"
-          },
-          "productId": {
-            "type": "integer",
-            "description": "unique identifier for the product described",
-            "example": 1315018
-          },
-          "_dose": {
-            "type": "string",
-            "description": "free-form text note on dosage",
-            "example": "3.0 ml per kg repeat in 6 hours and again in 24 hours"
-          },
-          "route": {
-            "type": "string",
-            "description": "route of administration",
-            "example": "intr-corporeal"
-          },
-          "sequenceFunction": {
-            "$ref": "#/components/schemas/SequenceFunction"
-          },
-          "sizeFunction": {
-            "$ref": "#/components/schemas/SizeFunction"
-          },
-          "doseNote": {
-            "type": "string",
-            "format": "html",
-            "description": "test note about dose",
-            "example": "THis can contain <b>html</b> tags"
-          },
-          "wtMeatHrs": {
-            "description": "meat withholding in hours",
-            "type": "integer",
-            "example": 22
-          },
-          "wtMilkHrs": {
-            "type": "integer",
-            "description": "milk withholding in hours",
-            "example": 5
-          },
-          "wtNote": {
-            "type": "string",
-            "description": "note on withholding",
-            "example": "not for dairy animals"
-          },
-          "ndc": {
-            "type": "string",
-            "description": "FDA NADA or ANADA number",
-            "example": "200-308"
-          },
-          "generic": {
-            "type": "string",
-            "description": "generic name for product",
-            "example": "OXYTETRACYCLINE"
-          }
-        }
-      },
-      "GreenbookHeader": {
-        "required": [
-          "ndc",
-          "proprietery",
-          "nonProp",
-          "ingredients",
-          "labeler",
-          "productType",
-          "marketCat",
-          "appNumber",
-          "link",
-          "status",
-          "lastChanged"
-        ],
-        "type": "object",
-        "properties": {
-          "ndc": {
-            "type": "string",
-            "description": "FDA NDC number",
-            "example": "0010-3495"
-          },
-          "proprietery": {
-            "type": "string",
-            "description": "proprietary name",
-            "example": "Bio-Mycin 200"
-          },
-          "nonProp": {
-            "description": "generic name",
-            "type": "string",
-            "example": "OXYTETRACYCLINE"
-          },
-          "ingredients": {
-            "type": "string",
-            "description": "ingredient or ingredients",
-            "example": "OXYTETRACYCLINE"
-          },
-          "labeler": {
-            "type": "string",
-            "description": "name of labeler",
-            "example": "Boehringer Ingelheim Vetmedica, Inc."
-          },
-          "productType": {
-            "type": "string",
-            "description": "type of product",
-            "example": "OTC ANIMAL DRUG"
-          },
-          "marketCat": {
-            "type": "string",
-            "description": "market category",
-            "example": "ANADA"
-          },
-          "appNumber": {
-            "type": "string",
-            "description": "application number",
-            "example": "ANADA200008"
-          },
-          "link": {
-            "type": "string",
-            "description": "public link to fda label",
-            "example": "https://www.accessdata.fda.gov/spl/data/c9491ada-6813-4548-8872-57bb38a58feb/c9491ada-6813-4548-8872-57bb38a58feb.xml"
-          },
-          "status": {
-            "type": "integer",
-            "description": "FDA status",
-            "example": 0
-          },
-          "lastChanged": {
-            "type": "string",
-            "format": "date-time",
-            "description": "date of last label change",
-            "example": "2020-05-16T16:19:12Z"
+            "description": "wip",
+            "example": "wip - NB this may have a status of DEPRECTATED, but the property itself is not!"
           }
         }
       },
@@ -2418,379 +1809,6 @@
           }
         }
       },
-      "CaseData": {
-        "description": "function to calculate dose size",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IdData"
-          },
-          {
-            "$ref": "#/components/schemas/WeightData"
-          },
-          {
-            "$ref": "#/components/schemas/PreferredDoseData"
-          },
-          {
-            "$ref": "#/components/schemas/PrefDoseRateData"
-          },
-          {
-            "$ref": "#/components/schemas/AnimalClassData"
-          }
-        ]
-      },
-      "IdData": {
-        "type": "object",
-        "required": [
-          "animalId",
-          "initiationTime"
-        ],
-        "properties": {
-          "animalId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "morId": {
-            "description": "if false, comment is private to site managers",
-            "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "note": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this is wonderful"
-          },
-          "initiationTime": {
-            "description": "ISO-8601-formatted datetime, time of the comment",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          }
-        }
-      },
-      "WeightData": {
-        "type": "object",
-        "required": [
-          "animalId",
-          "initiationTime",
-          "weight"
-        ],
-        "properties": {
-          "animalId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "morId": {
-            "description": "if false, comment is private to site managers",
-            "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "note": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this is wonderful"
-          },
-          "initiationTime": {
-            "description": "ISO-8601-formatted datetime, time of the comment",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "weight": {
-            "$ref": "#/components/schemas/MassQuantity"
-          }
-        }
-      },
-      "PreferredDoseData": {
-        "type": "object",
-        "required": [
-          "animalId",
-          "initiationTime",
-          "preferredDose"
-        ],
-        "properties": {
-          "animalId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "morId": {
-            "description": "if false, comment is private to site managers",
-            "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "note": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this is wonderful"
-          },
-          "initiationTime": {
-            "description": "ISO-8601-formatted datetime, time of the comment",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "preferredDose": {
-            "$ref": "#/components/schemas/DrugQuantity"
-          }
-        }
-      },
-      "PrefDoseRateData": {
-        "type": "object",
-        "required": [
-          "animalId",
-          "initiationTime",
-          "preferredDose",
-          "weight"
-        ],
-        "properties": {
-          "animalId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "morId": {
-            "description": "if false, comment is private to site managers",
-            "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "note": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this is wonderful"
-          },
-          "initiationTime": {
-            "description": "ISO-8601-formatted datetime, time of the comment",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "weight": {
-            "$ref": "#/components/schemas/MassQuantity"
-          },
-          "preferredDose": {
-            "$ref": "#/components/schemas/DrugQuantity"
-          }
-        }
-      },
-      "AnimalClassData": {
-        "type": "object",
-        "required": [
-          "animalId",
-          "initiationTime"
-        ],
-        "properties": {
-          "animalId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "morId": {
-            "description": "if false, comment is private to site managers",
-            "type": "boolean",
-            "default": false,
-            "example": true
-          },
-          "note": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this is wonderful"
-          },
-          "initiationTime": {
-            "description": "ISO-8601-formatted datetime, time of the comment",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "preferredDose": {
-            "$ref": "#/components/schemas/AnimalClass"
-          }
-        }
-      },
-      "AnimalClass": {
-        "type": "object",
-        "required": [
-          "animalClass",
-          "sizeFunction"
-        ],
-        "properties": {
-          "animalClass": {
-            "type": "string",
-            "description": "descrip",
-            "example": "Aardvark"
-          },
-          "sizeFunction": {
-            "$ref": "#/components/schemas/SizeFunction"
-          }
-        }
-      },
-      "AnimalTask": {
-        "description": "a task",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/PTask"
-          },
-          {
-            "$ref": "#/components/schemas/WeightData"
-          }
-        ]
-      },
-      "PTask": {
-        "type": "object",
-        "required": [
-          "id",
-          "caseId",
-          "morId",
-          "vorId",
-          "act",
-          "animalId",
-          "doAt",
-          "status"
-        ],
-        "properties": {
-          "id": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "caseId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "morId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "vorId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "act": {
-            "description": "if false, comment is private to site managers",
-            "type": "string",
-            "example": "fix it"
-          },
-          "animalId": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this"
-          },
-          "doAt": {
-            "description": "ISO-8601-formatted datetime, time the task should be executed",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "executor": {
-            "description": "set nu",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "status": {
-            "$ref": "#/components/schemas/TaskStatus"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PData"
-          }
-        }
-      },
-      "DoseTask": {
-        "type": "object",
-        "required": [
-          "id",
-          "caseId",
-          "morId",
-          "vorId",
-          "act",
-          "animalId",
-          "doAt",
-          "product",
-          "dose",
-          "route",
-          "status"
-        ],
-        "properties": {
-          "id": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "caseId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "morId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "vorId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "act": {
-            "description": "if false, comment is private to site managers",
-            "type": "string",
-            "example": "fix it"
-          },
-          "animalId": {
-            "type": "string",
-            "description": "comment from a user",
-            "example": "this"
-          },
-          "product": {
-            "type": "string"
-          },
-          "dose": {
-            "$ref": "#/components/schemas/DrugQuantity"
-          },
-          "route": {
-            "type": "string"
-          },
-          "doAt": {
-            "description": "ISO-8601-formatted datetime, time the task should be executed",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "executor": {
-            "description": "set nu",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "status": {
-            "$ref": "#/components/schemas/TaskStatus"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PData"
-          }
-        }
-      },
       "TaskStatus": {
         "type": "string",
         "description": "task status",
@@ -2807,6 +1825,144 @@
           "UNKNOWN"
         ],
         "example": "PRESCRIBED"
+      },
+      "PDataNone": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of PData",
+            "enum": [
+              "models.PdataNone"
+            ],
+            "example": "models.PdataNone"
+          },
+          "promiseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this is"
+          }
+        }
+      },
+      "PDataString": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of PData",
+            "enum": [
+              "models.PdataString"
+            ],
+            "example": "models.PdataString"
+          },
+          "promiseId": {
+            "description": "set n",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "string",
+            "description": "commen",
+            "example": "this is"
+          }
+        }
+      },
+      "PDataNumber": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of PData",
+            "enum": [
+              "models.PdataNumber"
+            ],
+            "example": "models.PdataNumber"
+          },
+          "promiseId": {
+            "description": "s",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "number",
+            "description": "co",
+            "example": 123
+          }
+        }
+      },
+      "PDataBoolean": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of PData",
+            "enum": [
+              "models.PDataBoolean"
+            ],
+            "example": "models.PDataBoolean"
+          },
+          "promiseId": {
+            "description": "ID of promise",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "type": "string",
+            "description": "data",
+            "example": "this is"
+          }
+        }
+      },
+      "PDataMass": {
+        "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of PData",
+            "enum": [
+              "models.PdataMass"
+            ],
+            "example": "models.PdataMass"
+          },
+          "promiseId": {
+            "description": "id number of Promise",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
+          "dat": {
+            "$ref": "#/components/schemas/MassQuantity"
+          }
+        }
       },
       "PData": {
         "description": "a task",
@@ -2828,131 +1984,126 @@
           }
         ]
       },
-      "PDataString": {
+      "PTask": {
         "type": "object",
         "required": [
-          "promiseId",
-          "dat"
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "act",
+          "animalId",
+          "doAt",
+          "status"
         ],
         "properties": {
-          "promiseId": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of CaseData",
+            "enum": [
+              "models.PreferredDoseData"
+            ],
+            "example": "models.PreferredDoseData"
+          },
+          "id": {
             "description": "set null or zero if User wishes to be anonymous",
             "type": "integer",
-            "default": null,
+            "format": "int64",
             "example": 123
           },
-          "dat": {
+          "caseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "morId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "vorId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "act": {
+            "description": "if false, comment is private to site managers",
+            "type": "string",
+            "example": "fix it"
+          },
+          "animalId": {
             "type": "string",
             "description": "comment from a user",
-            "example": "this is"
+            "example": "this"
+          },
+          "doAt": {
+            "description": "ISO-8601-formatted datetime, time the task should be executed",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "executor": {
+            "description": "set nu",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PData"
           }
         }
       },
-      "PDataNone": {
-        "type": "object",
-        "required": [
-          "promiseId",
-          "dat"
-        ],
+      "WeightData": {
+        "description": "specifies animal's weight",
         "properties": {
-          "promiseId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
-          },
-          "dat": {
+          "_type": {
             "type": "string",
-            "description": "comment from a user",
-            "example": "this is"
-          }
-        }
-      },
-      "PDataBoolean": {
-        "type": "object",
-        "required": [
-          "promiseId",
-          "dat"
-        ],
-        "properties": {
-          "promiseId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
+            "description": "identifies subtype of CaseData",
+            "enum": [
+              "models.WeightData"
+            ],
+            "example": "models.WeightData"
           },
-          "dat": {
+          "animalId": {
             "type": "string",
-            "description": "comment from a user",
-            "example": "this is"
-          }
-        }
-      },
-      "PDataMass": {
-        "type": "object",
-        "required": [
-          "promiseId",
-          "dat"
-        ],
-        "properties": {
-          "promiseId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
+            "description": "free-form text description of the animal",
+            "example": "Bossie"
           },
-          "dat": {
+          "weight": {
             "$ref": "#/components/schemas/MassQuantity"
+          },
+          "initiationTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "wip ISO-8601-formatted datetime added by the server when the instance of the animal's weight is first saved.",
+            "example": "2020-01-10T10:30:37Z"
           }
         }
       },
-      "PDataNumber": {
-        "type": "object",
-        "required": [
-          "promiseId",
-          "dat"
-        ],
-        "properties": {
-          "promiseId": {
-            "description": "set null or zero if User wishes to be anonymous",
-            "type": "integer",
-            "default": null,
-            "example": 123
+      "AnimalTask": {
+        "description": "a task",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/PTask"
           },
-          "dat": {
-            "type": "number",
-            "description": "comment from a user",
-            "example": 123
+          {
+            "$ref": "#/components/schemas/WeightData"
           }
-        }
+        ]
       }
     },
     "responses": {
-      "NoContent": {
-        "description": "There is no content to send for this request,."
+      "Unauthorized": {
+        "description": "401 – Users must log in"
       },
       "BadRequest": {
         "description": "The server could not understand the request due to invalid syntax.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error"
-            }
-          }
-        }
-      },
-      "Unauthorized": {
-        "description": "The client must authenticate itself to get the requested response.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error"
-            }
-          }
-        }
-      },
-      "Forbidden": {
-        "description": "The client does not have access rights to the content.",
         "content": {
           "application/json": {
             "schema": {
