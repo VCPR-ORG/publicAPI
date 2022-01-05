@@ -1999,7 +1999,7 @@
         "properties": {
           "_type": {
             "type": "string",
-            "description": "identifies subtype of CaseData",
+            "description": "identifies subtype of AnimalTask",
             "enum": [
               "models.PreferredDoseData"
             ],
@@ -2033,6 +2033,94 @@
             "description": "if false, comment is private to site managers",
             "type": "string",
             "example": "fix it"
+          },
+          "animalId": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this"
+          },
+          "doAt": {
+            "description": "ISO-8601-formatted datetime, time the task should be executed",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "executor": {
+            "description": "set nu",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PData"
+          }
+        }
+      },
+      "DoseTask": {
+        "type": "object",
+        "required": [
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "act",
+          "animalId",
+          "doAt",
+          "status"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of AnimalTask",
+            "enum": [
+              "models.PreferredDoseData"
+            ],
+            "example": "models.PreferredDoseData"
+          },
+          "id": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "caseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "morId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "vorId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "act": {
+            "description": "if false, comment is private to site managers",
+            "type": "string",
+            "example": "fix it"
+          },
+          "product": {
+            "description": "product to be administered",
+            "type": "string",
+            "example": "Calcium gluconate 23%"
+          },
+          "route": {
+            "description": "route of administration",
+            "type": "string",
+            "example": "IV"
+          },
+          "dose": {
+            "$ref": "#/components/schemas/DrugQuantity"
           },
           "animalId": {
             "type": "string",
@@ -2093,7 +2181,7 @@
             "$ref": "#/components/schemas/PTask"
           },
           {
-            "$ref": "#/components/schemas/WeightData"
+            "$ref": "#/components/schemas/DoseTask"
           }
         ]
       }

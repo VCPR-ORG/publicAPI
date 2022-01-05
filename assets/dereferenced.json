@@ -5593,7 +5593,7 @@
                     "properties": {
                       "_type": {
                         "type": "string",
-                        "description": "identifies subtype of CaseData",
+                        "description": "identifies subtype of AnimalTask",
                         "enum": [
                           "models.PreferredDoseData"
                         ],
@@ -5843,64 +5843,406 @@
                     }
                   },
                   {
-                    "description": "specifies animal's weight",
+                    "type": "object",
+                    "required": [
+                      "id",
+                      "caseId",
+                      "morId",
+                      "vorId",
+                      "act",
+                      "animalId",
+                      "doAt",
+                      "status"
+                    ],
                     "properties": {
                       "_type": {
                         "type": "string",
-                        "description": "identifies subtype of CaseData",
+                        "description": "identifies subtype of AnimalTask",
                         "enum": [
-                          "models.WeightData"
+                          "models.PreferredDoseData"
                         ],
-                        "example": "models.WeightData"
+                        "example": "models.PreferredDoseData"
                       },
-                      "animalId": {
+                      "id": {
+                        "description": "set null or zero if User wishes to be anonymous",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 123
+                      },
+                      "caseId": {
+                        "description": "set null or zero if User wishes to be anonymous",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 123
+                      },
+                      "morId": {
+                        "description": "set null or zero if User wishes to be anonymous",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 123
+                      },
+                      "vorId": {
+                        "description": "set null or zero if User wishes to be anonymous",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 123
+                      },
+                      "act": {
+                        "description": "if false, comment is private to site managers",
                         "type": "string",
-                        "description": "free-form text description of the animal",
-                        "example": "Bossie"
+                        "example": "fix it"
                       },
-                      "weight": {
+                      "product": {
+                        "description": "product to be administered",
+                        "type": "string",
+                        "example": "Calcium gluconate 23%"
+                      },
+                      "route": {
+                        "description": "route of administration",
+                        "type": "string",
+                        "example": "IV"
+                      },
+                      "dose": {
                         "required": [
-                          "dimension",
-                          "value",
-                          "symbol"
+                          "quantity"
                         ],
                         "properties": {
-                          "dimension": {
-                            "type": "string",
-                            "enum": [
-                              "Mass"
+                          "quantity": {
+                            "oneOf": [
+                              {
+                                "required": [
+                                  "dimension",
+                                  "value",
+                                  "symbol"
+                                ],
+                                "properties": {
+                                  "dimension": {
+                                    "type": "string",
+                                    "enum": [
+                                      "Mass"
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "default": 1,
+                                    "exclusiveMinimum": true,
+                                    "example": 50
+                                  },
+                                  "symbol": {
+                                    "description": "unit of mass or weight",
+                                    "type": "string",
+                                    "enum": [
+                                      "lb",
+                                      "t",
+                                      "dwt",
+                                      "gr",
+                                      "mg",
+                                      "mcg",
+                                      "oz",
+                                      "g",
+                                      "kg"
+                                    ],
+                                    "example": "kg"
+                                  }
+                                }
+                              },
+                              {
+                                "required": [
+                                  "dimension",
+                                  "value",
+                                  "symbol"
+                                ],
+                                "properties": {
+                                  "dimension": {
+                                    "type": "string",
+                                    "description": "wip",
+                                    "example": "Volume",
+                                    "enum": [
+                                      "Volume"
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "example": 3,
+                                    "exclusiveMinimum": true
+                                  },
+                                  "symbol": {
+                                    "description": "unit of Volume",
+                                    "type": "string",
+                                    "example": "ml",
+                                    "enum": [
+                                      "pt",
+                                      "tbsp",
+                                      "µl",
+                                      "nl",
+                                      "oz",
+                                      "dl",
+                                      "ml",
+                                      "qt",
+                                      "L",
+                                      "gal",
+                                      "c",
+                                      "tsp"
+                                    ]
+                                  }
+                                }
+                              },
+                              {
+                                "required": [
+                                  "dimension",
+                                  "value",
+                                  "symbol"
+                                ],
+                                "properties": {
+                                  "dimension": {
+                                    "type": "string",
+                                    "example": "Dimensionless",
+                                    "enum": [
+                                      "Dimensionless"
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "example": 3,
+                                    "exclusiveMinimum": true
+                                  },
+                                  "symbol": {
+                                    "description": "dimensionless unit (each)",
+                                    "type": "string",
+                                    "enum": [
+                                      "ea",
+                                      "%",
+                                      "dz"
+                                    ],
+                                    "example": "ea"
+                                  }
+                                }
+                              }
                             ]
-                          },
-                          "value": {
-                            "type": "number",
-                            "minimum": 0,
-                            "default": 1,
-                            "exclusiveMinimum": true,
-                            "example": 50
-                          },
-                          "symbol": {
-                            "description": "unit of mass or weight",
-                            "type": "string",
-                            "enum": [
-                              "lb",
-                              "t",
-                              "dwt",
-                              "gr",
-                              "mg",
-                              "mcg",
-                              "oz",
-                              "g",
-                              "kg"
-                            ],
-                            "example": "kg"
+                          }
+                        },
+                        "example": {
+                          "quantity": {
+                            "dimension": "Mass",
+                            "value": 3,
+                            "symbol": "oz"
                           }
                         }
                       },
-                      "initiationTime": {
+                      "animalId": {
+                        "type": "string",
+                        "description": "comment from a user",
+                        "example": "this"
+                      },
+                      "doAt": {
+                        "description": "ISO-8601-formatted datetime, time the task should be executed",
                         "type": "string",
                         "format": "date-time",
-                        "description": "wip ISO-8601-formatted datetime added by the server when the instance of the animal's weight is first saved.",
                         "example": "2020-01-10T10:30:37Z"
+                      },
+                      "executor": {
+                        "description": "set nu",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 123
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "task status",
+                        "enum": [
+                          "REQUIRED",
+                          "SUGGESTED",
+                          "DUE",
+                          "OPTIONAL",
+                          "OVERDUE",
+                          "CANCELLED",
+                          "REJECTED",
+                          "RECALLED",
+                          "EXECUTED",
+                          "UNKNOWN"
+                        ],
+                        "example": "PRESCRIBED"
+                      },
+                      "data": {
+                        "description": "a task",
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "required": [
+                              "promiseId",
+                              "dat"
+                            ],
+                            "properties": {
+                              "_type": {
+                                "type": "string",
+                                "description": "identifies subtype of PData",
+                                "enum": [
+                                  "models.PdataNone"
+                                ],
+                                "example": "models.PdataNone"
+                              },
+                              "promiseId": {
+                                "description": "set null or zero if User wishes to be anonymous",
+                                "type": "integer",
+                                "default": null,
+                                "example": 123
+                              },
+                              "dat": {
+                                "type": "string",
+                                "description": "comment from a user",
+                                "example": "this is"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "required": [
+                              "promiseId",
+                              "dat"
+                            ],
+                            "properties": {
+                              "_type": {
+                                "type": "string",
+                                "description": "identifies subtype of PData",
+                                "enum": [
+                                  "models.PdataString"
+                                ],
+                                "example": "models.PdataString"
+                              },
+                              "promiseId": {
+                                "description": "set n",
+                                "type": "integer",
+                                "default": null,
+                                "example": 123
+                              },
+                              "dat": {
+                                "type": "string",
+                                "description": "commen",
+                                "example": "this is"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "required": [
+                              "promiseId",
+                              "dat"
+                            ],
+                            "properties": {
+                              "_type": {
+                                "type": "string",
+                                "description": "identifies subtype of PData",
+                                "enum": [
+                                  "models.PdataNumber"
+                                ],
+                                "example": "models.PdataNumber"
+                              },
+                              "promiseId": {
+                                "description": "s",
+                                "type": "integer",
+                                "default": null,
+                                "example": 123
+                              },
+                              "dat": {
+                                "type": "number",
+                                "description": "co",
+                                "example": 123
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "required": [
+                              "promiseId",
+                              "dat"
+                            ],
+                            "properties": {
+                              "_type": {
+                                "type": "string",
+                                "description": "identifies subtype of PData",
+                                "enum": [
+                                  "models.PDataBoolean"
+                                ],
+                                "example": "models.PDataBoolean"
+                              },
+                              "promiseId": {
+                                "description": "ID of promise",
+                                "type": "integer",
+                                "default": null,
+                                "example": 123
+                              },
+                              "dat": {
+                                "type": "string",
+                                "description": "data",
+                                "example": "this is"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "required": [
+                              "promiseId",
+                              "dat"
+                            ],
+                            "properties": {
+                              "_type": {
+                                "type": "string",
+                                "description": "identifies subtype of PData",
+                                "enum": [
+                                  "models.PdataMass"
+                                ],
+                                "example": "models.PdataMass"
+                              },
+                              "promiseId": {
+                                "description": "id number of Promise",
+                                "type": "integer",
+                                "default": null,
+                                "example": 123
+                              },
+                              "dat": {
+                                "required": [
+                                  "dimension",
+                                  "value",
+                                  "symbol"
+                                ],
+                                "properties": {
+                                  "dimension": {
+                                    "type": "string",
+                                    "enum": [
+                                      "Mass"
+                                    ]
+                                  },
+                                  "value": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "default": 1,
+                                    "exclusiveMinimum": true,
+                                    "example": 50
+                                  },
+                                  "symbol": {
+                                    "description": "unit of mass or weight",
+                                    "type": "string",
+                                    "enum": [
+                                      "lb",
+                                      "t",
+                                      "dwt",
+                                      "gr",
+                                      "mg",
+                                      "mcg",
+                                      "oz",
+                                      "g",
+                                      "kg"
+                                    ],
+                                    "example": "kg"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
                       }
                     }
                   }
@@ -18278,7 +18620,7 @@
         "properties": {
           "_type": {
             "type": "string",
-            "description": "identifies subtype of CaseData",
+            "description": "identifies subtype of AnimalTask",
             "enum": [
               "models.PreferredDoseData"
             ],
@@ -18312,6 +18654,410 @@
             "description": "if false, comment is private to site managers",
             "type": "string",
             "example": "fix it"
+          },
+          "animalId": {
+            "type": "string",
+            "description": "comment from a user",
+            "example": "this"
+          },
+          "doAt": {
+            "description": "ISO-8601-formatted datetime, time the task should be executed",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "executor": {
+            "description": "set nu",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status": {
+            "type": "string",
+            "description": "task status",
+            "enum": [
+              "REQUIRED",
+              "SUGGESTED",
+              "DUE",
+              "OPTIONAL",
+              "OVERDUE",
+              "CANCELLED",
+              "REJECTED",
+              "RECALLED",
+              "EXECUTED",
+              "UNKNOWN"
+            ],
+            "example": "PRESCRIBED"
+          },
+          "data": {
+            "description": "a task",
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "promiseId",
+                  "dat"
+                ],
+                "properties": {
+                  "_type": {
+                    "type": "string",
+                    "description": "identifies subtype of PData",
+                    "enum": [
+                      "models.PdataNone"
+                    ],
+                    "example": "models.PdataNone"
+                  },
+                  "promiseId": {
+                    "description": "set null or zero if User wishes to be anonymous",
+                    "type": "integer",
+                    "default": null,
+                    "example": 123
+                  },
+                  "dat": {
+                    "type": "string",
+                    "description": "comment from a user",
+                    "example": "this is"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "promiseId",
+                  "dat"
+                ],
+                "properties": {
+                  "_type": {
+                    "type": "string",
+                    "description": "identifies subtype of PData",
+                    "enum": [
+                      "models.PdataString"
+                    ],
+                    "example": "models.PdataString"
+                  },
+                  "promiseId": {
+                    "description": "set n",
+                    "type": "integer",
+                    "default": null,
+                    "example": 123
+                  },
+                  "dat": {
+                    "type": "string",
+                    "description": "commen",
+                    "example": "this is"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "promiseId",
+                  "dat"
+                ],
+                "properties": {
+                  "_type": {
+                    "type": "string",
+                    "description": "identifies subtype of PData",
+                    "enum": [
+                      "models.PdataNumber"
+                    ],
+                    "example": "models.PdataNumber"
+                  },
+                  "promiseId": {
+                    "description": "s",
+                    "type": "integer",
+                    "default": null,
+                    "example": 123
+                  },
+                  "dat": {
+                    "type": "number",
+                    "description": "co",
+                    "example": 123
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "promiseId",
+                  "dat"
+                ],
+                "properties": {
+                  "_type": {
+                    "type": "string",
+                    "description": "identifies subtype of PData",
+                    "enum": [
+                      "models.PDataBoolean"
+                    ],
+                    "example": "models.PDataBoolean"
+                  },
+                  "promiseId": {
+                    "description": "ID of promise",
+                    "type": "integer",
+                    "default": null,
+                    "example": 123
+                  },
+                  "dat": {
+                    "type": "string",
+                    "description": "data",
+                    "example": "this is"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": [
+                  "promiseId",
+                  "dat"
+                ],
+                "properties": {
+                  "_type": {
+                    "type": "string",
+                    "description": "identifies subtype of PData",
+                    "enum": [
+                      "models.PdataMass"
+                    ],
+                    "example": "models.PdataMass"
+                  },
+                  "promiseId": {
+                    "description": "id number of Promise",
+                    "type": "integer",
+                    "default": null,
+                    "example": 123
+                  },
+                  "dat": {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "enum": [
+                          "Mass"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "default": 1,
+                        "exclusiveMinimum": true,
+                        "example": 50
+                      },
+                      "symbol": {
+                        "description": "unit of mass or weight",
+                        "type": "string",
+                        "enum": [
+                          "lb",
+                          "t",
+                          "dwt",
+                          "gr",
+                          "mg",
+                          "mcg",
+                          "oz",
+                          "g",
+                          "kg"
+                        ],
+                        "example": "kg"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "DoseTask": {
+        "type": "object",
+        "required": [
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "act",
+          "animalId",
+          "doAt",
+          "status"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of AnimalTask",
+            "enum": [
+              "models.PreferredDoseData"
+            ],
+            "example": "models.PreferredDoseData"
+          },
+          "id": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "caseId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "morId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "vorId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "act": {
+            "description": "if false, comment is private to site managers",
+            "type": "string",
+            "example": "fix it"
+          },
+          "product": {
+            "description": "product to be administered",
+            "type": "string",
+            "example": "Calcium gluconate 23%"
+          },
+          "route": {
+            "description": "route of administration",
+            "type": "string",
+            "example": "IV"
+          },
+          "dose": {
+            "required": [
+              "quantity"
+            ],
+            "properties": {
+              "quantity": {
+                "oneOf": [
+                  {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "enum": [
+                          "Mass"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "default": 1,
+                        "exclusiveMinimum": true,
+                        "example": 50
+                      },
+                      "symbol": {
+                        "description": "unit of mass or weight",
+                        "type": "string",
+                        "enum": [
+                          "lb",
+                          "t",
+                          "dwt",
+                          "gr",
+                          "mg",
+                          "mcg",
+                          "oz",
+                          "g",
+                          "kg"
+                        ],
+                        "example": "kg"
+                      }
+                    }
+                  },
+                  {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "description": "wip",
+                        "example": "Volume",
+                        "enum": [
+                          "Volume"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "example": 3,
+                        "exclusiveMinimum": true
+                      },
+                      "symbol": {
+                        "description": "unit of Volume",
+                        "type": "string",
+                        "example": "ml",
+                        "enum": [
+                          "pt",
+                          "tbsp",
+                          "µl",
+                          "nl",
+                          "oz",
+                          "dl",
+                          "ml",
+                          "qt",
+                          "L",
+                          "gal",
+                          "c",
+                          "tsp"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "example": "Dimensionless",
+                        "enum": [
+                          "Dimensionless"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "example": 3,
+                        "exclusiveMinimum": true
+                      },
+                      "symbol": {
+                        "description": "dimensionless unit (each)",
+                        "type": "string",
+                        "enum": [
+                          "ea",
+                          "%",
+                          "dz"
+                        ],
+                        "example": "ea"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "example": {
+              "quantity": {
+                "dimension": "Mass",
+                "value": 3,
+                "symbol": "oz"
+              }
+            }
           },
           "animalId": {
             "type": "string",
@@ -18607,7 +19353,7 @@
             "properties": {
               "_type": {
                 "type": "string",
-                "description": "identifies subtype of CaseData",
+                "description": "identifies subtype of AnimalTask",
                 "enum": [
                   "models.PreferredDoseData"
                 ],
@@ -18857,64 +19603,406 @@
             }
           },
           {
-            "description": "specifies animal's weight",
+            "type": "object",
+            "required": [
+              "id",
+              "caseId",
+              "morId",
+              "vorId",
+              "act",
+              "animalId",
+              "doAt",
+              "status"
+            ],
             "properties": {
               "_type": {
                 "type": "string",
-                "description": "identifies subtype of CaseData",
+                "description": "identifies subtype of AnimalTask",
                 "enum": [
-                  "models.WeightData"
+                  "models.PreferredDoseData"
                 ],
-                "example": "models.WeightData"
+                "example": "models.PreferredDoseData"
               },
-              "animalId": {
+              "id": {
+                "description": "set null or zero if User wishes to be anonymous",
+                "type": "integer",
+                "format": "int64",
+                "example": 123
+              },
+              "caseId": {
+                "description": "set null or zero if User wishes to be anonymous",
+                "type": "integer",
+                "format": "int64",
+                "example": 123
+              },
+              "morId": {
+                "description": "set null or zero if User wishes to be anonymous",
+                "type": "integer",
+                "format": "int64",
+                "example": 123
+              },
+              "vorId": {
+                "description": "set null or zero if User wishes to be anonymous",
+                "type": "integer",
+                "format": "int64",
+                "example": 123
+              },
+              "act": {
+                "description": "if false, comment is private to site managers",
                 "type": "string",
-                "description": "free-form text description of the animal",
-                "example": "Bossie"
+                "example": "fix it"
               },
-              "weight": {
+              "product": {
+                "description": "product to be administered",
+                "type": "string",
+                "example": "Calcium gluconate 23%"
+              },
+              "route": {
+                "description": "route of administration",
+                "type": "string",
+                "example": "IV"
+              },
+              "dose": {
                 "required": [
-                  "dimension",
-                  "value",
-                  "symbol"
+                  "quantity"
                 ],
                 "properties": {
-                  "dimension": {
-                    "type": "string",
-                    "enum": [
-                      "Mass"
+                  "quantity": {
+                    "oneOf": [
+                      {
+                        "required": [
+                          "dimension",
+                          "value",
+                          "symbol"
+                        ],
+                        "properties": {
+                          "dimension": {
+                            "type": "string",
+                            "enum": [
+                              "Mass"
+                            ]
+                          },
+                          "value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 1,
+                            "exclusiveMinimum": true,
+                            "example": 50
+                          },
+                          "symbol": {
+                            "description": "unit of mass or weight",
+                            "type": "string",
+                            "enum": [
+                              "lb",
+                              "t",
+                              "dwt",
+                              "gr",
+                              "mg",
+                              "mcg",
+                              "oz",
+                              "g",
+                              "kg"
+                            ],
+                            "example": "kg"
+                          }
+                        }
+                      },
+                      {
+                        "required": [
+                          "dimension",
+                          "value",
+                          "symbol"
+                        ],
+                        "properties": {
+                          "dimension": {
+                            "type": "string",
+                            "description": "wip",
+                            "example": "Volume",
+                            "enum": [
+                              "Volume"
+                            ]
+                          },
+                          "value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "example": 3,
+                            "exclusiveMinimum": true
+                          },
+                          "symbol": {
+                            "description": "unit of Volume",
+                            "type": "string",
+                            "example": "ml",
+                            "enum": [
+                              "pt",
+                              "tbsp",
+                              "µl",
+                              "nl",
+                              "oz",
+                              "dl",
+                              "ml",
+                              "qt",
+                              "L",
+                              "gal",
+                              "c",
+                              "tsp"
+                            ]
+                          }
+                        }
+                      },
+                      {
+                        "required": [
+                          "dimension",
+                          "value",
+                          "symbol"
+                        ],
+                        "properties": {
+                          "dimension": {
+                            "type": "string",
+                            "example": "Dimensionless",
+                            "enum": [
+                              "Dimensionless"
+                            ]
+                          },
+                          "value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "example": 3,
+                            "exclusiveMinimum": true
+                          },
+                          "symbol": {
+                            "description": "dimensionless unit (each)",
+                            "type": "string",
+                            "enum": [
+                              "ea",
+                              "%",
+                              "dz"
+                            ],
+                            "example": "ea"
+                          }
+                        }
+                      }
                     ]
-                  },
-                  "value": {
-                    "type": "number",
-                    "minimum": 0,
-                    "default": 1,
-                    "exclusiveMinimum": true,
-                    "example": 50
-                  },
-                  "symbol": {
-                    "description": "unit of mass or weight",
-                    "type": "string",
-                    "enum": [
-                      "lb",
-                      "t",
-                      "dwt",
-                      "gr",
-                      "mg",
-                      "mcg",
-                      "oz",
-                      "g",
-                      "kg"
-                    ],
-                    "example": "kg"
+                  }
+                },
+                "example": {
+                  "quantity": {
+                    "dimension": "Mass",
+                    "value": 3,
+                    "symbol": "oz"
                   }
                 }
               },
-              "initiationTime": {
+              "animalId": {
+                "type": "string",
+                "description": "comment from a user",
+                "example": "this"
+              },
+              "doAt": {
+                "description": "ISO-8601-formatted datetime, time the task should be executed",
                 "type": "string",
                 "format": "date-time",
-                "description": "wip ISO-8601-formatted datetime added by the server when the instance of the animal's weight is first saved.",
                 "example": "2020-01-10T10:30:37Z"
+              },
+              "executor": {
+                "description": "set nu",
+                "type": "integer",
+                "format": "int64",
+                "example": 123
+              },
+              "status": {
+                "type": "string",
+                "description": "task status",
+                "enum": [
+                  "REQUIRED",
+                  "SUGGESTED",
+                  "DUE",
+                  "OPTIONAL",
+                  "OVERDUE",
+                  "CANCELLED",
+                  "REJECTED",
+                  "RECALLED",
+                  "EXECUTED",
+                  "UNKNOWN"
+                ],
+                "example": "PRESCRIBED"
+              },
+              "data": {
+                "description": "a task",
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "promiseId",
+                      "dat"
+                    ],
+                    "properties": {
+                      "_type": {
+                        "type": "string",
+                        "description": "identifies subtype of PData",
+                        "enum": [
+                          "models.PdataNone"
+                        ],
+                        "example": "models.PdataNone"
+                      },
+                      "promiseId": {
+                        "description": "set null or zero if User wishes to be anonymous",
+                        "type": "integer",
+                        "default": null,
+                        "example": 123
+                      },
+                      "dat": {
+                        "type": "string",
+                        "description": "comment from a user",
+                        "example": "this is"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "promiseId",
+                      "dat"
+                    ],
+                    "properties": {
+                      "_type": {
+                        "type": "string",
+                        "description": "identifies subtype of PData",
+                        "enum": [
+                          "models.PdataString"
+                        ],
+                        "example": "models.PdataString"
+                      },
+                      "promiseId": {
+                        "description": "set n",
+                        "type": "integer",
+                        "default": null,
+                        "example": 123
+                      },
+                      "dat": {
+                        "type": "string",
+                        "description": "commen",
+                        "example": "this is"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "promiseId",
+                      "dat"
+                    ],
+                    "properties": {
+                      "_type": {
+                        "type": "string",
+                        "description": "identifies subtype of PData",
+                        "enum": [
+                          "models.PdataNumber"
+                        ],
+                        "example": "models.PdataNumber"
+                      },
+                      "promiseId": {
+                        "description": "s",
+                        "type": "integer",
+                        "default": null,
+                        "example": 123
+                      },
+                      "dat": {
+                        "type": "number",
+                        "description": "co",
+                        "example": 123
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "promiseId",
+                      "dat"
+                    ],
+                    "properties": {
+                      "_type": {
+                        "type": "string",
+                        "description": "identifies subtype of PData",
+                        "enum": [
+                          "models.PDataBoolean"
+                        ],
+                        "example": "models.PDataBoolean"
+                      },
+                      "promiseId": {
+                        "description": "ID of promise",
+                        "type": "integer",
+                        "default": null,
+                        "example": 123
+                      },
+                      "dat": {
+                        "type": "string",
+                        "description": "data",
+                        "example": "this is"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": [
+                      "promiseId",
+                      "dat"
+                    ],
+                    "properties": {
+                      "_type": {
+                        "type": "string",
+                        "description": "identifies subtype of PData",
+                        "enum": [
+                          "models.PdataMass"
+                        ],
+                        "example": "models.PdataMass"
+                      },
+                      "promiseId": {
+                        "description": "id number of Promise",
+                        "type": "integer",
+                        "default": null,
+                        "example": 123
+                      },
+                      "dat": {
+                        "required": [
+                          "dimension",
+                          "value",
+                          "symbol"
+                        ],
+                        "properties": {
+                          "dimension": {
+                            "type": "string",
+                            "enum": [
+                              "Mass"
+                            ]
+                          },
+                          "value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 1,
+                            "exclusiveMinimum": true,
+                            "example": 50
+                          },
+                          "symbol": {
+                            "description": "unit of mass or weight",
+                            "type": "string",
+                            "enum": [
+                              "lb",
+                              "t",
+                              "dwt",
+                              "gr",
+                              "mg",
+                              "mcg",
+                              "oz",
+                              "g",
+                              "kg"
+                            ],
+                            "example": "kg"
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
               }
             }
           }
