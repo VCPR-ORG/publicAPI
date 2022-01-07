@@ -626,14 +626,17 @@
           "email": {
             "type": "string",
             "format": "email",
+            "description": "email address",
             "example": "testVOR@dairysight.com"
           },
           "firstname": {
             "type": "string",
+            "description": "first name",
             "example": "Test"
           },
           "lastname": {
             "type": "string",
+            "description": "last name",
             "example": "Vet"
           },
           "suffix": {
@@ -878,15 +881,19 @@
           "userId": {
             "description": "set null or zero if User wishes to be anonymous",
             "type": "integer",
+            "example": 1,
             "default": null
           },
           "public": {
             "description": "if false, comment is private to site managers",
             "type": "boolean",
+            "example": false,
             "default": false
           },
           "comment": {
-            "type": "string"
+            "description": "user's comment",
+            "type": "string",
+            "example": "some comment"
           }
         }
       },
@@ -900,19 +907,29 @@
         "properties": {
           "school": {
             "type": "string",
+            "description": "institution granting the degree",
             "example": "University of ***"
           },
           "year": {
-            "type": "string"
+            "type": "string",
+            "description": "year granted",
+            "example": 1999
           },
           "license": {
-            "type": "string"
+            "description": "veterinary license number",
+            "type": "string",
+            "example": 12345
           },
           "license-state": {
-            "type": "string"
+            "type": "string",
+            "description": "state or province granting the license",
+            "example": "Maine"
           },
           "confirmVet": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "confirm the user is a veterinarian",
+            "default": false,
+            "example": true
           }
         }
       },
@@ -1050,18 +1067,15 @@
           "frequency": {
             "type": "integer",
             "description": "how many doses per day",
-            "default": 1
+            "default": 1,
+            "example": 2
           },
           "totalDoses": {
             "type": "integer",
             "description": "total number of doses",
-            "default": 1
+            "default": 1,
+            "example": 3
           }
-        },
-        "example": {
-          "totalDoses": 3,
-          "_type": "models.SeqPerDay",
-          "frequency": 2
         }
       },
       "SeqPerDayRange": {
@@ -1091,7 +1105,8 @@
           "minDoses": {
             "type": "integer",
             "description": "minimum total number of doses",
-            "default": 3
+            "default": 1,
+            "example": 3
           },
           "maxDoses": {
             "type": "integer",
@@ -1104,7 +1119,8 @@
       "SeqInterval": {
         "required": [
           "_type",
-          "totalDoses interval"
+          "totalDoses",
+          "interval"
         ],
         "description": "a series of equally-spaced doses specified by the total number of doses and time between sequential doses",
         "type": "object",
@@ -1211,10 +1227,13 @@
             "type": "string",
             "enum": [
               "Mass"
-            ]
+            ],
+            "description": "must be Mass",
+            "example": "Mass"
           },
           "value": {
             "type": "number",
+            "description": "number of units",
             "minimum": 0,
             "default": 1,
             "exclusiveMinimum": true,
@@ -1254,7 +1273,7 @@
         "properties": {
           "dimension": {
             "type": "string",
-            "description": "wip",
+            "description": "must be Volume",
             "example": "Volume",
             "enum": [
               "Volume"
@@ -1262,6 +1281,7 @@
           },
           "value": {
             "type": "number",
+            "description": "number of units",
             "minimum": 0,
             "example": 3,
             "exclusiveMinimum": true
@@ -1291,6 +1311,7 @@
         "properties": {
           "dimension": {
             "type": "string",
+            "description": "must be Dimensionless",
             "example": "Dimensionless",
             "enum": [
               "Dimensionless"
@@ -1298,6 +1319,7 @@
           },
           "value": {
             "type": "number",
+            "description": "number of units",
             "minimum": 0,
             "example": 3,
             "exclusiveMinimum": true
@@ -1345,9 +1367,11 @@
         "properties": {
           "_type": {
             "type": "string",
+            "description": "class of Dose Function",
             "enum": [
               "models.FixedDoseFunction"
-            ]
+            ],
+            "example": "models.FixedDoseFunction"
           },
           "dose": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -1375,6 +1399,8 @@
         "properties": {
           "_type": {
             "type": "string",
+            "description": "class of Dose Function",
+            "example": "models.DoseByWeightFunction",
             "enum": [
               "models.DoseByWeightFunction"
             ]
@@ -1389,13 +1415,13 @@
         "example": {
           "dose": {
             "quantity": {
-              "dimension": "volume",
+              "dimension": "Volume",
               "value": 3,
               "symbol": "ml"
             }
           },
           "perUnit": {
-            "dimension": "mass",
+            "dimension": "Mass",
             "value": 1,
             "symbol": "kg"
           },
@@ -1414,6 +1440,8 @@
         "properties": {
           "_type": {
             "type": "string",
+            "description": "class of Dose Function",
+            "example": "DoseByWeightFunction",
             "enum": [
               "models.DoseByWeightFunction"
             ]
@@ -1740,8 +1768,9 @@
         ],
         "properties": {
           "_type": {
-            "description": "server data type to which this Promise will be mapped",
+            "description": "Class of Promise",
             "type": "string",
+            "example": "models.IdPromise",
             "enum": [
               "models.IdPromise",
               "models.AffirmationPromise",
@@ -1753,50 +1782,46 @@
           },
           "id": {
             "description": "Promise ID number",
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "example": 2345
           },
           "name": {
             "description": "promise name for the doctor",
-            "type": "string"
+            "type": "string",
+            "example": "ID promise"
           },
           "descrip": {
             "description": "promise description for the client",
-            "type": "string"
+            "type": "string",
+            "example": "You must give ID for each case enrolled"
           },
           "query": {
             "description": "question to be answered by client",
             "type": "string",
-            "format": "html"
+            "format": "html",
+            "example": "What is the animal's name or number?"
           },
           "when": {
             "description": "ISO-8601 duration from initiation when promise must be fulfilled",
             "type": "string",
             "format": "duration",
-            "default": "PT0H"
+            "default": "PT0H",
+            "example": "PT24H"
           }
         },
         "example": "promise"
       },
       "StringPromise": {
         "description": "identification of animal is required to enroll a case",
-        "type": "object",
-        "required": [
-          "_type"
-        ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise",
+            "$ref": "#/components/schemas/Promise"
+          },
+          {
+            "type": "object",
             "properties": {
               "response": {
                 "$ref": "#/components/schemas/PDataString"
-              },
-              "_type": {
-                "type": "string",
-                "description": "class of promise",
-                "enum": [
-                  "models.StringPromise"
-                ]
               }
             }
           }
@@ -1805,30 +1830,15 @@
       "CategoryPromise": {
         "description": "identification of animal is required to enroll a case",
         "type": "object",
-        "required": [
-          "_type"
-        ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise",
-            "required": [
-              "animalId",
-              "initiationDate"
-            ],
+            "$ref": "#/components/schemas/Promise"
+          },
+          {
+            "type": "object",
             "properties": {
-              "animalId": {
-                "type": "string"
-              },
-              "initiationDate": {
-                "type": "string",
-                "format": "dateTime"
-              },
-              "_type": {
-                "description": "class of promise",
-                "type": "string",
-                "enum": [
-                  "models.api.v1.IdPromise"
-                ]
+              "response": {
+                "$ref": "#/components/schemas/PDataString"
               }
             }
           }
@@ -1838,29 +1848,18 @@
         "description": "identification of animal is required to enroll a case",
         "type": "object",
         "required": [
-          "_type"
+          "animalId",
+          "initiationDate"
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise",
-            "required": [
-              "animalId",
-              "initiationDate"
-            ],
+            "$ref": "#/components/schemas/Promise"
+          },
+          {
+            "type": "object",
             "properties": {
-              "animalId": {
-                "type": "string"
-              },
-              "initiationDate": {
-                "type": "string",
-                "format": "dateTime"
-              },
-              "_type": {
-                "description": "class of promise",
-                "type": "string",
-                "enum": [
-                  "models.api.v1.IdPromise"
-                ]
+              "response": {
+                "$ref": "#/components/schemas/PDataBoolean"
               }
             }
           }
@@ -1869,30 +1868,15 @@
       "NumberPromise": {
         "description": "identification of animal is required to enroll a case",
         "type": "object",
-        "required": [
-          "_type"
-        ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise",
-            "required": [
-              "animalId",
-              "initiationDate"
-            ],
+            "$ref": "#/components/schemas/Promise"
+          },
+          {
+            "type": "object",
             "properties": {
-              "animalId": {
-                "type": "string"
-              },
-              "initiationDate": {
-                "type": "string",
-                "format": "dateTime"
-              },
-              "_type": {
-                "description": "class of promise",
-                "type": "string",
-                "enum": [
-                  "models.api.v1.IdPromise"
-                ]
+              "response": {
+                "$ref": "#/components/schemas/PDataNumber"
               }
             }
           }
@@ -1901,30 +1885,15 @@
       "AffirmationPromise": {
         "description": "identification of animal is required to enroll a case",
         "type": "object",
-        "required": [
-          "_type"
-        ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise",
-            "required": [
-              "animalId",
-              "initiationDate"
-            ],
+            "$ref": "#/components/schemas/Promise"
+          },
+          {
+            "type": "object",
             "properties": {
-              "animalId": {
-                "type": "string"
-              },
-              "initiationDate": {
-                "type": "string",
-                "format": "dateTime"
-              },
-              "_type": {
-                "description": "class of promise",
-                "type": "string",
-                "enum": [
-                  "models.api.v1.IdPromise"
-                ]
+              "response": {
+                "$ref": "#/components/schemas/PDataNone"
               }
             }
           }
@@ -1933,30 +1902,15 @@
       "MassPromise": {
         "description": "identification of animal is required to enroll a case",
         "type": "object",
-        "required": [
-          "_type"
-        ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise",
-            "required": [
-              "animalId",
-              "initiationDate"
-            ],
+            "$ref": "#/components/schemas/Promise"
+          },
+          {
+            "type": "object",
             "properties": {
-              "animalId": {
-                "type": "string"
-              },
-              "initiationDate": {
-                "type": "string",
-                "format": "dateTime"
-              },
-              "_type": {
-                "description": "class of promise",
-                "type": "string",
-                "enum": [
-                  "models.api.v1.IdPromise"
-                ]
+              "response": {
+                "$ref": "#/components/schemas/PDataMass"
               }
             }
           }
