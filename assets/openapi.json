@@ -608,6 +608,7 @@
       },
       "User": {
         "description": "a User of a specific `usertype` class",
+        "type": "object",
         "properties": {
           "id": {
             "type": "integer",
@@ -775,66 +776,48 @@
         ],
         "example": "PRESCRIBED"
       },
-      "Withhold": {
-        "description": "duration after last treatment during which some act is prohibited. Most often this restricts when meat or milk may be sold for food.",
-        "required": [
-          "duration",
-          "prohibition"
-        ],
-        "properties": {
-          "hoursMeat": {
-            "type": "number",
-            "example": 22,
-            "description": "number of hours that must pass between exposure and slaughter"
-          },
-          "hoursMilk": {
-            "type": "number",
-            "example": 5,
-            "description": "number of hours that must pass between exposure and extracting milk for consumption"
-          },
-          "note": {
-            "type": "string",
-            "description": "free-form text note",
-            "format": "html",
-            "example": "<p>improvement apparent</p>"
-          }
-        }
-      },
       "Instructions": {
         "description": "instructions to execute a protocol",
         "type": "object",
         "properties": {
           "considerations": {
+            "description": "things to consider before choosing this protocol and in using it",
             "type": "string",
             "format": "html",
             "example": "<p>This is just an example, not a real protocol.</p>"
           },
           "restrictions": {
+            "description": "restrictions that apply to using this protocol",
             "type": "string",
             "format": "html",
             "example": "<p>Not for use on real animals.</p>"
           },
           "dothis": {
+            "description": "what to do in executing this protocol",
             "type": "string",
             "format": "html",
             "example": "<h3>Examinations to perform</h3>"
           },
           "recordthis": {
+            "description": "what to record when executing this protocol",
             "type": "string",
             "format": "html",
             "example": "<p>record every step in your notebook.</p>"
           },
           "success": {
+            "description": "what to expect if all goes well",
             "type": "string",
             "format": "html",
             "example": "<p>All problems are gone</p>"
           },
           "failure": {
+            "description": "what may indicate things are this protocol is not working",
             "type": "string",
             "format": "html",
             "example": "<p>One or more problems remain</p>"
           },
           "references": {
+            "description": "references for further information",
             "type": "string",
             "format": "html",
             "example": "<a href=\"https://en.wikipedia.org/wiki/Rickrolling\">Wikipedia</a>"
@@ -848,12 +831,14 @@
           "requireId": {
             "type": "boolean",
             "description": "the Case must include specific ID/s of animal/s to be enrolled",
-            "default": false
+            "default": false,
+            "example": false
           },
           "requireMor": {
             "type": "boolean",
             "description": "if true, the MOR enrolling the Case must be identified with a Signature",
-            "default": false
+            "default": false,
+            "example": false
           },
           "contraindications": {
             "description": "considerations that prohibit or suggest against use of this Protocol",
@@ -885,6 +870,7 @@
         }
       },
       "Comment": {
+        "type": "object",
         "required": [
           "comment"
         ],
@@ -906,6 +892,7 @@
       },
       "Degree": {
         "description": "an academic degree qualifying a User as a veterinarian",
+        "type": "object",
         "required": [
           "school",
           "year"
@@ -989,7 +976,7 @@
         "type": "object",
         "required": [
           "product",
-          "size",
+          "doseSize",
           "time"
         ],
         "properties": {
@@ -1019,7 +1006,9 @@
           },
           "note": {
             "type": "string",
-            "format": "html"
+            "format": "html",
+            "description": "additional information aboutthe dose",
+            "example": "exceeding recommended dose can cause something"
           }
         },
         "example": "{\"id\":\"B-123\",\"product\":\"MiracleMed\",\"size\":{\"size\":2,\"unit\":\"ml\"},\"route\":\"intramuscular injection\",\"time\":\"2020-01-10T10:30:37Z\"}"
@@ -1033,7 +1022,7 @@
         "properties": {
           "_type": {
             "type": "string",
-            "description": "wip",
+            "description": "identifies class of SequenceFunction",
             "enum": [
               "models.SeqSingleDose"
             ],
@@ -1052,16 +1041,20 @@
         "properties": {
           "_type": {
             "type": "string",
+            "description": "identifies class of SequenceFunction",
             "enum": [
               "models.SeqPerDay"
-            ]
+            ],
+            "example": "models.SeqPerDay"
           },
           "frequency": {
             "type": "integer",
+            "description": "how many doses per day",
             "default": 1
           },
           "totalDoses": {
             "type": "integer",
+            "description": "total number of doses",
             "default": 1
           }
         },
@@ -1082,6 +1075,7 @@
         "type": "object",
         "properties": {
           "_type": {
+            "description": "identifies class of SequenceFunction",
             "type": "string",
             "enum": [
               "models.SeqPerDayRange"
@@ -1090,15 +1084,18 @@
           },
           "frequency": {
             "type": "integer",
+            "description": "how many doses per day",
             "default": 1,
             "example": 2
           },
           "minDoses": {
             "type": "integer",
+            "description": "minimum total number of doses",
             "default": 3
           },
           "maxDoses": {
             "type": "integer",
+            "description": "maximum total number of doses",
             "default": 1,
             "example": 9
           }
@@ -1113,6 +1110,7 @@
         "type": "object",
         "properties": {
           "_type": {
+            "description": "identifies class of SequenceFunction",
             "type": "string",
             "enum": [
               "models.SeqInterval"
@@ -1121,11 +1119,12 @@
           },
           "totalDoses": {
             "type": "integer",
+            "description": "total number of doses",
             "default": 1,
             "example": 3
           },
           "interval": {
-            "description": "ISO-8601 duration from initiation or previous dose",
+            "description": "time interval between doses",
             "type": "string",
             "format": "duration",
             "default": "PT8H",
@@ -1142,6 +1141,7 @@
         "type": "object",
         "properties": {
           "_type": {
+            "description": "identifies class of SequenceFunction",
             "type": "string",
             "enum": [
               "models.SeqSeries"
@@ -1200,6 +1200,7 @@
         "example": "kg"
       },
       "MassQuantity": {
+        "type": "object",
         "required": [
           "dimension",
           "value",
@@ -1244,6 +1245,7 @@
         ]
       },
       "VolumeQuantity": {
+        "type": "object",
         "required": [
           "dimension",
           "value",
@@ -1280,6 +1282,7 @@
         "example": "ea"
       },
       "DimensionlessQuantity": {
+        "type": "object",
         "required": [
           "dimension",
           "value",
@@ -1305,6 +1308,7 @@
         }
       },
       "DrugQuantity": {
+        "type": "object",
         "required": [
           "quantity"
         ],
@@ -1332,6 +1336,7 @@
         }
       },
       "FixedDoseFunction": {
+        "type": "object",
         "description": "a fixed quantity expressed in any available unit",
         "required": [
           "_type",
@@ -1360,6 +1365,7 @@
         }
       },
       "DoseByWeightFunction": {
+        "type": "object",
         "description": "dose is specified as a quantity per unit of animal weight",
         "required": [
           "_type",
@@ -1397,6 +1403,7 @@
         }
       },
       "LoadingDoseByWeightFunction": {
+        "type": "object",
         "description": "dose is specified as first (loading) dose and following doses per unit of animal weight",
         "required": [
           "_type",
@@ -1445,6 +1452,7 @@
         }
       },
       "DrugQuantityRange": {
+        "type": "object",
         "required": [
           "min",
           "max"
@@ -1475,6 +1483,7 @@
         }
       },
       "DoseRangeFunction": {
+        "type": "object",
         "description": "a range of permissible dose size. The User may select any value within the range (inclusive).",
         "required": [
           "_type",
@@ -1494,6 +1503,7 @@
         }
       },
       "DoseRangeByWeightFunction": {
+        "type": "object",
         "description": "dose is specified as a range per unit of animal weight. The User may select any value within the range (inclusive).",
         "required": [
           "_type",
@@ -1560,6 +1570,7 @@
         ]
       },
       "DoseFunctions": {
+        "type": "object",
         "properties": {
           "sequenceFunction": {
             "$ref": "#/components/schemas/SequenceFunction"
@@ -1575,6 +1586,7 @@
         "properties": {
           "code": {
             "type": "string",
+            "description": "keyword code identifying tag",
             "maxLength": 15,
             "example": "Example-code"
           }
@@ -1645,6 +1657,12 @@
             "type": "string",
             "example": "wip"
           },
+          "sequenceFunction": {
+            "$ref": "#/components/schemas/SequenceFunction"
+          },
+          "sizeFunction": {
+            "$ref": "#/components/schemas/SizeFunction"
+          },
           "wtMeatHrs": {
             "type": "integer",
             "description": "number of hours that must pass between exposure and slaughter",
@@ -1670,6 +1688,7 @@
           "note": {
             "type": "string",
             "format": "html",
+            "description": "further information about the treatment",
             "example": "<p>a free-form note</p>"
           },
           "amduca": {
@@ -1715,7 +1734,7 @@
         "required": [
           "_type",
           "name",
-          "description",
+          "descrip",
           "query",
           "when"
         ],
@@ -1756,7 +1775,8 @@
             "format": "duration",
             "default": "PT0H"
           }
-        }
+        },
+        "example": "promise"
       },
       "StringPromise": {
         "description": "identification of animal is required to enroll a case",
@@ -1766,16 +1786,14 @@
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise"
-          },
-          {
-            "type": "object",
+            "$ref": "#/components/schemas/Promise",
             "properties": {
               "response": {
                 "$ref": "#/components/schemas/PDataString"
               },
               "_type": {
                 "type": "string",
+                "description": "class of promise",
                 "enum": [
                   "models.StringPromise"
                 ]
@@ -1792,10 +1810,7 @@
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise"
-          },
-          {
-            "type": "object",
+            "$ref": "#/components/schemas/Promise",
             "required": [
               "animalId",
               "initiationDate"
@@ -1809,6 +1824,7 @@
                 "format": "dateTime"
               },
               "_type": {
+                "description": "class of promise",
                 "type": "string",
                 "enum": [
                   "models.api.v1.IdPromise"
@@ -1826,10 +1842,7 @@
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise"
-          },
-          {
-            "type": "object",
+            "$ref": "#/components/schemas/Promise",
             "required": [
               "animalId",
               "initiationDate"
@@ -1843,6 +1856,7 @@
                 "format": "dateTime"
               },
               "_type": {
+                "description": "class of promise",
                 "type": "string",
                 "enum": [
                   "models.api.v1.IdPromise"
@@ -1860,10 +1874,7 @@
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise"
-          },
-          {
-            "type": "object",
+            "$ref": "#/components/schemas/Promise",
             "required": [
               "animalId",
               "initiationDate"
@@ -1877,6 +1888,7 @@
                 "format": "dateTime"
               },
               "_type": {
+                "description": "class of promise",
                 "type": "string",
                 "enum": [
                   "models.api.v1.IdPromise"
@@ -1894,10 +1906,7 @@
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise"
-          },
-          {
-            "type": "object",
+            "$ref": "#/components/schemas/Promise",
             "required": [
               "animalId",
               "initiationDate"
@@ -1911,6 +1920,7 @@
                 "format": "dateTime"
               },
               "_type": {
+                "description": "class of promise",
                 "type": "string",
                 "enum": [
                   "models.api.v1.IdPromise"
@@ -1928,10 +1938,7 @@
         ],
         "allOf": [
           {
-            "$ref": "#/components/schemas/Promise"
-          },
-          {
-            "type": "object",
+            "$ref": "#/components/schemas/Promise",
             "required": [
               "animalId",
               "initiationDate"
@@ -1945,6 +1952,7 @@
                 "format": "dateTime"
               },
               "_type": {
+                "description": "class of promise",
                 "type": "string",
                 "enum": [
                   "models.api.v1.IdPromise"
@@ -2195,8 +2203,7 @@
       "PDataNone": {
         "type": "object",
         "required": [
-          "promiseId",
-          "dat"
+          "promiseId"
         ],
         "properties": {
           "_type": {
@@ -2431,9 +2438,11 @@
         "properties": {
           "_type": {
             "type": "string",
+            "description": "class of Dose Function",
             "enum": [
               "models.api.v1.DoseByClass"
-            ]
+            ],
+            "example": "models.api.v1.DoseByClass"
           },
           "animalClasses": {
             "type": "array",
@@ -2561,7 +2570,7 @@
         }
       },
       "CaseData": {
-        "description": "wip tbd",
+        "description": "data for an individual Case",
         "type": "object",
         "properties": {
           "id": {
@@ -2596,11 +2605,12 @@
         }
       },
       "IdData": {
+        "type": "object",
         "description": "identifies animal or group treated in the **_Case_**",
         "properties": {
           "_type": {
             "type": "string",
-            "description": "identifies subtype of CaseData",
+            "description": "Class of CaseData",
             "enum": [
               "models.IdData"
             ],
@@ -2629,6 +2639,7 @@
         ],
         "properties": {
           "_type": {
+            "description": "Class of CaseData",
             "type": "string",
             "enum": [
               "models.api.v1.PreferredDoseData"
@@ -2699,6 +2710,7 @@
         ],
         "properties": {
           "_type": {
+            "description": "Class of CaseData",
             "type": "string",
             "enum": [
               "models.api.v1.AnimalClassData"
