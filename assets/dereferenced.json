@@ -28,6 +28,28 @@
       "url": "http://localhost"
     }
   ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "Endpoints and models related to user management."
+    },
+    {
+      "name": "Protocol",
+      "description": "Endpoints and models related to protocol management."
+    },
+    {
+      "name": "Prescription",
+      "description": "Endpoints and models related to prescription management."
+    },
+    {
+      "name": "Case",
+      "description": "Endpoints and models related to case management."
+    },
+    {
+      "name": "Promise",
+      "description": "Endpoints and models related to promise management."
+    }
+  ],
   "security": [
     {
       "authToken": []
@@ -359,14 +381,14 @@
                               "ownerId",
                               "name",
                               "status",
-                              "withhold",
                               "instructions"
                             ],
                             "properties": {
                               "id": {
-                                "description": "key value created by the database. If `id` is zero or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
+                                "description": "key value created by the database. If zero or null a new record will be created.",
                                 "type": "integer",
-                                "format": "int64"
+                                "format": "int64",
+                                "example": 12345
                               },
                               "ownerId": {
                                 "description": "the `id` key of the VOR User who owns the protocol.",
@@ -374,12 +396,12 @@
                                 "example": 1
                               },
                               "name": {
-                                "description": "wip",
+                                "description": "descriptive name of the protocol",
                                 "type": "string",
                                 "example": "wip"
                               },
                               "shortname": {
-                                "description": "wip",
+                                "description": "short name for protocol",
                                 "type": "string",
                                 "example": "wip"
                               },
@@ -409,32 +431,19 @@
                                 "example": "PRESCRIBED"
                               },
                               "vetNote": {
-                                "type": "string"
+                                "description": "note visible only to the prescribing vet",
+                                "type": "string",
+                                "example": "consider prescribing protocol x instead"
                               },
-                              "withhold": {
-                                "description": "duration after last treatment during which some act is prohibited. Most often this restricts when meat or milk may be sold for food.",
-                                "required": [
-                                  "duration",
-                                  "prohibition"
-                                ],
-                                "properties": {
-                                  "hoursMeat": {
-                                    "type": "number",
-                                    "example": 22,
-                                    "description": "number of hours that must pass between exposure and slaughter"
-                                  },
-                                  "hoursMilk": {
-                                    "type": "number",
-                                    "example": 5,
-                                    "description": "number of hours that must pass between exposure and extracting milk for consumption"
-                                  },
-                                  "note": {
-                                    "type": "string",
-                                    "description": "free-form text note",
-                                    "format": "html",
-                                    "example": "<p>improvement apparent</p>"
-                                  }
-                                }
+                              "wtMeatHrs": {
+                                "type": "number",
+                                "example": 22,
+                                "description": "number of hours that must pass between exposure and slaughter"
+                              },
+                              "wtMilkHrs": {
+                                "type": "number",
+                                "example": 5,
+                                "description": "number of hours that must pass between exposure and extracting milk for consumption"
                               },
                               "instructions": {
                                 "description": "instructions to execute a protocol",
@@ -478,8 +487,16 @@
                                 }
                               },
                               "shareAll": {
+                                "description": "share this protocol with all other vets using the system?",
                                 "type": "boolean",
-                                "default": false
+                                "default": false,
+                                "example": true
+                              },
+                              "shareClonable": {
+                                "description": "when shared to another vet, may the recipient create and alter a clone?",
+                                "type": "boolean",
+                                "default": false,
+                                "example": true
                               },
                               "caseDefinition": {
                                 "description": "information used at the time of case selection to determine whether a particular protocol may be enrolled and the protocol initiated for a particular animal or group of animals (the Case). The Case may be enrolled with the Protocol **only** if the Case meets all requirements of the CaseDefinition and none of the prohibitions. Other information may be advisory, and used at the discretion of the person doing enrollment.",
@@ -621,6 +638,7 @@
                                     "dosage": {
                                       "oneOf": [
                                         {
+                                          "type": "object",
                                           "properties": {
                                             "doseId": {
                                               "type": "integer",
@@ -2144,17 +2162,12 @@
                                     },
                                     "wtMeatHrs": {
                                       "type": "integer",
-                                      "description": "wip",
+                                      "description": "number of hours that must pass between exposure and slaughter",
                                       "example": "wip"
                                     },
                                     "wtMilkHrs": {
                                       "type": "integer",
-                                      "description": "wip",
-                                      "example": "wip"
-                                    },
-                                    "wtNote": {
-                                      "type": "string",
-                                      "description": "wip",
+                                      "description": "number of hours that must pass between exposure and extracting milk for consumption",
                                       "example": "wip"
                                     },
                                     "nada": {
@@ -2339,28 +2352,6 @@
                                       "type": "string",
                                       "format": "duration",
                                       "default": "PT0H"
-                                    },
-                                    "response": {
-                                      "description": "data supplied by the client to fulfill promise",
-                                      "type": "string"
-                                    },
-                                    "responseBy": {
-                                      "description": "User ID of person supplying response data",
-                                      "type": "integer"
-                                    },
-                                    "responseTime": {
-                                      "description": "timestamp for response data",
-                                      "type": "string"
-                                    },
-                                    "notify": {
-                                      "description": "notify prescribing doctor when completed",
-                                      "type": "boolean",
-                                      "default": false
-                                    },
-                                    "sigRequired": {
-                                      "description": "require signature of respondant",
-                                      "type": "boolean",
-                                      "default": false
                                     }
                                   }
                                 }
@@ -2475,14 +2466,14 @@
                             "ownerId",
                             "name",
                             "status",
-                            "withhold",
                             "instructions"
                           ],
                           "properties": {
                             "id": {
-                              "description": "key value created by the database. If `id` is zero or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
+                              "description": "key value created by the database. If zero or null a new record will be created.",
                               "type": "integer",
-                              "format": "int64"
+                              "format": "int64",
+                              "example": 12345
                             },
                             "ownerId": {
                               "description": "the `id` key of the VOR User who owns the protocol.",
@@ -2490,12 +2481,12 @@
                               "example": 1
                             },
                             "name": {
-                              "description": "wip",
+                              "description": "descriptive name of the protocol",
                               "type": "string",
                               "example": "wip"
                             },
                             "shortname": {
-                              "description": "wip",
+                              "description": "short name for protocol",
                               "type": "string",
                               "example": "wip"
                             },
@@ -2525,32 +2516,19 @@
                               "example": "PRESCRIBED"
                             },
                             "vetNote": {
-                              "type": "string"
+                              "description": "note visible only to the prescribing vet",
+                              "type": "string",
+                              "example": "consider prescribing protocol x instead"
                             },
-                            "withhold": {
-                              "description": "duration after last treatment during which some act is prohibited. Most often this restricts when meat or milk may be sold for food.",
-                              "required": [
-                                "duration",
-                                "prohibition"
-                              ],
-                              "properties": {
-                                "hoursMeat": {
-                                  "type": "number",
-                                  "example": 22,
-                                  "description": "number of hours that must pass between exposure and slaughter"
-                                },
-                                "hoursMilk": {
-                                  "type": "number",
-                                  "example": 5,
-                                  "description": "number of hours that must pass between exposure and extracting milk for consumption"
-                                },
-                                "note": {
-                                  "type": "string",
-                                  "description": "free-form text note",
-                                  "format": "html",
-                                  "example": "<p>improvement apparent</p>"
-                                }
-                              }
+                            "wtMeatHrs": {
+                              "type": "number",
+                              "example": 22,
+                              "description": "number of hours that must pass between exposure and slaughter"
+                            },
+                            "wtMilkHrs": {
+                              "type": "number",
+                              "example": 5,
+                              "description": "number of hours that must pass between exposure and extracting milk for consumption"
                             },
                             "instructions": {
                               "description": "instructions to execute a protocol",
@@ -2594,8 +2572,16 @@
                               }
                             },
                             "shareAll": {
+                              "description": "share this protocol with all other vets using the system?",
                               "type": "boolean",
-                              "default": false
+                              "default": false,
+                              "example": true
+                            },
+                            "shareClonable": {
+                              "description": "when shared to another vet, may the recipient create and alter a clone?",
+                              "type": "boolean",
+                              "default": false,
+                              "example": true
                             },
                             "caseDefinition": {
                               "description": "information used at the time of case selection to determine whether a particular protocol may be enrolled and the protocol initiated for a particular animal or group of animals (the Case). The Case may be enrolled with the Protocol **only** if the Case meets all requirements of the CaseDefinition and none of the prohibitions. Other information may be advisory, and used at the discretion of the person doing enrollment.",
@@ -2737,6 +2723,7 @@
                                   "dosage": {
                                     "oneOf": [
                                       {
+                                        "type": "object",
                                         "properties": {
                                           "doseId": {
                                             "type": "integer",
@@ -4260,17 +4247,12 @@
                                   },
                                   "wtMeatHrs": {
                                     "type": "integer",
-                                    "description": "wip",
+                                    "description": "number of hours that must pass between exposure and slaughter",
                                     "example": "wip"
                                   },
                                   "wtMilkHrs": {
                                     "type": "integer",
-                                    "description": "wip",
-                                    "example": "wip"
-                                  },
-                                  "wtNote": {
-                                    "type": "string",
-                                    "description": "wip",
+                                    "description": "number of hours that must pass between exposure and extracting milk for consumption",
                                     "example": "wip"
                                   },
                                   "nada": {
@@ -4455,28 +4437,6 @@
                                     "type": "string",
                                     "format": "duration",
                                     "default": "PT0H"
-                                  },
-                                  "response": {
-                                    "description": "data supplied by the client to fulfill promise",
-                                    "type": "string"
-                                  },
-                                  "responseBy": {
-                                    "description": "User ID of person supplying response data",
-                                    "type": "integer"
-                                  },
-                                  "responseTime": {
-                                    "description": "timestamp for response data",
-                                    "type": "string"
-                                  },
-                                  "notify": {
-                                    "description": "notify prescribing doctor when completed",
-                                    "type": "boolean",
-                                    "default": false
-                                  },
-                                  "sigRequired": {
-                                    "description": "require signature of respondant",
-                                    "type": "boolean",
-                                    "default": false
                                   }
                                 }
                               }
@@ -6697,28 +6657,6 @@
                           "type": "string",
                           "format": "duration",
                           "default": "PT0H"
-                        },
-                        "response": {
-                          "description": "data supplied by the client to fulfill promise",
-                          "type": "string"
-                        },
-                        "responseBy": {
-                          "description": "User ID of person supplying response data",
-                          "type": "integer"
-                        },
-                        "responseTime": {
-                          "description": "timestamp for response data",
-                          "type": "string"
-                        },
-                        "notify": {
-                          "description": "notify prescribing doctor when completed",
-                          "type": "boolean",
-                          "default": false
-                        },
-                        "sigRequired": {
-                          "description": "require signature of respondant",
-                          "type": "boolean",
-                          "default": false
                         }
                       }
                     }
@@ -8675,28 +8613,6 @@
                                 "type": "string",
                                 "format": "duration",
                                 "default": "PT0H"
-                              },
-                              "response": {
-                                "description": "data supplied by the client to fulfill promise",
-                                "type": "string"
-                              },
-                              "responseBy": {
-                                "description": "User ID of person supplying response data",
-                                "type": "integer"
-                              },
-                              "responseTime": {
-                                "description": "timestamp for response data",
-                                "type": "string"
-                              },
-                              "notify": {
-                                "description": "notify prescribing doctor when completed",
-                                "type": "boolean",
-                                "default": false
-                              },
-                              "sigRequired": {
-                                "description": "require signature of respondant",
-                                "type": "boolean",
-                                "default": false
                               }
                             }
                           }
@@ -10707,28 +10623,6 @@
                                   "type": "string",
                                   "format": "duration",
                                   "default": "PT0H"
-                                },
-                                "response": {
-                                  "description": "data supplied by the client to fulfill promise",
-                                  "type": "string"
-                                },
-                                "responseBy": {
-                                  "description": "User ID of person supplying response data",
-                                  "type": "integer"
-                                },
-                                "responseTime": {
-                                  "description": "timestamp for response data",
-                                  "type": "string"
-                                },
-                                "notify": {
-                                  "description": "notify prescribing doctor when completed",
-                                  "type": "boolean",
-                                  "default": false
-                                },
-                                "sigRequired": {
-                                  "description": "require signature of respondant",
-                                  "type": "boolean",
-                                  "default": false
                                 }
                               }
                             }
@@ -12715,28 +12609,6 @@
                                   "type": "string",
                                   "format": "duration",
                                   "default": "PT0H"
-                                },
-                                "response": {
-                                  "description": "data supplied by the client to fulfill promise",
-                                  "type": "string"
-                                },
-                                "responseBy": {
-                                  "description": "User ID of person supplying response data",
-                                  "type": "integer"
-                                },
-                                "responseTime": {
-                                  "description": "timestamp for response data",
-                                  "type": "string"
-                                },
-                                "notify": {
-                                  "description": "notify prescribing doctor when completed",
-                                  "type": "boolean",
-                                  "default": false
-                                },
-                                "sigRequired": {
-                                  "description": "require signature of respondant",
-                                  "type": "boolean",
-                                  "default": false
                                 }
                               }
                             }
@@ -15208,28 +15080,6 @@
                                 "type": "string",
                                 "format": "duration",
                                 "default": "PT0H"
-                              },
-                              "response": {
-                                "description": "data supplied by the client to fulfill promise",
-                                "type": "string"
-                              },
-                              "responseBy": {
-                                "description": "User ID of person supplying response data",
-                                "type": "integer"
-                              },
-                              "responseTime": {
-                                "description": "timestamp for response data",
-                                "type": "string"
-                              },
-                              "notify": {
-                                "description": "notify prescribing doctor when completed",
-                                "type": "boolean",
-                                "default": false
-                              },
-                              "sigRequired": {
-                                "description": "require signature of respondant",
-                                "type": "boolean",
-                                "default": false
                               }
                             }
                           }
@@ -17240,28 +17090,6 @@
                                   "type": "string",
                                   "format": "duration",
                                   "default": "PT0H"
-                                },
-                                "response": {
-                                  "description": "data supplied by the client to fulfill promise",
-                                  "type": "string"
-                                },
-                                "responseBy": {
-                                  "description": "User ID of person supplying response data",
-                                  "type": "integer"
-                                },
-                                "responseTime": {
-                                  "description": "timestamp for response data",
-                                  "type": "string"
-                                },
-                                "notify": {
-                                  "description": "notify prescribing doctor when completed",
-                                  "type": "boolean",
-                                  "default": false
-                                },
-                                "sigRequired": {
-                                  "description": "require signature of respondant",
-                                  "type": "boolean",
-                                  "default": false
                                 }
                               }
                             }
@@ -17288,6 +17116,95 @@
         "in": "header",
         "name": "X-Auth-Token",
         "description": "Uses JWT token stored in request header."
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "401 – Users must log in"
+      },
+      "BadRequest": {
+        "description": "The server could not understand the request due to invalid syntax.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "description": "error response per RFC 7807",
+              "required": [
+                "title",
+                "status"
+              ],
+              "properties": {
+                "errorType": {
+                  "type": "string",
+                  "description": "a URI identifier that categorizes the error",
+                  "example": "/errors/incorrect-user-pass"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "A brief, human-readable message about the error",
+                  "example": "incorrect username or password"
+                },
+                "status": {
+                  "type": "integer",
+                  "description": "HTTP status code",
+                  "example": 404
+                },
+                "detail": {
+                  "type": "string",
+                  "description": "a human-readable description of the specific error",
+                  "example": "Authentication failed due to incorrect username or password."
+                },
+                "instance": {
+                  "type": "string",
+                  "description": "a URI that identifies the specific occurrence of the error",
+                  "example": "/login/log/abc123"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The server can not find the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "description": "error response per RFC 7807",
+              "required": [
+                "title",
+                "status"
+              ],
+              "properties": {
+                "errorType": {
+                  "type": "string",
+                  "description": "a URI identifier that categorizes the error",
+                  "example": "/errors/incorrect-user-pass"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "A brief, human-readable message about the error",
+                  "example": "incorrect username or password"
+                },
+                "status": {
+                  "type": "integer",
+                  "description": "HTTP status code",
+                  "example": 404
+                },
+                "detail": {
+                  "type": "string",
+                  "description": "a human-readable description of the specific error",
+                  "example": "Authentication failed due to incorrect username or password."
+                },
+                "instance": {
+                  "type": "string",
+                  "description": "a URI that identifies the specific occurrence of the error",
+                  "example": "/login/log/abc123"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -17367,6 +17284,52 @@
           "lastname",
           "suffix"
         ]
+      },
+      "Address": {
+        "description": "an address",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "description": "unique identifier for the User",
+            "example": 1
+          },
+          "busName": {
+            "description": "bussiness name, if appropriate",
+            "type": "string",
+            "example": "testVOR Clinic"
+          },
+          "address1": {
+            "description": "first line or street address",
+            "type": "string",
+            "example": "123 Main St."
+          },
+          "address2": {
+            "description": "second line of address, if needed",
+            "type": "string",
+            "example": "123 Main St."
+          },
+          "town": {
+            "description": "town or city",
+            "type": "string",
+            "example": "Anytown"
+          },
+          "state": {
+            "description": "state or province",
+            "type": "string",
+            "example": "Any State"
+          },
+          "zip": {
+            "type": "string",
+            "description": "zip or postal code",
+            "example": "12345-abcd"
+          },
+          "country": {
+            "type": "string",
+            "description": "country",
+            "example": "USA"
+          }
+        }
       },
       "SuccessfulLogin": {
         "description": "User object and generated auth token",
@@ -17612,7 +17575,52 @@
           }
         }
       },
-      "fdaSpecies": {
+      "Comment": {
+        "required": [
+          "comment"
+        ],
+        "properties": {
+          "userId": {
+            "description": "set null or zero if User wishes to be anonymous",
+            "type": "integer",
+            "default": null
+          },
+          "public": {
+            "description": "if false, comment is private to site managers",
+            "type": "boolean",
+            "default": false
+          },
+          "comment": {
+            "type": "string"
+          }
+        }
+      },
+      "Degree": {
+        "description": "an academic degree qualifying a User as a veterinarian",
+        "required": [
+          "school",
+          "year"
+        ],
+        "properties": {
+          "school": {
+            "type": "string",
+            "example": "University of ***"
+          },
+          "year": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "license-state": {
+            "type": "string"
+          },
+          "confirmVet": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FDASpecies": {
         "type": "array",
         "description": "a class of animals recognized by the FDA. In FDA literature this is called a \"species\", which conflicts with the typical usage of that word. \"fdaSpecies\" in the labeling domain usually corresponds with \"Eligibility\" in the Protocol domain.",
         "items": {
@@ -17697,14 +17705,172 @@
           }
         }
       },
-      "DoseId": {
+      "Dose": {
+        "description": "a single dose to be given at a specified time",
+        "type": "object",
+        "required": [
+          "product",
+          "size",
+          "time"
+        ],
         "properties": {
-          "doseId": {
-            "type": "integer",
-            "description": "key to a label dosage",
+          "id": {
+            "description": "ID of animal to be dosed",
+            "type": "string",
+            "example": "Y6768B752"
+          },
+          "product": {
+            "description": "product name",
+            "type": "string",
             "example": "wip"
+          },
+          "doseSize": {
+            "required": [
+              "quantity"
+            ],
+            "properties": {
+              "quantity": {
+                "oneOf": [
+                  {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "enum": [
+                          "Mass"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "default": 1,
+                        "exclusiveMinimum": true,
+                        "example": 50
+                      },
+                      "symbol": {
+                        "description": "unit of mass or weight",
+                        "type": "string",
+                        "enum": [
+                          "lb",
+                          "t",
+                          "dwt",
+                          "gr",
+                          "mg",
+                          "mcg",
+                          "oz",
+                          "g",
+                          "kg"
+                        ],
+                        "example": "kg"
+                      }
+                    }
+                  },
+                  {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "description": "wip",
+                        "example": "Volume",
+                        "enum": [
+                          "Volume"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "example": 3,
+                        "exclusiveMinimum": true
+                      },
+                      "symbol": {
+                        "description": "unit of Volume",
+                        "type": "string",
+                        "example": "ml",
+                        "enum": [
+                          "pt",
+                          "tbsp",
+                          "µl",
+                          "nl",
+                          "oz",
+                          "dl",
+                          "ml",
+                          "qt",
+                          "L",
+                          "gal",
+                          "c",
+                          "tsp"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "required": [
+                      "dimension",
+                      "value",
+                      "symbol"
+                    ],
+                    "properties": {
+                      "dimension": {
+                        "type": "string",
+                        "example": "Dimensionless",
+                        "enum": [
+                          "Dimensionless"
+                        ]
+                      },
+                      "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "example": 3,
+                        "exclusiveMinimum": true
+                      },
+                      "symbol": {
+                        "description": "dimensionless unit (each)",
+                        "type": "string",
+                        "enum": [
+                          "ea",
+                          "%",
+                          "dz"
+                        ],
+                        "example": "ea"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "example": {
+              "quantity": {
+                "dimension": "Mass",
+                "value": 3,
+                "symbol": "oz"
+              }
+            }
+          },
+          "route": {
+            "description": "route of administration",
+            "type": "string",
+            "example": "wip"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T22:20:39Z",
+            "description": "wip ISO-8601-formatted datetime added by the server when the dose is saved"
+          },
+          "note": {
+            "type": "string",
+            "format": "html"
           }
-        }
+        },
+        "example": "{\"id\":\"B-123\",\"product\":\"MiracleMed\",\"size\":{\"size\":2,\"unit\":\"ml\"},\"route\":\"intramuscular injection\",\"time\":\"2020-01-10T10:30:37Z\"}"
       },
       "SeqSingleDose": {
         "description": "a single dose",
@@ -22890,6 +23056,7 @@
           "dosage": {
             "oneOf": [
               {
+                "type": "object",
                 "properties": {
                   "doseId": {
                     "type": "integer",
@@ -24413,17 +24580,12 @@
           },
           "wtMeatHrs": {
             "type": "integer",
-            "description": "wip",
+            "description": "number of hours that must pass between exposure and slaughter",
             "example": "wip"
           },
           "wtMilkHrs": {
             "type": "integer",
-            "description": "wip",
-            "example": "wip"
-          },
-          "wtNote": {
-            "type": "string",
-            "description": "wip",
+            "description": "number of hours that must pass between exposure and extracting milk for consumption",
             "example": "wip"
           },
           "nada": {
@@ -24458,6 +24620,16 @@
               "OFFLABEL",
               "UNIDENTIFIED"
             ]
+          }
+        }
+      },
+      "DoseId": {
+        "type": "object",
+        "properties": {
+          "doseId": {
+            "type": "integer",
+            "description": "key to a label dosage",
+            "example": "wip"
           }
         }
       },
@@ -24529,30 +24701,505 @@
             "type": "string",
             "format": "duration",
             "default": "PT0H"
-          },
-          "response": {
-            "description": "data supplied by the client to fulfill promise",
-            "type": "string"
-          },
-          "responseBy": {
-            "description": "User ID of person supplying response data",
-            "type": "integer"
-          },
-          "responseTime": {
-            "description": "timestamp for response data",
-            "type": "string"
-          },
-          "notify": {
-            "description": "notify prescribing doctor when completed",
-            "type": "boolean",
-            "default": false
-          },
-          "sigRequired": {
-            "description": "require signature of respondant",
-            "type": "boolean",
-            "default": false
           }
         }
+      },
+      "StringPromise": {
+        "description": "identification of animal is required to enroll a case",
+        "type": "object",
+        "required": [
+          "_type"
+        ],
+        "allOf": [
+          {
+            "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
+            "type": "object",
+            "required": [
+              "_type",
+              "name",
+              "description",
+              "query",
+              "when"
+            ],
+            "properties": {
+              "_type": {
+                "description": "server data type to which this Promise will be mapped",
+                "type": "string",
+                "enum": [
+                  "models.IdPromise",
+                  "models.AffirmationPromise",
+                  "models.BooleanPromise",
+                  "models.StringPromise",
+                  "models.MassPromise",
+                  "models.CategoryPromise"
+                ]
+              },
+              "id": {
+                "description": "Promise ID number",
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "description": "promise name for the doctor",
+                "type": "string"
+              },
+              "descrip": {
+                "description": "promise description for the client",
+                "type": "string"
+              },
+              "query": {
+                "description": "question to be answered by client",
+                "type": "string",
+                "format": "html"
+              },
+              "when": {
+                "description": "ISO-8601 duration from initiation when promise must be fulfilled",
+                "type": "string",
+                "format": "duration",
+                "default": "PT0H"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "response": {
+                "type": "object",
+                "required": [
+                  "promiseId",
+                  "dat"
+                ],
+                "properties": {
+                  "_type": {
+                    "type": "string",
+                    "description": "identifies subtype of PData",
+                    "enum": [
+                      "models.PdataString"
+                    ],
+                    "example": "models.PdataString"
+                  },
+                  "promiseId": {
+                    "description": "ID of promise to which this data is attached",
+                    "type": "integer",
+                    "default": null,
+                    "example": 123
+                  },
+                  "dat": {
+                    "type": "string",
+                    "description": "data to fulfill the Promise",
+                    "example": "full recovery"
+                  }
+                }
+              },
+              "_type": {
+                "type": "string",
+                "enum": [
+                  "models.StringPromise"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "CategoryPromise": {
+        "description": "identification of animal is required to enroll a case",
+        "type": "object",
+        "required": [
+          "_type"
+        ],
+        "allOf": [
+          {
+            "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
+            "type": "object",
+            "required": [
+              "_type",
+              "name",
+              "description",
+              "query",
+              "when"
+            ],
+            "properties": {
+              "_type": {
+                "description": "server data type to which this Promise will be mapped",
+                "type": "string",
+                "enum": [
+                  "models.IdPromise",
+                  "models.AffirmationPromise",
+                  "models.BooleanPromise",
+                  "models.StringPromise",
+                  "models.MassPromise",
+                  "models.CategoryPromise"
+                ]
+              },
+              "id": {
+                "description": "Promise ID number",
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "description": "promise name for the doctor",
+                "type": "string"
+              },
+              "descrip": {
+                "description": "promise description for the client",
+                "type": "string"
+              },
+              "query": {
+                "description": "question to be answered by client",
+                "type": "string",
+                "format": "html"
+              },
+              "when": {
+                "description": "ISO-8601 duration from initiation when promise must be fulfilled",
+                "type": "string",
+                "format": "duration",
+                "default": "PT0H"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "animalId",
+              "initiationDate"
+            ],
+            "properties": {
+              "animalId": {
+                "type": "string"
+              },
+              "initiationDate": {
+                "type": "string",
+                "format": "dateTime"
+              },
+              "_type": {
+                "type": "string",
+                "enum": [
+                  "models.api.v1.IdPromise"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "BooleanPromise": {
+        "description": "identification of animal is required to enroll a case",
+        "type": "object",
+        "required": [
+          "_type"
+        ],
+        "allOf": [
+          {
+            "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
+            "type": "object",
+            "required": [
+              "_type",
+              "name",
+              "description",
+              "query",
+              "when"
+            ],
+            "properties": {
+              "_type": {
+                "description": "server data type to which this Promise will be mapped",
+                "type": "string",
+                "enum": [
+                  "models.IdPromise",
+                  "models.AffirmationPromise",
+                  "models.BooleanPromise",
+                  "models.StringPromise",
+                  "models.MassPromise",
+                  "models.CategoryPromise"
+                ]
+              },
+              "id": {
+                "description": "Promise ID number",
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "description": "promise name for the doctor",
+                "type": "string"
+              },
+              "descrip": {
+                "description": "promise description for the client",
+                "type": "string"
+              },
+              "query": {
+                "description": "question to be answered by client",
+                "type": "string",
+                "format": "html"
+              },
+              "when": {
+                "description": "ISO-8601 duration from initiation when promise must be fulfilled",
+                "type": "string",
+                "format": "duration",
+                "default": "PT0H"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "animalId",
+              "initiationDate"
+            ],
+            "properties": {
+              "animalId": {
+                "type": "string"
+              },
+              "initiationDate": {
+                "type": "string",
+                "format": "dateTime"
+              },
+              "_type": {
+                "type": "string",
+                "enum": [
+                  "models.api.v1.IdPromise"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "NumberPromise": {
+        "description": "identification of animal is required to enroll a case",
+        "type": "object",
+        "required": [
+          "_type"
+        ],
+        "allOf": [
+          {
+            "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
+            "type": "object",
+            "required": [
+              "_type",
+              "name",
+              "description",
+              "query",
+              "when"
+            ],
+            "properties": {
+              "_type": {
+                "description": "server data type to which this Promise will be mapped",
+                "type": "string",
+                "enum": [
+                  "models.IdPromise",
+                  "models.AffirmationPromise",
+                  "models.BooleanPromise",
+                  "models.StringPromise",
+                  "models.MassPromise",
+                  "models.CategoryPromise"
+                ]
+              },
+              "id": {
+                "description": "Promise ID number",
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "description": "promise name for the doctor",
+                "type": "string"
+              },
+              "descrip": {
+                "description": "promise description for the client",
+                "type": "string"
+              },
+              "query": {
+                "description": "question to be answered by client",
+                "type": "string",
+                "format": "html"
+              },
+              "when": {
+                "description": "ISO-8601 duration from initiation when promise must be fulfilled",
+                "type": "string",
+                "format": "duration",
+                "default": "PT0H"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "animalId",
+              "initiationDate"
+            ],
+            "properties": {
+              "animalId": {
+                "type": "string"
+              },
+              "initiationDate": {
+                "type": "string",
+                "format": "dateTime"
+              },
+              "_type": {
+                "type": "string",
+                "enum": [
+                  "models.api.v1.IdPromise"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AffirmationPromise": {
+        "description": "identification of animal is required to enroll a case",
+        "type": "object",
+        "required": [
+          "_type"
+        ],
+        "allOf": [
+          {
+            "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
+            "type": "object",
+            "required": [
+              "_type",
+              "name",
+              "description",
+              "query",
+              "when"
+            ],
+            "properties": {
+              "_type": {
+                "description": "server data type to which this Promise will be mapped",
+                "type": "string",
+                "enum": [
+                  "models.IdPromise",
+                  "models.AffirmationPromise",
+                  "models.BooleanPromise",
+                  "models.StringPromise",
+                  "models.MassPromise",
+                  "models.CategoryPromise"
+                ]
+              },
+              "id": {
+                "description": "Promise ID number",
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "description": "promise name for the doctor",
+                "type": "string"
+              },
+              "descrip": {
+                "description": "promise description for the client",
+                "type": "string"
+              },
+              "query": {
+                "description": "question to be answered by client",
+                "type": "string",
+                "format": "html"
+              },
+              "when": {
+                "description": "ISO-8601 duration from initiation when promise must be fulfilled",
+                "type": "string",
+                "format": "duration",
+                "default": "PT0H"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "animalId",
+              "initiationDate"
+            ],
+            "properties": {
+              "animalId": {
+                "type": "string"
+              },
+              "initiationDate": {
+                "type": "string",
+                "format": "dateTime"
+              },
+              "_type": {
+                "type": "string",
+                "enum": [
+                  "models.api.v1.IdPromise"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "MassPromise": {
+        "description": "identification of animal is required to enroll a case",
+        "type": "object",
+        "required": [
+          "_type"
+        ],
+        "allOf": [
+          {
+            "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
+            "type": "object",
+            "required": [
+              "_type",
+              "name",
+              "description",
+              "query",
+              "when"
+            ],
+            "properties": {
+              "_type": {
+                "description": "server data type to which this Promise will be mapped",
+                "type": "string",
+                "enum": [
+                  "models.IdPromise",
+                  "models.AffirmationPromise",
+                  "models.BooleanPromise",
+                  "models.StringPromise",
+                  "models.MassPromise",
+                  "models.CategoryPromise"
+                ]
+              },
+              "id": {
+                "description": "Promise ID number",
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "description": "promise name for the doctor",
+                "type": "string"
+              },
+              "descrip": {
+                "description": "promise description for the client",
+                "type": "string"
+              },
+              "query": {
+                "description": "question to be answered by client",
+                "type": "string",
+                "format": "html"
+              },
+              "when": {
+                "description": "ISO-8601 duration from initiation when promise must be fulfilled",
+                "type": "string",
+                "format": "duration",
+                "default": "PT0H"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "animalId",
+              "initiationDate"
+            ],
+            "properties": {
+              "animalId": {
+                "type": "string"
+              },
+              "initiationDate": {
+                "type": "string",
+                "format": "dateTime"
+              },
+              "_type": {
+                "type": "string",
+                "enum": [
+                  "models.api.v1.IdPromise"
+                ]
+              }
+            }
+          }
+        ]
       },
       "Metadata": {
         "description": "(for future development)",
@@ -24572,14 +25219,14 @@
           "ownerId",
           "name",
           "status",
-          "withhold",
           "instructions"
         ],
         "properties": {
           "id": {
-            "description": "key value created by the database. If `id` is zero or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
+            "description": "key value created by the database. If zero or null a new record will be created.",
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "example": 12345
           },
           "ownerId": {
             "description": "the `id` key of the VOR User who owns the protocol.",
@@ -24587,12 +25234,12 @@
             "example": 1
           },
           "name": {
-            "description": "wip",
+            "description": "descriptive name of the protocol",
             "type": "string",
             "example": "wip"
           },
           "shortname": {
-            "description": "wip",
+            "description": "short name for protocol",
             "type": "string",
             "example": "wip"
           },
@@ -24622,32 +25269,19 @@
             "example": "PRESCRIBED"
           },
           "vetNote": {
-            "type": "string"
+            "description": "note visible only to the prescribing vet",
+            "type": "string",
+            "example": "consider prescribing protocol x instead"
           },
-          "withhold": {
-            "description": "duration after last treatment during which some act is prohibited. Most often this restricts when meat or milk may be sold for food.",
-            "required": [
-              "duration",
-              "prohibition"
-            ],
-            "properties": {
-              "hoursMeat": {
-                "type": "number",
-                "example": 22,
-                "description": "number of hours that must pass between exposure and slaughter"
-              },
-              "hoursMilk": {
-                "type": "number",
-                "example": 5,
-                "description": "number of hours that must pass between exposure and extracting milk for consumption"
-              },
-              "note": {
-                "type": "string",
-                "description": "free-form text note",
-                "format": "html",
-                "example": "<p>improvement apparent</p>"
-              }
-            }
+          "wtMeatHrs": {
+            "type": "number",
+            "example": 22,
+            "description": "number of hours that must pass between exposure and slaughter"
+          },
+          "wtMilkHrs": {
+            "type": "number",
+            "example": 5,
+            "description": "number of hours that must pass between exposure and extracting milk for consumption"
           },
           "instructions": {
             "description": "instructions to execute a protocol",
@@ -24691,8 +25325,16 @@
             }
           },
           "shareAll": {
+            "description": "share this protocol with all other vets using the system?",
             "type": "boolean",
-            "default": false
+            "default": false,
+            "example": true
+          },
+          "shareClonable": {
+            "description": "when shared to another vet, may the recipient create and alter a clone?",
+            "type": "boolean",
+            "default": false,
+            "example": true
           },
           "caseDefinition": {
             "description": "information used at the time of case selection to determine whether a particular protocol may be enrolled and the protocol initiated for a particular animal or group of animals (the Case). The Case may be enrolled with the Protocol **only** if the Case meets all requirements of the CaseDefinition and none of the prohibitions. Other information may be advisory, and used at the discretion of the person doing enrollment.",
@@ -24834,6 +25476,7 @@
                 "dosage": {
                   "oneOf": [
                     {
+                      "type": "object",
                       "properties": {
                         "doseId": {
                           "type": "integer",
@@ -26357,17 +27000,12 @@
                 },
                 "wtMeatHrs": {
                   "type": "integer",
-                  "description": "wip",
+                  "description": "number of hours that must pass between exposure and slaughter",
                   "example": "wip"
                 },
                 "wtMilkHrs": {
                   "type": "integer",
-                  "description": "wip",
-                  "example": "wip"
-                },
-                "wtNote": {
-                  "type": "string",
-                  "description": "wip",
+                  "description": "number of hours that must pass between exposure and extracting milk for consumption",
                   "example": "wip"
                 },
                 "nada": {
@@ -26552,28 +27190,6 @@
                   "type": "string",
                   "format": "duration",
                   "default": "PT0H"
-                },
-                "response": {
-                  "description": "data supplied by the client to fulfill promise",
-                  "type": "string"
-                },
-                "responseBy": {
-                  "description": "User ID of person supplying response data",
-                  "type": "integer"
-                },
-                "responseTime": {
-                  "description": "timestamp for response data",
-                  "type": "string"
-                },
-                "notify": {
-                  "description": "notify prescribing doctor when completed",
-                  "type": "boolean",
-                  "default": false
-                },
-                "sigRequired": {
-                  "description": "require signature of respondant",
-                  "type": "boolean",
-                  "default": false
                 }
               }
             }
@@ -26612,14 +27228,14 @@
               "ownerId",
               "name",
               "status",
-              "withhold",
               "instructions"
             ],
             "properties": {
               "id": {
-                "description": "key value created by the database. If `id` is zero or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
+                "description": "key value created by the database. If zero or null a new record will be created.",
                 "type": "integer",
-                "format": "int64"
+                "format": "int64",
+                "example": 12345
               },
               "ownerId": {
                 "description": "the `id` key of the VOR User who owns the protocol.",
@@ -26627,12 +27243,12 @@
                 "example": 1
               },
               "name": {
-                "description": "wip",
+                "description": "descriptive name of the protocol",
                 "type": "string",
                 "example": "wip"
               },
               "shortname": {
-                "description": "wip",
+                "description": "short name for protocol",
                 "type": "string",
                 "example": "wip"
               },
@@ -26662,32 +27278,19 @@
                 "example": "PRESCRIBED"
               },
               "vetNote": {
-                "type": "string"
+                "description": "note visible only to the prescribing vet",
+                "type": "string",
+                "example": "consider prescribing protocol x instead"
               },
-              "withhold": {
-                "description": "duration after last treatment during which some act is prohibited. Most often this restricts when meat or milk may be sold for food.",
-                "required": [
-                  "duration",
-                  "prohibition"
-                ],
-                "properties": {
-                  "hoursMeat": {
-                    "type": "number",
-                    "example": 22,
-                    "description": "number of hours that must pass between exposure and slaughter"
-                  },
-                  "hoursMilk": {
-                    "type": "number",
-                    "example": 5,
-                    "description": "number of hours that must pass between exposure and extracting milk for consumption"
-                  },
-                  "note": {
-                    "type": "string",
-                    "description": "free-form text note",
-                    "format": "html",
-                    "example": "<p>improvement apparent</p>"
-                  }
-                }
+              "wtMeatHrs": {
+                "type": "number",
+                "example": 22,
+                "description": "number of hours that must pass between exposure and slaughter"
+              },
+              "wtMilkHrs": {
+                "type": "number",
+                "example": 5,
+                "description": "number of hours that must pass between exposure and extracting milk for consumption"
               },
               "instructions": {
                 "description": "instructions to execute a protocol",
@@ -26731,8 +27334,16 @@
                 }
               },
               "shareAll": {
+                "description": "share this protocol with all other vets using the system?",
                 "type": "boolean",
-                "default": false
+                "default": false,
+                "example": true
+              },
+              "shareClonable": {
+                "description": "when shared to another vet, may the recipient create and alter a clone?",
+                "type": "boolean",
+                "default": false,
+                "example": true
               },
               "caseDefinition": {
                 "description": "information used at the time of case selection to determine whether a particular protocol may be enrolled and the protocol initiated for a particular animal or group of animals (the Case). The Case may be enrolled with the Protocol **only** if the Case meets all requirements of the CaseDefinition and none of the prohibitions. Other information may be advisory, and used at the discretion of the person doing enrollment.",
@@ -26874,6 +27485,7 @@
                     "dosage": {
                       "oneOf": [
                         {
+                          "type": "object",
                           "properties": {
                             "doseId": {
                               "type": "integer",
@@ -28397,17 +29009,12 @@
                     },
                     "wtMeatHrs": {
                       "type": "integer",
-                      "description": "wip",
+                      "description": "number of hours that must pass between exposure and slaughter",
                       "example": "wip"
                     },
                     "wtMilkHrs": {
                       "type": "integer",
-                      "description": "wip",
-                      "example": "wip"
-                    },
-                    "wtNote": {
-                      "type": "string",
-                      "description": "wip",
+                      "description": "number of hours that must pass between exposure and extracting milk for consumption",
                       "example": "wip"
                     },
                     "nada": {
@@ -28592,28 +29199,6 @@
                       "type": "string",
                       "format": "duration",
                       "default": "PT0H"
-                    },
-                    "response": {
-                      "description": "data supplied by the client to fulfill promise",
-                      "type": "string"
-                    },
-                    "responseBy": {
-                      "description": "User ID of person supplying response data",
-                      "type": "integer"
-                    },
-                    "responseTime": {
-                      "description": "timestamp for response data",
-                      "type": "string"
-                    },
-                    "notify": {
-                      "description": "notify prescribing doctor when completed",
-                      "type": "boolean",
-                      "default": false
-                    },
-                    "sigRequired": {
-                      "description": "require signature of respondant",
-                      "type": "boolean",
-                      "default": false
                     }
                   }
                 }
@@ -30613,28 +31198,6 @@
                   "type": "string",
                   "format": "duration",
                   "default": "PT0H"
-                },
-                "response": {
-                  "description": "data supplied by the client to fulfill promise",
-                  "type": "string"
-                },
-                "responseBy": {
-                  "description": "User ID of person supplying response data",
-                  "type": "integer"
-                },
-                "responseTime": {
-                  "description": "timestamp for response data",
-                  "type": "string"
-                },
-                "notify": {
-                  "description": "notify prescribing doctor when completed",
-                  "type": "boolean",
-                  "default": false
-                },
-                "sigRequired": {
-                  "description": "require signature of respondant",
-                  "type": "boolean",
-                  "default": false
                 }
               }
             }
@@ -31258,6 +31821,1398 @@
             ]
           }
         }
+      },
+      "DoseByClass": {
+        "description": "dose calculated by class",
+        "required": [
+          "_type",
+          "animalClasses"
+        ],
+        "type": "object",
+        "properties": {
+          "_type": {
+            "type": "string",
+            "enum": [
+              "models.api.v1.DoseByClass"
+            ]
+          },
+          "animalClasses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "animalClass",
+                "sizefunction"
+              ],
+              "properties": {
+                "animalClass": {
+                  "type": "string",
+                  "description": "name of class"
+                },
+                "sizefunction": {
+                  "description": "function to calculate dose size",
+                  "type": "object",
+                  "oneOf": [
+                    {
+                      "description": "a fixed quantity expressed in any available unit",
+                      "required": [
+                        "_type",
+                        "dose"
+                      ],
+                      "properties": {
+                        "_type": {
+                          "type": "string",
+                          "enum": [
+                            "models.FixedDoseFunction"
+                          ]
+                        },
+                        "dose": {
+                          "required": [
+                            "quantity"
+                          ],
+                          "properties": {
+                            "quantity": {
+                              "oneOf": [
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Mass"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "default": 1,
+                                      "exclusiveMinimum": true,
+                                      "example": 50
+                                    },
+                                    "symbol": {
+                                      "description": "unit of mass or weight",
+                                      "type": "string",
+                                      "enum": [
+                                        "lb",
+                                        "t",
+                                        "dwt",
+                                        "gr",
+                                        "mg",
+                                        "mcg",
+                                        "oz",
+                                        "g",
+                                        "kg"
+                                      ],
+                                      "example": "kg"
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "description": "wip",
+                                      "example": "Volume",
+                                      "enum": [
+                                        "Volume"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "unit of Volume",
+                                      "type": "string",
+                                      "example": "ml",
+                                      "enum": [
+                                        "pt",
+                                        "tbsp",
+                                        "µl",
+                                        "nl",
+                                        "oz",
+                                        "dl",
+                                        "ml",
+                                        "qt",
+                                        "L",
+                                        "gal",
+                                        "c",
+                                        "tsp"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "example": "Dimensionless",
+                                      "enum": [
+                                        "Dimensionless"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "dimensionless unit (each)",
+                                      "type": "string",
+                                      "enum": [
+                                        "ea",
+                                        "%",
+                                        "dz"
+                                      ],
+                                      "example": "ea"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "example": {
+                            "quantity": {
+                              "dimension": "Mass",
+                              "value": 3,
+                              "symbol": "oz"
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "dose": {
+                          "quantity": {
+                            "dimension": "Volume",
+                            "value": 3,
+                            "symbol": "ml"
+                          }
+                        },
+                        "_type": "models.FixedDoseFunction"
+                      }
+                    },
+                    {
+                      "description": "a range of permissible dose size. The User may select any value within the range (inclusive).",
+                      "required": [
+                        "_type",
+                        "range"
+                      ],
+                      "properties": {
+                        "_type": {
+                          "type": "string",
+                          "enum": [
+                            "models.DoseRangeFunction"
+                          ],
+                          "example": "models.DoseRangeFunction"
+                        },
+                        "range": {
+                          "required": [
+                            "min",
+                            "max"
+                          ],
+                          "properties": {
+                            "min": {
+                              "required": [
+                                "quantity"
+                              ],
+                              "properties": {
+                                "quantity": {
+                                  "oneOf": [
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "enum": [
+                                            "Mass"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "default": 1,
+                                          "exclusiveMinimum": true,
+                                          "example": 50
+                                        },
+                                        "symbol": {
+                                          "description": "unit of mass or weight",
+                                          "type": "string",
+                                          "enum": [
+                                            "lb",
+                                            "t",
+                                            "dwt",
+                                            "gr",
+                                            "mg",
+                                            "mcg",
+                                            "oz",
+                                            "g",
+                                            "kg"
+                                          ],
+                                          "example": "kg"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "description": "wip",
+                                          "example": "Volume",
+                                          "enum": [
+                                            "Volume"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "unit of Volume",
+                                          "type": "string",
+                                          "example": "ml",
+                                          "enum": [
+                                            "pt",
+                                            "tbsp",
+                                            "µl",
+                                            "nl",
+                                            "oz",
+                                            "dl",
+                                            "ml",
+                                            "qt",
+                                            "L",
+                                            "gal",
+                                            "c",
+                                            "tsp"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "example": "Dimensionless",
+                                          "enum": [
+                                            "Dimensionless"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "dimensionless unit (each)",
+                                          "type": "string",
+                                          "enum": [
+                                            "ea",
+                                            "%",
+                                            "dz"
+                                          ],
+                                          "example": "ea"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "example": {
+                                "quantity": {
+                                  "dimension": "Mass",
+                                  "value": 3,
+                                  "symbol": "oz"
+                                }
+                              }
+                            },
+                            "max": {
+                              "required": [
+                                "quantity"
+                              ],
+                              "properties": {
+                                "quantity": {
+                                  "oneOf": [
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "enum": [
+                                            "Mass"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "default": 1,
+                                          "exclusiveMinimum": true,
+                                          "example": 50
+                                        },
+                                        "symbol": {
+                                          "description": "unit of mass or weight",
+                                          "type": "string",
+                                          "enum": [
+                                            "lb",
+                                            "t",
+                                            "dwt",
+                                            "gr",
+                                            "mg",
+                                            "mcg",
+                                            "oz",
+                                            "g",
+                                            "kg"
+                                          ],
+                                          "example": "kg"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "description": "wip",
+                                          "example": "Volume",
+                                          "enum": [
+                                            "Volume"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "unit of Volume",
+                                          "type": "string",
+                                          "example": "ml",
+                                          "enum": [
+                                            "pt",
+                                            "tbsp",
+                                            "µl",
+                                            "nl",
+                                            "oz",
+                                            "dl",
+                                            "ml",
+                                            "qt",
+                                            "L",
+                                            "gal",
+                                            "c",
+                                            "tsp"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "example": "Dimensionless",
+                                          "enum": [
+                                            "Dimensionless"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "dimensionless unit (each)",
+                                          "type": "string",
+                                          "enum": [
+                                            "ea",
+                                            "%",
+                                            "dz"
+                                          ],
+                                          "example": "ea"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "example": {
+                                "quantity": {
+                                  "dimension": "Mass",
+                                  "value": 3,
+                                  "symbol": "oz"
+                                }
+                              }
+                            }
+                          },
+                          "example": {
+                            "min": {
+                              "quantity": {
+                                "dimension": "Volume",
+                                "value": 3,
+                                "symbol": "ml"
+                              }
+                            },
+                            "max": {
+                              "quantity": {
+                                "dimension": "Volume",
+                                "value": 345,
+                                "symbol": "ml"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "description": "dose is specified as a quantity per unit of animal weight",
+                      "required": [
+                        "_type",
+                        "dose",
+                        "perUnit"
+                      ],
+                      "properties": {
+                        "_type": {
+                          "type": "string",
+                          "enum": [
+                            "models.DoseByWeightFunction"
+                          ]
+                        },
+                        "dose": {
+                          "required": [
+                            "quantity"
+                          ],
+                          "properties": {
+                            "quantity": {
+                              "oneOf": [
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Mass"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "default": 1,
+                                      "exclusiveMinimum": true,
+                                      "example": 50
+                                    },
+                                    "symbol": {
+                                      "description": "unit of mass or weight",
+                                      "type": "string",
+                                      "enum": [
+                                        "lb",
+                                        "t",
+                                        "dwt",
+                                        "gr",
+                                        "mg",
+                                        "mcg",
+                                        "oz",
+                                        "g",
+                                        "kg"
+                                      ],
+                                      "example": "kg"
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "description": "wip",
+                                      "example": "Volume",
+                                      "enum": [
+                                        "Volume"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "unit of Volume",
+                                      "type": "string",
+                                      "example": "ml",
+                                      "enum": [
+                                        "pt",
+                                        "tbsp",
+                                        "µl",
+                                        "nl",
+                                        "oz",
+                                        "dl",
+                                        "ml",
+                                        "qt",
+                                        "L",
+                                        "gal",
+                                        "c",
+                                        "tsp"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "example": "Dimensionless",
+                                      "enum": [
+                                        "Dimensionless"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "dimensionless unit (each)",
+                                      "type": "string",
+                                      "enum": [
+                                        "ea",
+                                        "%",
+                                        "dz"
+                                      ],
+                                      "example": "ea"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "example": {
+                            "quantity": {
+                              "dimension": "Mass",
+                              "value": 3,
+                              "symbol": "oz"
+                            }
+                          }
+                        },
+                        "perUnit": {
+                          "required": [
+                            "dimension",
+                            "value",
+                            "symbol"
+                          ],
+                          "properties": {
+                            "dimension": {
+                              "type": "string",
+                              "enum": [
+                                "Mass"
+                              ]
+                            },
+                            "value": {
+                              "type": "number",
+                              "minimum": 0,
+                              "default": 1,
+                              "exclusiveMinimum": true,
+                              "example": 50
+                            },
+                            "symbol": {
+                              "description": "unit of mass or weight",
+                              "type": "string",
+                              "enum": [
+                                "lb",
+                                "t",
+                                "dwt",
+                                "gr",
+                                "mg",
+                                "mcg",
+                                "oz",
+                                "g",
+                                "kg"
+                              ],
+                              "example": "kg"
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "dose": {
+                          "quantity": {
+                            "dimension": "volume",
+                            "value": 3,
+                            "symbol": "ml"
+                          }
+                        },
+                        "perUnit": {
+                          "dimension": "mass",
+                          "value": 1,
+                          "symbol": "kg"
+                        },
+                        "_type": "models.DoseByWeightFunction"
+                      }
+                    },
+                    {
+                      "description": "dose is specified as a range per unit of animal weight. The User may select any value within the range (inclusive).",
+                      "required": [
+                        "_type",
+                        "range",
+                        "perUnit"
+                      ],
+                      "properties": {
+                        "_type": {
+                          "type": "string",
+                          "enum": [
+                            "models.DoseRangeByWeightFunction"
+                          ]
+                        },
+                        "range": {
+                          "required": [
+                            "min",
+                            "max"
+                          ],
+                          "properties": {
+                            "min": {
+                              "required": [
+                                "quantity"
+                              ],
+                              "properties": {
+                                "quantity": {
+                                  "oneOf": [
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "enum": [
+                                            "Mass"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "default": 1,
+                                          "exclusiveMinimum": true,
+                                          "example": 50
+                                        },
+                                        "symbol": {
+                                          "description": "unit of mass or weight",
+                                          "type": "string",
+                                          "enum": [
+                                            "lb",
+                                            "t",
+                                            "dwt",
+                                            "gr",
+                                            "mg",
+                                            "mcg",
+                                            "oz",
+                                            "g",
+                                            "kg"
+                                          ],
+                                          "example": "kg"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "description": "wip",
+                                          "example": "Volume",
+                                          "enum": [
+                                            "Volume"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "unit of Volume",
+                                          "type": "string",
+                                          "example": "ml",
+                                          "enum": [
+                                            "pt",
+                                            "tbsp",
+                                            "µl",
+                                            "nl",
+                                            "oz",
+                                            "dl",
+                                            "ml",
+                                            "qt",
+                                            "L",
+                                            "gal",
+                                            "c",
+                                            "tsp"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "example": "Dimensionless",
+                                          "enum": [
+                                            "Dimensionless"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "dimensionless unit (each)",
+                                          "type": "string",
+                                          "enum": [
+                                            "ea",
+                                            "%",
+                                            "dz"
+                                          ],
+                                          "example": "ea"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "example": {
+                                "quantity": {
+                                  "dimension": "Mass",
+                                  "value": 3,
+                                  "symbol": "oz"
+                                }
+                              }
+                            },
+                            "max": {
+                              "required": [
+                                "quantity"
+                              ],
+                              "properties": {
+                                "quantity": {
+                                  "oneOf": [
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "enum": [
+                                            "Mass"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "default": 1,
+                                          "exclusiveMinimum": true,
+                                          "example": 50
+                                        },
+                                        "symbol": {
+                                          "description": "unit of mass or weight",
+                                          "type": "string",
+                                          "enum": [
+                                            "lb",
+                                            "t",
+                                            "dwt",
+                                            "gr",
+                                            "mg",
+                                            "mcg",
+                                            "oz",
+                                            "g",
+                                            "kg"
+                                          ],
+                                          "example": "kg"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "description": "wip",
+                                          "example": "Volume",
+                                          "enum": [
+                                            "Volume"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "unit of Volume",
+                                          "type": "string",
+                                          "example": "ml",
+                                          "enum": [
+                                            "pt",
+                                            "tbsp",
+                                            "µl",
+                                            "nl",
+                                            "oz",
+                                            "dl",
+                                            "ml",
+                                            "qt",
+                                            "L",
+                                            "gal",
+                                            "c",
+                                            "tsp"
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "required": [
+                                        "dimension",
+                                        "value",
+                                        "symbol"
+                                      ],
+                                      "properties": {
+                                        "dimension": {
+                                          "type": "string",
+                                          "example": "Dimensionless",
+                                          "enum": [
+                                            "Dimensionless"
+                                          ]
+                                        },
+                                        "value": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "example": 3,
+                                          "exclusiveMinimum": true
+                                        },
+                                        "symbol": {
+                                          "description": "dimensionless unit (each)",
+                                          "type": "string",
+                                          "enum": [
+                                            "ea",
+                                            "%",
+                                            "dz"
+                                          ],
+                                          "example": "ea"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "example": {
+                                "quantity": {
+                                  "dimension": "Mass",
+                                  "value": 3,
+                                  "symbol": "oz"
+                                }
+                              }
+                            }
+                          },
+                          "example": {
+                            "min": {
+                              "quantity": {
+                                "dimension": "Volume",
+                                "value": 3,
+                                "symbol": "ml"
+                              }
+                            },
+                            "max": {
+                              "quantity": {
+                                "dimension": "Volume",
+                                "value": 345,
+                                "symbol": "ml"
+                              }
+                            }
+                          }
+                        },
+                        "perUnit": {
+                          "required": [
+                            "dimension",
+                            "value",
+                            "symbol"
+                          ],
+                          "properties": {
+                            "dimension": {
+                              "type": "string",
+                              "enum": [
+                                "Mass"
+                              ]
+                            },
+                            "value": {
+                              "type": "number",
+                              "minimum": 0,
+                              "default": 1,
+                              "exclusiveMinimum": true,
+                              "example": 50
+                            },
+                            "symbol": {
+                              "description": "unit of mass or weight",
+                              "type": "string",
+                              "enum": [
+                                "lb",
+                                "t",
+                                "dwt",
+                                "gr",
+                                "mg",
+                                "mcg",
+                                "oz",
+                                "g",
+                                "kg"
+                              ],
+                              "example": "kg"
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "perUnit": {
+                          "dimension": "Mass",
+                          "value": 1,
+                          "symbol": "kg"
+                        },
+                        "_type": "models.DoseRangeByWeightFunction",
+                        "range": {
+                          "min": {
+                            "quantity": {
+                              "dimension": "volume",
+                              "value": 3,
+                              "symbol": "ml"
+                            }
+                          },
+                          "max": {
+                            "quantity": {
+                              "dimension": "volume",
+                              "value": 2,
+                              "symbol": "ml"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "description": "dose is specified as first (loading) dose and following doses per unit of animal weight",
+                      "required": [
+                        "_type",
+                        "firstDose",
+                        "followDose",
+                        "perUnit"
+                      ],
+                      "properties": {
+                        "_type": {
+                          "type": "string",
+                          "enum": [
+                            "models.DoseByWeightFunction"
+                          ]
+                        },
+                        "firstDose": {
+                          "required": [
+                            "quantity"
+                          ],
+                          "properties": {
+                            "quantity": {
+                              "oneOf": [
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Mass"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "default": 1,
+                                      "exclusiveMinimum": true,
+                                      "example": 50
+                                    },
+                                    "symbol": {
+                                      "description": "unit of mass or weight",
+                                      "type": "string",
+                                      "enum": [
+                                        "lb",
+                                        "t",
+                                        "dwt",
+                                        "gr",
+                                        "mg",
+                                        "mcg",
+                                        "oz",
+                                        "g",
+                                        "kg"
+                                      ],
+                                      "example": "kg"
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "description": "wip",
+                                      "example": "Volume",
+                                      "enum": [
+                                        "Volume"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "unit of Volume",
+                                      "type": "string",
+                                      "example": "ml",
+                                      "enum": [
+                                        "pt",
+                                        "tbsp",
+                                        "µl",
+                                        "nl",
+                                        "oz",
+                                        "dl",
+                                        "ml",
+                                        "qt",
+                                        "L",
+                                        "gal",
+                                        "c",
+                                        "tsp"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "example": "Dimensionless",
+                                      "enum": [
+                                        "Dimensionless"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "dimensionless unit (each)",
+                                      "type": "string",
+                                      "enum": [
+                                        "ea",
+                                        "%",
+                                        "dz"
+                                      ],
+                                      "example": "ea"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "example": {
+                            "quantity": {
+                              "dimension": "Mass",
+                              "value": 3,
+                              "symbol": "oz"
+                            }
+                          }
+                        },
+                        "followDose": {
+                          "required": [
+                            "quantity"
+                          ],
+                          "properties": {
+                            "quantity": {
+                              "oneOf": [
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Mass"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "default": 1,
+                                      "exclusiveMinimum": true,
+                                      "example": 50
+                                    },
+                                    "symbol": {
+                                      "description": "unit of mass or weight",
+                                      "type": "string",
+                                      "enum": [
+                                        "lb",
+                                        "t",
+                                        "dwt",
+                                        "gr",
+                                        "mg",
+                                        "mcg",
+                                        "oz",
+                                        "g",
+                                        "kg"
+                                      ],
+                                      "example": "kg"
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "description": "wip",
+                                      "example": "Volume",
+                                      "enum": [
+                                        "Volume"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "unit of Volume",
+                                      "type": "string",
+                                      "example": "ml",
+                                      "enum": [
+                                        "pt",
+                                        "tbsp",
+                                        "µl",
+                                        "nl",
+                                        "oz",
+                                        "dl",
+                                        "ml",
+                                        "qt",
+                                        "L",
+                                        "gal",
+                                        "c",
+                                        "tsp"
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "required": [
+                                    "dimension",
+                                    "value",
+                                    "symbol"
+                                  ],
+                                  "properties": {
+                                    "dimension": {
+                                      "type": "string",
+                                      "example": "Dimensionless",
+                                      "enum": [
+                                        "Dimensionless"
+                                      ]
+                                    },
+                                    "value": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "example": 3,
+                                      "exclusiveMinimum": true
+                                    },
+                                    "symbol": {
+                                      "description": "dimensionless unit (each)",
+                                      "type": "string",
+                                      "enum": [
+                                        "ea",
+                                        "%",
+                                        "dz"
+                                      ],
+                                      "example": "ea"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          "example": {
+                            "quantity": {
+                              "dimension": "Mass",
+                              "value": 3,
+                              "symbol": "oz"
+                            }
+                          }
+                        },
+                        "perUnit": {
+                          "required": [
+                            "dimension",
+                            "value",
+                            "symbol"
+                          ],
+                          "properties": {
+                            "dimension": {
+                              "type": "string",
+                              "enum": [
+                                "Mass"
+                              ]
+                            },
+                            "value": {
+                              "type": "number",
+                              "minimum": 0,
+                              "default": 1,
+                              "exclusiveMinimum": true,
+                              "example": 50
+                            },
+                            "symbol": {
+                              "description": "unit of mass or weight",
+                              "type": "string",
+                              "enum": [
+                                "lb",
+                                "t",
+                                "dwt",
+                                "gr",
+                                "mg",
+                                "mcg",
+                                "oz",
+                                "g",
+                                "kg"
+                              ],
+                              "example": "kg"
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "perUnit": {
+                          "dimension": "mass",
+                          "value": 1,
+                          "symbol": "kg"
+                        },
+                        "followDose": {
+                          "quantity": {
+                            "dimension": "volume",
+                            "value": 3,
+                            "symbol": "ml"
+                          }
+                        },
+                        "_type": "models.LoadingDoseByWeightFunction",
+                        "firstDose": {
+                          "quantity": {
+                            "dimension": "volume",
+                            "value": 6,
+                            "symbol": "ml"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "example": "{\"_type\":\"models.api.v1.DoseByClass\",\"animalClasses\":[{\"animalClass\":\"Jabberwocks\",\"sizeFunction\":{\"unit\":\"mg\",\"size\":3.2,\"_type\":\"models.api.v1.DrugQuantity\"}},{\"animalClass\":\"Borogoves\",\"sizeFunction\":{\"_type\":\"models.api.v1.DoseRangeFunction\",\"maxDose\":{\"size\":20,\"unit\":\"ml\"},\"minDose\":{\"size\":10,\"unit\":\"ml\"}}}]}"
       },
       "DoseTask": {
         "type": "object",
@@ -37066,116 +39021,47 @@
         ]
       }
     },
-    "responses": {
-      "Unauthorized": {
-        "description": "401 – Users must log in"
+    "examples": {
+      "prescription": {
+        "value": "{\"protocol\":{\"ownerId\":1,\"name\":\"example protocol\",\"shortname\":\"EXamp\",\"created\":\"2020-01-10T22:20:39Z\",\"edited\":\"2020-01-10T22:20:39Z\",\"status\":\"SAVED\",\"wtMeatHrs\":44,\"wtMilkHrs\":12,\"withholdNote\":\"be sure to wt\",\"instructions\":{\"considerations\":\"think first\",\"restrictions\":\"always\",\"dothis\":\"execute protocol\",\"recordthis\":\"case data\",\"success\":\"good\",\"failure\":\"bad\",\"references\":\"ref\"},\"shareAll\":false,\"shareClonable\":false,\"caseDefinition\":{\"pxId\":0,\"medical\":\"really sick\",\"economic\":\"lotsa cash\"},\"treatments\":[{\"id\":0,\"ownerId\":0,\"description\":\"sample w 30d meat\",\"note\":\"this is an off-label Treatment\",\"eligibilities\":[{\"id\":1,\"name\":\"Beef Cattle\",\"fdaSpecies\":\"BeefCattle\"}],\"tags\":[{\"id\":-1,\"color\":\"#516cc6\",\"name\":\"EXAMPLE\"}],\"labelId\":null,\"product\":\"MiracleMed\",\"_dose\":\"3.0 ml per kg starting at initiation, repeat in 6 hours and again in 1 day\",\"route\":\"intr-corporeal\",\"sequenceFunction\":{\"_type\":\"models.SeqSeries\",\"intervals\":[\"PT6H\",\"PT24H\"]},\"sizeFunction\":{\"_type\":\"models.DoseByWeightFunction\",\"dose\":{\"quantity\":{\"dimension\":\"Volume\",\"value\":3,\"symbol\":\"ml\"}},\"perUnit\":{\"dimension\":\"Mass\",\"value\":1,\"symbol\":\"kg\"}},\"wtMeatHrs\":null,\"wtMilkHrs\":null,\"wtNote\":null}],\"tags\":[{\"id\":-1,\"color\":\"#516cc6\",\"name\":\"EXAMPLE\"}],\"diagnoses\":[{\"id\":8,\"name\":\"Pain/inflammation (musculoskeletal), treatment\"}],\"eligibility\":{\"id\":1,\"name\":\"Beef Cattle\",\"fdaSpecies\":\"BeefCattle\"},\"promises\":[]},\"vorId\":1,\"morId\":2,\"refills\":3,\"status\":\"PRESCRIBED\",\"metadata\":[],\"rxId\":\"gG3pBCR1GCMKm89c\",\"created\":\"2020-01-10T10:30:37Z\"}",
+        "summary": "Rx.example 1/7/22"
       },
-      "BadRequest": {
-        "description": "The server could not understand the request due to invalid syntax.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "description": "error response per RFC 7807",
-              "required": [
-                "title",
-                "status"
-              ],
-              "properties": {
-                "errorType": {
-                  "type": "string",
-                  "description": "a URI identifier that categorizes the error",
-                  "example": "/errors/incorrect-user-pass"
-                },
-                "title": {
-                  "type": "string",
-                  "description": "A brief, human-readable message about the error",
-                  "example": "incorrect username or password"
-                },
-                "status": {
-                  "type": "integer",
-                  "description": "HTTP status code",
-                  "example": 404
-                },
-                "detail": {
-                  "type": "string",
-                  "description": "a human-readable description of the specific error",
-                  "example": "Authentication failed due to incorrect username or password."
-                },
-                "instance": {
-                  "type": "string",
-                  "description": "a URI that identifies the specific occurrence of the error",
-                  "example": "/login/log/abc123"
-                }
-              }
-            }
-          }
-        }
+      "protocol": {
+        "value": "{\"ownerId\":1,\"name\":\"example protocol\",\"shortname\":\"EXamp\",\"created\":\"2020-01-10T22:20:39Z\",\"edited\":\"2020-01-10T22:20:39Z\",\"status\":\"SAVED\",\"wtMeatHrs\":44,\"wtMilkHrs\":12,\"withholdNote\":\"be sure to wt\",\"instructions\":{\"considerations\":\"think first\",\"restrictions\":\"always\",\"dothis\":\"execute protocol\",\"recordthis\":\"case data\",\"success\":\"good\",\"failure\":\"bad\",\"references\":\"ref\"},\"shareAll\":false,\"shareClonable\":false,\"caseDefinition\":{\"pxId\":0,\"medical\":\"really sick\",\"economic\":\"lotsa cash\"},\"treatments\":[{\"id\":0,\"ownerId\":0,\"description\":\"sample w 30d meat\",\"note\":\"this is an off-label Treatment\",\"eligibilities\":[{\"id\":1,\"name\":\"Beef Cattle\",\"fdaSpecies\":\"BeefCattle\"}],\"tags\":[{\"id\":-1,\"color\":\"#516cc6\",\"name\":\"EXAMPLE\"}],\"labelId\":null,\"product\":\"MiracleMed\",\"_dose\":\"3.0 ml per kg starting at initiation, repeat in 6 hours and again in 1 day\",\"route\":\"intr-corporeal\",\"sequenceFunction\":{\"_type\":\"models.SeqSeries\",\"intervals\":[\"PT6H\",\"PT24H\"]},\"sizeFunction\":{\"_type\":\"models.DoseByWeightFunction\",\"dose\":{\"quantity\":{\"dimension\":\"Volume\",\"value\":3,\"symbol\":\"ml\"}},\"perUnit\":{\"dimension\":\"Mass\",\"value\":1,\"symbol\":\"kg\"}},\"wtMeatHrs\":null,\"wtMilkHrs\":null,\"wtNote\":null}],\"tags\":[{\"id\":-1,\"color\":\"#516cc6\",\"name\":\"EXAMPLE\"}],\"diagnoses\":[{\"id\":8,\"name\":\"Pain/inflammation (musculoskeletal), treatment\"}],\"eligibility\":{\"id\":1,\"name\":\"Beef Cattle\",\"fdaSpecies\":\"BeefCattle\"},\"promises\":[]}",
+        "summary": "Protocol.example 1/7/22"
       },
-      "NotFound": {
-        "description": "The server can not find the requested resource.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "description": "error response per RFC 7807",
-              "required": [
-                "title",
-                "status"
-              ],
-              "properties": {
-                "errorType": {
-                  "type": "string",
-                  "description": "a URI identifier that categorizes the error",
-                  "example": "/errors/incorrect-user-pass"
-                },
-                "title": {
-                  "type": "string",
-                  "description": "A brief, human-readable message about the error",
-                  "example": "incorrect username or password"
-                },
-                "status": {
-                  "type": "integer",
-                  "description": "HTTP status code",
-                  "example": 404
-                },
-                "detail": {
-                  "type": "string",
-                  "description": "a human-readable description of the specific error",
-                  "example": "Authentication failed due to incorrect username or password."
-                },
-                "instance": {
-                  "type": "string",
-                  "description": "a URI that identifies the specific occurrence of the error",
-                  "example": "/login/log/abc123"
-                }
-              }
-            }
-          }
-        }
+      "comment": {
+        "value": "{\"userId\":0,\"public\":false,\"created\":\"2020-01-10T22:20:39Z\",\"comment\":\"this is an anonymous private comment\"}",
+        "summary": "Comment.example 1/7/22"
+      },
+      "address": {
+        "value": "{\"userId\":3,\"busName\":\"Some Business\",\"address1\":\"123 Main St.\",\"town\":\"Anytown\",\"state\":\"Any State\",\"zip\":\"12345\",\"country\":\"USA\"}",
+        "summary": "Address.example 1/7/22"
+      },
+      "user": {
+        "value": "{\"id\":3,\"uname\":\"testTOR\",\"userType\":\"TOR\",\"email\":\"testTOR@dairysight.com\",\"firstname\":\"Test\",\"lastname\":\"Tech\"}",
+        "summary": "User.example 1/7/22"
+      },
+      "dose": {
+        "value": "{\"product\":\"MiracleMed\",\"dose\":{\"quantity\":{\"dimension\":\"Volume\",\"value\":3,\"symbol\":\"ml\"}},\"route\":\"intramuscular injection\",\"animalId\":\"Bossie\",\"doAt\":\"2020-05-16T16:19:12Z\",\"executor\":2,\"status\":\"REQUIRED\"}",
+        "summary": "Dose.example 1/7/22"
+      },
+      "treatment": {
+        "value": "{\"id\":0,\"ownerId\":0,\"description\":\"sample w 30d meat\",\"note\":\"this is an off-label Treatment\",\"eligibilities\":[{\"id\":1,\"name\":\"Beef Cattle\",\"fdaSpecies\":\"BeefCattle\"}],\"tags\":[{\"id\":-1,\"color\":\"#516cc6\",\"name\":\"EXAMPLE\"}],\"labelId\":null,\"product\":\"MiracleMed\",\"_dose\":\"3.0 ml per kg starting at initiation, repeat in 6 hours and again in 1 day\",\"route\":\"intr-corporeal\",\"sequenceFunction\":{\"_type\":\"models.SeqSeries\",\"intervals\":[\"PT6H\",\"PT24H\"]},\"sizeFunction\":{\"_type\":\"models.DoseByWeightFunction\",\"dose\":{\"quantity\":{\"dimension\":\"Volume\",\"value\":3,\"symbol\":\"ml\"}},\"perUnit\":{\"dimension\":\"Mass\",\"value\":1,\"symbol\":\"kg\"}},\"wtMeatHrs\":null,\"wtMilkHrs\":null,\"wtNote\":null}",
+        "summary": "Treatment.example 1/7/22"
+      },
+      "volumeQ": {
+        "value": "{\"quantity\":{\"dimension\":\"Volume\",\"value\":3,\"symbol\":\"ml\"}}",
+        "summary": "VolumeQ.example 1/7/22"
+      },
+      "massQ": {
+        "value": "{\"quantity\":{\"dimension\":\"Mass\",\"value\":3,\"symbol\":\"oz\"}}",
+        "summary": "MassQ.example 1/7/22"
+      },
+      "dimensionlessQ": {
+        "value": "",
+        "summary": "DimensionlessQ.example 1/7/22"
       }
     }
-  },
-  "tags": [
-    {
-      "name": "User",
-      "description": "Endpoints and models related to user management."
-    },
-    {
-      "name": "Protocol",
-      "description": "Endpoints and models related to protocol management."
-    },
-    {
-      "name": "Prescription",
-      "description": "Endpoints and models related to prescription management."
-    },
-    {
-      "name": "Case",
-      "description": "Endpoints and models related to case management."
-    },
-    {
-      "name": "Promise",
-      "description": "Endpoints and models related to promise management."
-    }
-  ]
+  }
 }
