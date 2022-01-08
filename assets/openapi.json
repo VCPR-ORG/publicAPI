@@ -1921,10 +1921,14 @@
         "description": "(for future development)",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "key identifying data",
+            "example": "popularity"
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "value associated with key",
+            "example": "good 1.2"
           }
         }
       },
@@ -2053,13 +2057,15 @@
       "Prescription": {
         "type": "object",
         "required": [
-          "size",
-          "unit"
+          "vorId",
+          "morId",
+          "protocol",
+          "status"
         ],
         "properties": {
           "rxId": {
             "type": "string",
-            "description": "wip",
+            "description": "prescription identifier",
             "example": "gG3pBCR1GCMKm89c"
           },
           "protocol": {
@@ -2067,41 +2073,40 @@
           },
           "vorId": {
             "type": "integer",
-            "description": "ID of VOR user who prescribed this task",
-            "example": "aZ3pBCR1GCMKm89c"
+            "description": "ID of VOR user who prescribed this",
+            "example": 1
           },
           "morId": {
             "type": "integer",
-            "description": "wip",
-            "example": "tP3pBCR1GCMKm89c"
+            "description": "ID of MOR this is prescribed for",
+            "example": 2
           },
           "refills": {
             "type": "integer",
-            "description": "number of repeats for this script",
+            "description": "number of repeats for this prescription",
             "default": 0,
             "example": 0
           },
           "expiration": {
             "type": "string",
             "format": "date-time",
-            "description": "ISO-8601-formatted datetime defining expiration date",
+            "description": "expiration date",
             "example": "2021-01-10T10:30:37Z"
           },
           "created": {
             "type": "string",
             "format": "date-time",
-            "description": "ISO-8601-formatted datetime added by the server when prescription is first saved",
+            "description": "description: timestamp when prescribed first saved",
             "example": "2021-08-10T10:30:37Z"
           },
           "metadata": {
-            "type": "string",
-            "description": "wip",
-            "example": "wip"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metadata"
+            }
           },
           "status": {
-            "type": "string",
-            "description": "wip",
-            "example": "wip - NB this may have a status of DEPRECTATED, but the property itself is not!"
+            "$ref": "#/components/schemas/ProtocolStatus"
           }
         }
       },
