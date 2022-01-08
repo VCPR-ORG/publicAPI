@@ -372,6 +372,7 @@
                     "prescriptions": {
                       "type": "array",
                       "items": {
+                        "type": "object",
                         "required": [
                           "size",
                           "unit"
@@ -567,8 +568,9 @@
                                   "required": [
                                     "product",
                                     "route",
-                                    "sequencefunction",
-                                    "sizefunction"
+                                    "dosage",
+                                    "sequenceFunction",
+                                    "sizeFunction"
                                   ],
                                   "properties": {
                                     "id": {
@@ -1585,6 +1587,7 @@
                                                       "enum": [
                                                         "models.DoseRangeFunction"
                                                       ],
+                                                      "description": "class of Dose Function",
                                                       "example": "models.DoseRangeFunction"
                                                     },
                                                     "range": {
@@ -1907,7 +1910,9 @@
                                                       "type": "string",
                                                       "enum": [
                                                         "models.DoseRangeByWeightFunction"
-                                                      ]
+                                                      ],
+                                                      "description": "class of Dose Function",
+                                                      "example": "models.DoseRangeByWeightFunction"
                                                     },
                                                     "range": {
                                                       "type": "object",
@@ -3211,6 +3216,7 @@
                                               "enum": [
                                                 "models.DoseRangeFunction"
                                               ],
+                                              "description": "class of Dose Function",
                                               "example": "models.DoseRangeFunction"
                                             },
                                             "range": {
@@ -3533,7 +3539,9 @@
                                               "type": "string",
                                               "enum": [
                                                 "models.DoseRangeByWeightFunction"
-                                              ]
+                                              ],
+                                              "description": "class of Dose Function",
+                                              "example": "models.DoseRangeByWeightFunction"
                                             },
                                             "range": {
                                               "type": "object",
@@ -4118,6 +4126,7 @@
                               "metadata": {
                                 "type": "array",
                                 "items": {
+                                  "type": "object",
                                   "description": "(for future development)",
                                   "properties": {
                                     "key": {
@@ -4208,6 +4217,7 @@
                 "schema": {
                   "properties": {
                     "prescription": {
+                      "type": "object",
                       "required": [
                         "size",
                         "unit"
@@ -4403,8 +4413,9 @@
                                 "required": [
                                   "product",
                                   "route",
-                                  "sequencefunction",
-                                  "sizefunction"
+                                  "dosage",
+                                  "sequenceFunction",
+                                  "sizeFunction"
                                 ],
                                 "properties": {
                                   "id": {
@@ -5421,6 +5432,7 @@
                                                     "enum": [
                                                       "models.DoseRangeFunction"
                                                     ],
+                                                    "description": "class of Dose Function",
                                                     "example": "models.DoseRangeFunction"
                                                   },
                                                   "range": {
@@ -5743,7 +5755,9 @@
                                                     "type": "string",
                                                     "enum": [
                                                       "models.DoseRangeByWeightFunction"
-                                                    ]
+                                                    ],
+                                                    "description": "class of Dose Function",
+                                                    "example": "models.DoseRangeByWeightFunction"
                                                   },
                                                   "range": {
                                                     "type": "object",
@@ -7047,6 +7061,7 @@
                                             "enum": [
                                               "models.DoseRangeFunction"
                                             ],
+                                            "description": "class of Dose Function",
                                             "example": "models.DoseRangeFunction"
                                           },
                                           "range": {
@@ -7369,7 +7384,9 @@
                                             "type": "string",
                                             "enum": [
                                               "models.DoseRangeByWeightFunction"
-                                            ]
+                                            ],
+                                            "description": "class of Dose Function",
+                                            "example": "models.DoseRangeByWeightFunction"
                                           },
                                           "range": {
                                             "type": "object",
@@ -7954,6 +7971,7 @@
                             "metadata": {
                               "type": "array",
                               "items": {
+                                "type": "object",
                                 "description": "(for future development)",
                                 "properties": {
                                   "key": {
@@ -8292,6 +8310,7 @@
                             }
                           },
                           {
+                            "type": "object",
                             "description": "specifies animal's weight",
                             "properties": {
                               "_type": {
@@ -9547,6 +9566,7 @@
                                             "enum": [
                                               "models.DoseRangeFunction"
                                             ],
+                                            "description": "class of Dose Function",
                                             "example": "models.DoseRangeFunction"
                                           },
                                           "range": {
@@ -9869,7 +9889,9 @@
                                             "type": "string",
                                             "enum": [
                                               "models.DoseRangeByWeightFunction"
-                                            ]
+                                            ],
+                                            "description": "class of Dose Function",
+                                            "example": "models.DoseRangeByWeightFunction"
                                           },
                                           "range": {
                                             "type": "object",
@@ -10390,6 +10412,7 @@
                                   }
                                 },
                                 {
+                                  "type": "object",
                                   "description": "specifies animal's weight",
                                   "properties": {
                                     "_type": {
@@ -11645,6 +11668,7 @@
                                                   "enum": [
                                                     "models.DoseRangeFunction"
                                                   ],
+                                                  "description": "class of Dose Function",
                                                   "example": "models.DoseRangeFunction"
                                                 },
                                                 "range": {
@@ -11967,7 +11991,9 @@
                                                   "type": "string",
                                                   "enum": [
                                                     "models.DoseRangeByWeightFunction"
-                                                  ]
+                                                  ],
+                                                  "description": "class of Dose Function",
+                                                  "example": "models.DoseRangeByWeightFunction"
                                                 },
                                                 "range": {
                                                   "type": "object",
@@ -12542,6 +12568,7 @@
                                     }
                                   },
                                   {
+                                    "type": "object",
                                     "description": "specifies animal's weight",
                                     "properties": {
                                       "_type": {
@@ -13797,6 +13824,7 @@
                                                     "enum": [
                                                       "models.DoseRangeFunction"
                                                     ],
+                                                    "description": "class of Dose Function",
                                                     "example": "models.DoseRangeFunction"
                                                   },
                                                   "range": {
@@ -14119,7 +14147,9 @@
                                                     "type": "string",
                                                     "enum": [
                                                       "models.DoseRangeByWeightFunction"
-                                                    ]
+                                                    ],
+                                                    "description": "class of Dose Function",
+                                                    "example": "models.DoseRangeByWeightFunction"
                                                   },
                                                   "range": {
                                                     "type": "object",
@@ -14670,6 +14700,7 @@
                                     }
                                   },
                                   {
+                                    "type": "object",
                                     "description": "specifies animal's weight",
                                     "properties": {
                                       "_type": {
@@ -15925,6 +15956,7 @@
                                                     "enum": [
                                                       "models.DoseRangeFunction"
                                                     ],
+                                                    "description": "class of Dose Function",
                                                     "example": "models.DoseRangeFunction"
                                                   },
                                                   "range": {
@@ -16247,7 +16279,9 @@
                                                     "type": "string",
                                                     "enum": [
                                                       "models.DoseRangeByWeightFunction"
-                                                    ]
+                                                    ],
+                                                    "description": "class of Dose Function",
+                                                    "example": "models.DoseRangeByWeightFunction"
                                                   },
                                                   "range": {
                                                     "type": "object",
@@ -17296,6 +17330,7 @@
                                   }
                                 },
                                 {
+                                  "type": "object",
                                   "description": "specifies animal's weight",
                                   "properties": {
                                     "_type": {
@@ -18551,6 +18586,7 @@
                                                   "enum": [
                                                     "models.DoseRangeFunction"
                                                   ],
+                                                  "description": "class of Dose Function",
                                                   "example": "models.DoseRangeFunction"
                                                 },
                                                 "range": {
@@ -18873,7 +18909,9 @@
                                                   "type": "string",
                                                   "enum": [
                                                     "models.DoseRangeByWeightFunction"
-                                                  ]
+                                                  ],
+                                                  "description": "class of Dose Function",
+                                                  "example": "models.DoseRangeByWeightFunction"
                                                 },
                                                 "range": {
                                                   "type": "object",
@@ -19448,6 +19486,7 @@
                                     }
                                   },
                                   {
+                                    "type": "object",
                                     "description": "specifies animal's weight",
                                     "properties": {
                                       "_type": {
@@ -20703,6 +20742,7 @@
                                                     "enum": [
                                                       "models.DoseRangeFunction"
                                                     ],
+                                                    "description": "class of Dose Function",
                                                     "example": "models.DoseRangeFunction"
                                                   },
                                                   "range": {
@@ -21025,7 +21065,9 @@
                                                     "type": "string",
                                                     "enum": [
                                                       "models.DoseRangeByWeightFunction"
-                                                    ]
+                                                    ],
+                                                    "description": "class of Dose Function",
+                                                    "example": "models.DoseRangeByWeightFunction"
                                                   },
                                                   "range": {
                                                     "type": "object",
@@ -23942,6 +23984,7 @@
             "enum": [
               "models.DoseRangeFunction"
             ],
+            "description": "class of Dose Function",
             "example": "models.DoseRangeFunction"
           },
           "range": {
@@ -24264,7 +24307,9 @@
             "type": "string",
             "enum": [
               "models.DoseRangeByWeightFunction"
-            ]
+            ],
+            "description": "class of Dose Function",
+            "example": "models.DoseRangeByWeightFunction"
           },
           "range": {
             "type": "object",
@@ -25403,6 +25448,7 @@
                 "enum": [
                   "models.DoseRangeFunction"
                 ],
+                "description": "class of Dose Function",
                 "example": "models.DoseRangeFunction"
               },
               "range": {
@@ -25725,7 +25771,9 @@
                 "type": "string",
                 "enum": [
                   "models.DoseRangeByWeightFunction"
-                ]
+                ],
+                "description": "class of Dose Function",
+                "example": "models.DoseRangeByWeightFunction"
               },
               "range": {
                 "type": "object",
@@ -27023,6 +27071,7 @@
                     "enum": [
                       "models.DoseRangeFunction"
                     ],
+                    "description": "class of Dose Function",
                     "example": "models.DoseRangeFunction"
                   },
                   "range": {
@@ -27345,7 +27394,9 @@
                     "type": "string",
                     "enum": [
                       "models.DoseRangeByWeightFunction"
-                    ]
+                    ],
+                    "description": "class of Dose Function",
+                    "example": "models.DoseRangeByWeightFunction"
                   },
                   "range": {
                     "type": "object",
@@ -27750,8 +27801,9 @@
         "required": [
           "product",
           "route",
-          "sequencefunction",
-          "sizefunction"
+          "dosage",
+          "sequenceFunction",
+          "sizeFunction"
         ],
         "properties": {
           "id": {
@@ -28768,6 +28820,7 @@
                             "enum": [
                               "models.DoseRangeFunction"
                             ],
+                            "description": "class of Dose Function",
                             "example": "models.DoseRangeFunction"
                           },
                           "range": {
@@ -29090,7 +29143,9 @@
                             "type": "string",
                             "enum": [
                               "models.DoseRangeByWeightFunction"
-                            ]
+                            ],
+                            "description": "class of Dose Function",
+                            "example": "models.DoseRangeByWeightFunction"
                           },
                           "range": {
                             "type": "object",
@@ -30394,6 +30449,7 @@
                     "enum": [
                       "models.DoseRangeFunction"
                     ],
+                    "description": "class of Dose Function",
                     "example": "models.DoseRangeFunction"
                   },
                   "range": {
@@ -30716,7 +30772,9 @@
                     "type": "string",
                     "enum": [
                       "models.DoseRangeByWeightFunction"
-                    ]
+                    ],
+                    "description": "class of Dose Function",
+                    "example": "models.DoseRangeByWeightFunction"
                   },
                   "range": {
                     "type": "object",
@@ -31417,10 +31475,6 @@
       "BooleanPromise": {
         "description": "identification of animal is required to enroll a case",
         "type": "object",
-        "required": [
-          "animalId",
-          "initiationDate"
-        ],
         "allOf": [
           {
             "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
@@ -31826,6 +31880,7 @@
         ]
       },
       "Metadata": {
+        "type": "object",
         "description": "(for future development)",
         "properties": {
           "key": {
@@ -32021,8 +32076,9 @@
               "required": [
                 "product",
                 "route",
-                "sequencefunction",
-                "sizefunction"
+                "dosage",
+                "sequenceFunction",
+                "sizeFunction"
               ],
               "properties": {
                 "id": {
@@ -33039,6 +33095,7 @@
                                   "enum": [
                                     "models.DoseRangeFunction"
                                   ],
+                                  "description": "class of Dose Function",
                                   "example": "models.DoseRangeFunction"
                                 },
                                 "range": {
@@ -33361,7 +33418,9 @@
                                   "type": "string",
                                   "enum": [
                                     "models.DoseRangeByWeightFunction"
-                                  ]
+                                  ],
+                                  "description": "class of Dose Function",
+                                  "example": "models.DoseRangeByWeightFunction"
                                 },
                                 "range": {
                                   "type": "object",
@@ -34665,6 +34724,7 @@
                           "enum": [
                             "models.DoseRangeFunction"
                           ],
+                          "description": "class of Dose Function",
                           "example": "models.DoseRangeFunction"
                         },
                         "range": {
@@ -34987,7 +35047,9 @@
                           "type": "string",
                           "enum": [
                             "models.DoseRangeByWeightFunction"
-                          ]
+                          ],
+                          "description": "class of Dose Function",
+                          "example": "models.DoseRangeByWeightFunction"
                         },
                         "range": {
                           "type": "object",
@@ -35572,6 +35634,7 @@
           "metadata": {
             "type": "array",
             "items": {
+              "type": "object",
               "description": "(for future development)",
               "properties": {
                 "key": {
@@ -35586,6 +35649,7 @@
         }
       },
       "Prescription": {
+        "type": "object",
         "required": [
           "size",
           "unit"
@@ -35781,8 +35845,9 @@
                   "required": [
                     "product",
                     "route",
-                    "sequencefunction",
-                    "sizefunction"
+                    "dosage",
+                    "sequenceFunction",
+                    "sizeFunction"
                   ],
                   "properties": {
                     "id": {
@@ -36799,6 +36864,7 @@
                                       "enum": [
                                         "models.DoseRangeFunction"
                                       ],
+                                      "description": "class of Dose Function",
                                       "example": "models.DoseRangeFunction"
                                     },
                                     "range": {
@@ -37121,7 +37187,9 @@
                                       "type": "string",
                                       "enum": [
                                         "models.DoseRangeByWeightFunction"
-                                      ]
+                                      ],
+                                      "description": "class of Dose Function",
+                                      "example": "models.DoseRangeByWeightFunction"
                                     },
                                     "range": {
                                       "type": "object",
@@ -38425,6 +38493,7 @@
                               "enum": [
                                 "models.DoseRangeFunction"
                               ],
+                              "description": "class of Dose Function",
                               "example": "models.DoseRangeFunction"
                             },
                             "range": {
@@ -38747,7 +38816,9 @@
                               "type": "string",
                               "enum": [
                                 "models.DoseRangeByWeightFunction"
-                              ]
+                              ],
+                              "description": "class of Dose Function",
+                              "example": "models.DoseRangeByWeightFunction"
                             },
                             "range": {
                               "type": "object",
@@ -39332,6 +39403,7 @@
               "metadata": {
                 "type": "array",
                 "items": {
+                  "type": "object",
                   "description": "(for future development)",
                   "properties": {
                     "key": {
@@ -39449,6 +39521,7 @@
                     }
                   },
                   {
+                    "type": "object",
                     "description": "specifies animal's weight",
                     "properties": {
                       "_type": {
@@ -40704,6 +40777,7 @@
                                     "enum": [
                                       "models.DoseRangeFunction"
                                     ],
+                                    "description": "class of Dose Function",
                                     "example": "models.DoseRangeFunction"
                                   },
                                   "range": {
@@ -41026,7 +41100,9 @@
                                     "type": "string",
                                     "enum": [
                                       "models.DoseRangeByWeightFunction"
-                                    ]
+                                    ],
+                                    "description": "class of Dose Function",
+                                    "example": "models.DoseRangeByWeightFunction"
                                   },
                                   "range": {
                                     "type": "object",
@@ -42119,667 +42195,29 @@
             "type": "array",
             "items": {
               "type": "object",
+              "description": "a fixed quantity expressed in any available unit",
               "required": [
-                "animalClass",
-                "sizefunction"
+                "_type",
+                "dose"
               ],
               "properties": {
-                "animalClass": {
+                "_type": {
                   "type": "string",
-                  "description": "name of class"
+                  "description": "class of Dose Function",
+                  "enum": [
+                    "models.FixedDoseFunction"
+                  ],
+                  "example": "models.FixedDoseFunction"
                 },
-                "sizefunction": {
-                  "description": "function to calculate dose size",
+                "dose": {
                   "type": "object",
-                  "oneOf": [
-                    {
-                      "type": "object",
-                      "description": "a fixed quantity expressed in any available unit",
-                      "required": [
-                        "_type",
-                        "dose"
-                      ],
-                      "properties": {
-                        "_type": {
-                          "type": "string",
-                          "description": "class of Dose Function",
-                          "enum": [
-                            "models.FixedDoseFunction"
-                          ],
-                          "example": "models.FixedDoseFunction"
-                        },
-                        "dose": {
-                          "type": "object",
-                          "required": [
-                            "quantity"
-                          ],
-                          "properties": {
-                            "quantity": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "enum": [
-                                        "Mass"
-                                      ],
-                                      "description": "must be Mass",
-                                      "example": "Mass"
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "default": 1,
-                                      "exclusiveMinimum": true,
-                                      "example": 50
-                                    },
-                                    "symbol": {
-                                      "description": "unit of mass or weight",
-                                      "type": "string",
-                                      "enum": [
-                                        "lb",
-                                        "t",
-                                        "dwt",
-                                        "gr",
-                                        "mg",
-                                        "mcg",
-                                        "oz",
-                                        "g",
-                                        "kg"
-                                      ],
-                                      "example": "kg"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Volume",
-                                      "example": "Volume",
-                                      "enum": [
-                                        "Volume"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "unit of Volume",
-                                      "type": "string",
-                                      "example": "ml",
-                                      "enum": [
-                                        "pt",
-                                        "tbsp",
-                                        "µl",
-                                        "nl",
-                                        "oz",
-                                        "dl",
-                                        "ml",
-                                        "qt",
-                                        "L",
-                                        "gal",
-                                        "c",
-                                        "tsp"
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Dimensionless",
-                                      "example": "Dimensionless",
-                                      "enum": [
-                                        "Dimensionless"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "dimensionless unit (each)",
-                                      "type": "string",
-                                      "enum": [
-                                        "ea",
-                                        "%",
-                                        "dz"
-                                      ],
-                                      "example": "ea"
-                                    }
-                                  }
-                                }
-                              ]
-                            }
-                          },
-                          "example": {
-                            "quantity": {
-                              "dimension": "Mass",
-                              "value": 3,
-                              "symbol": "oz"
-                            }
-                          }
-                        }
-                      },
-                      "example": {
-                        "dose": {
-                          "quantity": {
-                            "dimension": "Volume",
-                            "value": 3,
-                            "symbol": "ml"
-                          }
-                        },
-                        "_type": "models.FixedDoseFunction"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "description": "a range of permissible dose size. The User may select any value within the range (inclusive).",
-                      "required": [
-                        "_type",
-                        "range"
-                      ],
-                      "properties": {
-                        "_type": {
-                          "type": "string",
-                          "enum": [
-                            "models.DoseRangeFunction"
-                          ],
-                          "example": "models.DoseRangeFunction"
-                        },
-                        "range": {
-                          "type": "object",
-                          "required": [
-                            "min",
-                            "max"
-                          ],
-                          "properties": {
-                            "min": {
-                              "type": "object",
-                              "required": [
-                                "quantity"
-                              ],
-                              "properties": {
-                                "quantity": {
-                                  "oneOf": [
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "enum": [
-                                            "Mass"
-                                          ],
-                                          "description": "must be Mass",
-                                          "example": "Mass"
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "default": 1,
-                                          "exclusiveMinimum": true,
-                                          "example": 50
-                                        },
-                                        "symbol": {
-                                          "description": "unit of mass or weight",
-                                          "type": "string",
-                                          "enum": [
-                                            "lb",
-                                            "t",
-                                            "dwt",
-                                            "gr",
-                                            "mg",
-                                            "mcg",
-                                            "oz",
-                                            "g",
-                                            "kg"
-                                          ],
-                                          "example": "kg"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Volume",
-                                          "example": "Volume",
-                                          "enum": [
-                                            "Volume"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "unit of Volume",
-                                          "type": "string",
-                                          "example": "ml",
-                                          "enum": [
-                                            "pt",
-                                            "tbsp",
-                                            "µl",
-                                            "nl",
-                                            "oz",
-                                            "dl",
-                                            "ml",
-                                            "qt",
-                                            "L",
-                                            "gal",
-                                            "c",
-                                            "tsp"
-                                          ]
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Dimensionless",
-                                          "example": "Dimensionless",
-                                          "enum": [
-                                            "Dimensionless"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "dimensionless unit (each)",
-                                          "type": "string",
-                                          "enum": [
-                                            "ea",
-                                            "%",
-                                            "dz"
-                                          ],
-                                          "example": "ea"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              },
-                              "example": {
-                                "quantity": {
-                                  "dimension": "Mass",
-                                  "value": 3,
-                                  "symbol": "oz"
-                                }
-                              }
-                            },
-                            "max": {
-                              "type": "object",
-                              "required": [
-                                "quantity"
-                              ],
-                              "properties": {
-                                "quantity": {
-                                  "oneOf": [
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "enum": [
-                                            "Mass"
-                                          ],
-                                          "description": "must be Mass",
-                                          "example": "Mass"
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "default": 1,
-                                          "exclusiveMinimum": true,
-                                          "example": 50
-                                        },
-                                        "symbol": {
-                                          "description": "unit of mass or weight",
-                                          "type": "string",
-                                          "enum": [
-                                            "lb",
-                                            "t",
-                                            "dwt",
-                                            "gr",
-                                            "mg",
-                                            "mcg",
-                                            "oz",
-                                            "g",
-                                            "kg"
-                                          ],
-                                          "example": "kg"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Volume",
-                                          "example": "Volume",
-                                          "enum": [
-                                            "Volume"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "unit of Volume",
-                                          "type": "string",
-                                          "example": "ml",
-                                          "enum": [
-                                            "pt",
-                                            "tbsp",
-                                            "µl",
-                                            "nl",
-                                            "oz",
-                                            "dl",
-                                            "ml",
-                                            "qt",
-                                            "L",
-                                            "gal",
-                                            "c",
-                                            "tsp"
-                                          ]
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Dimensionless",
-                                          "example": "Dimensionless",
-                                          "enum": [
-                                            "Dimensionless"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "dimensionless unit (each)",
-                                          "type": "string",
-                                          "enum": [
-                                            "ea",
-                                            "%",
-                                            "dz"
-                                          ],
-                                          "example": "ea"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              },
-                              "example": {
-                                "quantity": {
-                                  "dimension": "Mass",
-                                  "value": 3,
-                                  "symbol": "oz"
-                                }
-                              }
-                            }
-                          },
-                          "example": {
-                            "min": {
-                              "quantity": {
-                                "dimension": "Volume",
-                                "value": 3,
-                                "symbol": "ml"
-                              }
-                            },
-                            "max": {
-                              "quantity": {
-                                "dimension": "Volume",
-                                "value": 345,
-                                "symbol": "ml"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "description": "dose is specified as a quantity per unit of animal weight",
-                      "required": [
-                        "_type",
-                        "dose",
-                        "perUnit"
-                      ],
-                      "properties": {
-                        "_type": {
-                          "type": "string",
-                          "description": "class of Dose Function",
-                          "example": "models.DoseByWeightFunction",
-                          "enum": [
-                            "models.DoseByWeightFunction"
-                          ]
-                        },
-                        "dose": {
-                          "type": "object",
-                          "required": [
-                            "quantity"
-                          ],
-                          "properties": {
-                            "quantity": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "enum": [
-                                        "Mass"
-                                      ],
-                                      "description": "must be Mass",
-                                      "example": "Mass"
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "default": 1,
-                                      "exclusiveMinimum": true,
-                                      "example": 50
-                                    },
-                                    "symbol": {
-                                      "description": "unit of mass or weight",
-                                      "type": "string",
-                                      "enum": [
-                                        "lb",
-                                        "t",
-                                        "dwt",
-                                        "gr",
-                                        "mg",
-                                        "mcg",
-                                        "oz",
-                                        "g",
-                                        "kg"
-                                      ],
-                                      "example": "kg"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Volume",
-                                      "example": "Volume",
-                                      "enum": [
-                                        "Volume"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "unit of Volume",
-                                      "type": "string",
-                                      "example": "ml",
-                                      "enum": [
-                                        "pt",
-                                        "tbsp",
-                                        "µl",
-                                        "nl",
-                                        "oz",
-                                        "dl",
-                                        "ml",
-                                        "qt",
-                                        "L",
-                                        "gal",
-                                        "c",
-                                        "tsp"
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Dimensionless",
-                                      "example": "Dimensionless",
-                                      "enum": [
-                                        "Dimensionless"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "dimensionless unit (each)",
-                                      "type": "string",
-                                      "enum": [
-                                        "ea",
-                                        "%",
-                                        "dz"
-                                      ],
-                                      "example": "ea"
-                                    }
-                                  }
-                                }
-                              ]
-                            }
-                          },
-                          "example": {
-                            "quantity": {
-                              "dimension": "Mass",
-                              "value": 3,
-                              "symbol": "oz"
-                            }
-                          }
-                        },
-                        "perUnit": {
+                  "required": [
+                    "quantity"
+                  ],
+                  "properties": {
+                    "quantity": {
+                      "oneOf": [
+                        {
                           "type": "object",
                           "required": [
                             "dimension",
@@ -42820,345 +42258,8 @@
                               "example": "kg"
                             }
                           }
-                        }
-                      },
-                      "example": {
-                        "dose": {
-                          "quantity": {
-                            "dimension": "Volume",
-                            "value": 3,
-                            "symbol": "ml"
-                          }
                         },
-                        "perUnit": {
-                          "dimension": "Mass",
-                          "value": 1,
-                          "symbol": "kg"
-                        },
-                        "_type": "models.DoseByWeightFunction"
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "description": "dose is specified as a range per unit of animal weight. The User may select any value within the range (inclusive).",
-                      "required": [
-                        "_type",
-                        "range",
-                        "perUnit"
-                      ],
-                      "properties": {
-                        "_type": {
-                          "type": "string",
-                          "enum": [
-                            "models.DoseRangeByWeightFunction"
-                          ]
-                        },
-                        "range": {
-                          "type": "object",
-                          "required": [
-                            "min",
-                            "max"
-                          ],
-                          "properties": {
-                            "min": {
-                              "type": "object",
-                              "required": [
-                                "quantity"
-                              ],
-                              "properties": {
-                                "quantity": {
-                                  "oneOf": [
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "enum": [
-                                            "Mass"
-                                          ],
-                                          "description": "must be Mass",
-                                          "example": "Mass"
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "default": 1,
-                                          "exclusiveMinimum": true,
-                                          "example": 50
-                                        },
-                                        "symbol": {
-                                          "description": "unit of mass or weight",
-                                          "type": "string",
-                                          "enum": [
-                                            "lb",
-                                            "t",
-                                            "dwt",
-                                            "gr",
-                                            "mg",
-                                            "mcg",
-                                            "oz",
-                                            "g",
-                                            "kg"
-                                          ],
-                                          "example": "kg"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Volume",
-                                          "example": "Volume",
-                                          "enum": [
-                                            "Volume"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "unit of Volume",
-                                          "type": "string",
-                                          "example": "ml",
-                                          "enum": [
-                                            "pt",
-                                            "tbsp",
-                                            "µl",
-                                            "nl",
-                                            "oz",
-                                            "dl",
-                                            "ml",
-                                            "qt",
-                                            "L",
-                                            "gal",
-                                            "c",
-                                            "tsp"
-                                          ]
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Dimensionless",
-                                          "example": "Dimensionless",
-                                          "enum": [
-                                            "Dimensionless"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "dimensionless unit (each)",
-                                          "type": "string",
-                                          "enum": [
-                                            "ea",
-                                            "%",
-                                            "dz"
-                                          ],
-                                          "example": "ea"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              },
-                              "example": {
-                                "quantity": {
-                                  "dimension": "Mass",
-                                  "value": 3,
-                                  "symbol": "oz"
-                                }
-                              }
-                            },
-                            "max": {
-                              "type": "object",
-                              "required": [
-                                "quantity"
-                              ],
-                              "properties": {
-                                "quantity": {
-                                  "oneOf": [
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "enum": [
-                                            "Mass"
-                                          ],
-                                          "description": "must be Mass",
-                                          "example": "Mass"
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "default": 1,
-                                          "exclusiveMinimum": true,
-                                          "example": 50
-                                        },
-                                        "symbol": {
-                                          "description": "unit of mass or weight",
-                                          "type": "string",
-                                          "enum": [
-                                            "lb",
-                                            "t",
-                                            "dwt",
-                                            "gr",
-                                            "mg",
-                                            "mcg",
-                                            "oz",
-                                            "g",
-                                            "kg"
-                                          ],
-                                          "example": "kg"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Volume",
-                                          "example": "Volume",
-                                          "enum": [
-                                            "Volume"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "unit of Volume",
-                                          "type": "string",
-                                          "example": "ml",
-                                          "enum": [
-                                            "pt",
-                                            "tbsp",
-                                            "µl",
-                                            "nl",
-                                            "oz",
-                                            "dl",
-                                            "ml",
-                                            "qt",
-                                            "L",
-                                            "gal",
-                                            "c",
-                                            "tsp"
-                                          ]
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "required": [
-                                        "dimension",
-                                        "value",
-                                        "symbol"
-                                      ],
-                                      "properties": {
-                                        "dimension": {
-                                          "type": "string",
-                                          "description": "must be Dimensionless",
-                                          "example": "Dimensionless",
-                                          "enum": [
-                                            "Dimensionless"
-                                          ]
-                                        },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "number of units",
-                                          "minimum": 0,
-                                          "example": 3,
-                                          "exclusiveMinimum": true
-                                        },
-                                        "symbol": {
-                                          "description": "dimensionless unit (each)",
-                                          "type": "string",
-                                          "enum": [
-                                            "ea",
-                                            "%",
-                                            "dz"
-                                          ],
-                                          "example": "ea"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              },
-                              "example": {
-                                "quantity": {
-                                  "dimension": "Mass",
-                                  "value": 3,
-                                  "symbol": "oz"
-                                }
-                              }
-                            }
-                          },
-                          "example": {
-                            "min": {
-                              "quantity": {
-                                "dimension": "Volume",
-                                "value": 3,
-                                "symbol": "ml"
-                              }
-                            },
-                            "max": {
-                              "quantity": {
-                                "dimension": "Volume",
-                                "value": 345,
-                                "symbol": "ml"
-                              }
-                            }
-                          }
-                        },
-                        "perUnit": {
+                        {
                           "type": "object",
                           "required": [
                             "dimension",
@@ -43168,363 +42269,41 @@
                           "properties": {
                             "dimension": {
                               "type": "string",
+                              "description": "must be Volume",
+                              "example": "Volume",
                               "enum": [
-                                "Mass"
-                              ],
-                              "description": "must be Mass",
-                              "example": "Mass"
+                                "Volume"
+                              ]
                             },
                             "value": {
                               "type": "number",
                               "description": "number of units",
                               "minimum": 0,
-                              "default": 1,
-                              "exclusiveMinimum": true,
-                              "example": 50
+                              "example": 3,
+                              "exclusiveMinimum": true
                             },
                             "symbol": {
-                              "description": "unit of mass or weight",
+                              "description": "unit of Volume",
                               "type": "string",
+                              "example": "ml",
                               "enum": [
-                                "lb",
-                                "t",
-                                "dwt",
-                                "gr",
-                                "mg",
-                                "mcg",
+                                "pt",
+                                "tbsp",
+                                "µl",
+                                "nl",
                                 "oz",
-                                "g",
-                                "kg"
-                              ],
-                              "example": "kg"
-                            }
-                          }
-                        }
-                      },
-                      "example": {
-                        "perUnit": {
-                          "dimension": "Mass",
-                          "value": 1,
-                          "symbol": "kg"
-                        },
-                        "_type": "models.DoseRangeByWeightFunction",
-                        "range": {
-                          "min": {
-                            "quantity": {
-                              "dimension": "volume",
-                              "value": 3,
-                              "symbol": "ml"
-                            }
-                          },
-                          "max": {
-                            "quantity": {
-                              "dimension": "volume",
-                              "value": 2,
-                              "symbol": "ml"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    {
-                      "type": "object",
-                      "description": "dose is specified as first (loading) dose and following doses per unit of animal weight",
-                      "required": [
-                        "_type",
-                        "firstDose",
-                        "followDose",
-                        "perUnit"
-                      ],
-                      "properties": {
-                        "_type": {
-                          "type": "string",
-                          "description": "class of Dose Function",
-                          "example": "DoseByWeightFunction",
-                          "enum": [
-                            "models.DoseByWeightFunction"
-                          ]
-                        },
-                        "firstDose": {
-                          "type": "object",
-                          "required": [
-                            "quantity"
-                          ],
-                          "properties": {
-                            "quantity": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "enum": [
-                                        "Mass"
-                                      ],
-                                      "description": "must be Mass",
-                                      "example": "Mass"
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "default": 1,
-                                      "exclusiveMinimum": true,
-                                      "example": 50
-                                    },
-                                    "symbol": {
-                                      "description": "unit of mass or weight",
-                                      "type": "string",
-                                      "enum": [
-                                        "lb",
-                                        "t",
-                                        "dwt",
-                                        "gr",
-                                        "mg",
-                                        "mcg",
-                                        "oz",
-                                        "g",
-                                        "kg"
-                                      ],
-                                      "example": "kg"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Volume",
-                                      "example": "Volume",
-                                      "enum": [
-                                        "Volume"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "unit of Volume",
-                                      "type": "string",
-                                      "example": "ml",
-                                      "enum": [
-                                        "pt",
-                                        "tbsp",
-                                        "µl",
-                                        "nl",
-                                        "oz",
-                                        "dl",
-                                        "ml",
-                                        "qt",
-                                        "L",
-                                        "gal",
-                                        "c",
-                                        "tsp"
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Dimensionless",
-                                      "example": "Dimensionless",
-                                      "enum": [
-                                        "Dimensionless"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "dimensionless unit (each)",
-                                      "type": "string",
-                                      "enum": [
-                                        "ea",
-                                        "%",
-                                        "dz"
-                                      ],
-                                      "example": "ea"
-                                    }
-                                  }
-                                }
+                                "dl",
+                                "ml",
+                                "qt",
+                                "L",
+                                "gal",
+                                "c",
+                                "tsp"
                               ]
                             }
-                          },
-                          "example": {
-                            "quantity": {
-                              "dimension": "Mass",
-                              "value": 3,
-                              "symbol": "oz"
-                            }
                           }
                         },
-                        "followDose": {
-                          "type": "object",
-                          "required": [
-                            "quantity"
-                          ],
-                          "properties": {
-                            "quantity": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "enum": [
-                                        "Mass"
-                                      ],
-                                      "description": "must be Mass",
-                                      "example": "Mass"
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "default": 1,
-                                      "exclusiveMinimum": true,
-                                      "example": 50
-                                    },
-                                    "symbol": {
-                                      "description": "unit of mass or weight",
-                                      "type": "string",
-                                      "enum": [
-                                        "lb",
-                                        "t",
-                                        "dwt",
-                                        "gr",
-                                        "mg",
-                                        "mcg",
-                                        "oz",
-                                        "g",
-                                        "kg"
-                                      ],
-                                      "example": "kg"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Volume",
-                                      "example": "Volume",
-                                      "enum": [
-                                        "Volume"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "unit of Volume",
-                                      "type": "string",
-                                      "example": "ml",
-                                      "enum": [
-                                        "pt",
-                                        "tbsp",
-                                        "µl",
-                                        "nl",
-                                        "oz",
-                                        "dl",
-                                        "ml",
-                                        "qt",
-                                        "L",
-                                        "gal",
-                                        "c",
-                                        "tsp"
-                                      ]
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "required": [
-                                    "dimension",
-                                    "value",
-                                    "symbol"
-                                  ],
-                                  "properties": {
-                                    "dimension": {
-                                      "type": "string",
-                                      "description": "must be Dimensionless",
-                                      "example": "Dimensionless",
-                                      "enum": [
-                                        "Dimensionless"
-                                      ]
-                                    },
-                                    "value": {
-                                      "type": "number",
-                                      "description": "number of units",
-                                      "minimum": 0,
-                                      "example": 3,
-                                      "exclusiveMinimum": true
-                                    },
-                                    "symbol": {
-                                      "description": "dimensionless unit (each)",
-                                      "type": "string",
-                                      "enum": [
-                                        "ea",
-                                        "%",
-                                        "dz"
-                                      ],
-                                      "example": "ea"
-                                    }
-                                  }
-                                }
-                              ]
-                            }
-                          },
-                          "example": {
-                            "quantity": {
-                              "dimension": "Mass",
-                              "value": 3,
-                              "symbol": "oz"
-                            }
-                          }
-                        },
-                        "perUnit": {
+                        {
                           "type": "object",
                           "required": [
                             "dimension",
@@ -43534,64 +42313,52 @@
                           "properties": {
                             "dimension": {
                               "type": "string",
+                              "description": "must be Dimensionless",
+                              "example": "Dimensionless",
                               "enum": [
-                                "Mass"
-                              ],
-                              "description": "must be Mass",
-                              "example": "Mass"
+                                "Dimensionless"
+                              ]
                             },
                             "value": {
                               "type": "number",
                               "description": "number of units",
                               "minimum": 0,
-                              "default": 1,
-                              "exclusiveMinimum": true,
-                              "example": 50
+                              "example": 3,
+                              "exclusiveMinimum": true
                             },
                             "symbol": {
-                              "description": "unit of mass or weight",
+                              "description": "dimensionless unit (each)",
                               "type": "string",
                               "enum": [
-                                "lb",
-                                "t",
-                                "dwt",
-                                "gr",
-                                "mg",
-                                "mcg",
-                                "oz",
-                                "g",
-                                "kg"
+                                "ea",
+                                "%",
+                                "dz"
                               ],
-                              "example": "kg"
+                              "example": "ea"
                             }
                           }
                         }
-                      },
-                      "example": {
-                        "perUnit": {
-                          "dimension": "mass",
-                          "value": 1,
-                          "symbol": "kg"
-                        },
-                        "followDose": {
-                          "quantity": {
-                            "dimension": "volume",
-                            "value": 3,
-                            "symbol": "ml"
-                          }
-                        },
-                        "_type": "models.LoadingDoseByWeightFunction",
-                        "firstDose": {
-                          "quantity": {
-                            "dimension": "volume",
-                            "value": 6,
-                            "symbol": "ml"
-                          }
-                        }
-                      }
+                      ]
                     }
-                  ]
+                  },
+                  "example": {
+                    "quantity": {
+                      "dimension": "Mass",
+                      "value": 3,
+                      "symbol": "oz"
+                    }
+                  }
                 }
+              },
+              "example": {
+                "dose": {
+                  "quantity": {
+                    "dimension": "Volume",
+                    "value": 3,
+                    "symbol": "ml"
+                  }
+                },
+                "_type": "models.FixedDoseFunction"
               }
             }
           }
@@ -43876,6 +42643,7 @@
                 }
               },
               {
+                "type": "object",
                 "description": "specifies animal's weight",
                 "properties": {
                   "_type": {
@@ -45131,6 +43899,7 @@
                                 "enum": [
                                   "models.DoseRangeFunction"
                                 ],
+                                "description": "class of Dose Function",
                                 "example": "models.DoseRangeFunction"
                               },
                               "range": {
@@ -45453,7 +44222,9 @@
                                 "type": "string",
                                 "enum": [
                                   "models.DoseRangeByWeightFunction"
-                                ]
+                                ],
+                                "description": "class of Dose Function",
+                                "example": "models.DoseRangeByWeightFunction"
                               },
                               "range": {
                                 "type": "object",
@@ -47053,6 +45824,7 @@
                         "enum": [
                           "models.DoseRangeFunction"
                         ],
+                        "description": "class of Dose Function",
                         "example": "models.DoseRangeFunction"
                       },
                       "range": {
@@ -47375,7 +46147,9 @@
                         "type": "string",
                         "enum": [
                           "models.DoseRangeByWeightFunction"
-                        ]
+                        ],
+                        "description": "class of Dose Function",
+                        "example": "models.DoseRangeByWeightFunction"
                       },
                       "range": {
                         "type": "object",
@@ -48533,6 +47307,7 @@
                     "enum": [
                       "models.DoseRangeFunction"
                     ],
+                    "description": "class of Dose Function",
                     "example": "models.DoseRangeFunction"
                   },
                   "range": {
@@ -48855,7 +47630,9 @@
                     "type": "string",
                     "enum": [
                       "models.DoseRangeByWeightFunction"
-                    ]
+                    ],
+                    "description": "class of Dose Function",
+                    "example": "models.DoseRangeByWeightFunction"
                   },
                   "range": {
                     "type": "object",
@@ -49235,6 +48012,7 @@
         }
       },
       "WeightData": {
+        "type": "object",
         "description": "specifies animal's weight",
         "properties": {
           "_type": {

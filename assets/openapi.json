@@ -1523,6 +1523,7 @@
             "enum": [
               "models.DoseRangeFunction"
             ],
+            "description": "class of Dose Function",
             "example": "models.DoseRangeFunction"
           },
           "range": {
@@ -1543,7 +1544,9 @@
             "type": "string",
             "enum": [
               "models.DoseRangeByWeightFunction"
-            ]
+            ],
+            "description": "class of Dose Function",
+            "example": "models.DoseRangeByWeightFunction"
           },
           "range": {
             "$ref": "#/components/schemas/DrugQuantityRange"
@@ -1634,8 +1637,9 @@
         "required": [
           "product",
           "route",
-          "sequencefunction",
-          "sizefunction"
+          "dosage",
+          "sequenceFunction",
+          "sizeFunction"
         ],
         "properties": {
           "id": {
@@ -1847,10 +1851,6 @@
       "BooleanPromise": {
         "description": "identification of animal is required to enroll a case",
         "type": "object",
-        "required": [
-          "animalId",
-          "initiationDate"
-        ],
         "allOf": [
           {
             "$ref": "#/components/schemas/Promise"
@@ -1917,6 +1917,7 @@
         ]
       },
       "Metadata": {
+        "type": "object",
         "description": "(for future development)",
         "properties": {
           "key": {
@@ -2050,6 +2051,7 @@
         }
       },
       "Prescription": {
+        "type": "object",
         "required": [
           "size",
           "unit"
@@ -2401,38 +2403,7 @@
           "animalClasses": {
             "type": "array",
             "items": {
-              "type": "object",
-              "required": [
-                "animalClass",
-                "sizefunction"
-              ],
-              "properties": {
-                "animalClass": {
-                  "type": "string",
-                  "description": "name of class"
-                },
-                "sizefunction": {
-                  "description": "function to calculate dose size",
-                  "type": "object",
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/FixedDoseFunction"
-                    },
-                    {
-                      "$ref": "#/components/schemas/DoseRangeFunction"
-                    },
-                    {
-                      "$ref": "#/components/schemas/DoseByWeightFunction"
-                    },
-                    {
-                      "$ref": "#/components/schemas/DoseRangeByWeightFunction"
-                    },
-                    {
-                      "$ref": "#/components/schemas/LoadingDoseByWeightFunction"
-                    }
-                  ]
-                }
-              }
+              "$ref": "#/components/schemas/FixedDoseFunction"
             }
           }
         },
@@ -2707,6 +2678,7 @@
         }
       },
       "WeightData": {
+        "type": "object",
         "description": "specifies animal's weight",
         "properties": {
           "_type": {
