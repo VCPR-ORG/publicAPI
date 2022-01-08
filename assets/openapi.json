@@ -455,7 +455,7 @@
             },
             "required": true,
             "description": "prescription uuid",
-            "example": "gG3pBCR1GCMKm89c"
+            "example": "Vi1y9kbpEj7Upqy7"
           }
         ],
         "responses": {
@@ -2156,7 +2156,7 @@
           "EXECUTED",
           "UNKNOWN"
         ],
-        "example": "PRESCRIBED"
+        "example": "REQUIRED"
       },
       "PDataNone": {
         "type": "object",
