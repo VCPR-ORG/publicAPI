@@ -438,7 +438,7 @@
         }
       }
     },
-    "/api/prescriptions/:rxId/cases": {
+    "/api/prescriptions/{rxId}/cases": {
       "get": {
         "operationId": "myCases",
         "tags": [
@@ -502,7 +502,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success – recorded Protocol",
+            "description": "Success, Protocol recorded",
             "content": {
               "application/json": {
                 "schema": {
@@ -2314,6 +2314,7 @@
         "description": "A Task required to fulfill a Promise",
         "type": "object",
         "required": [
+          "type",
           "id",
           "caseId",
           "morId",
@@ -2414,6 +2415,7 @@
       "DoseTask": {
         "type": "object",
         "required": [
+          "type",
           "id",
           "caseId",
           "morId",
