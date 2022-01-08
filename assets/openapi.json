@@ -2314,7 +2314,7 @@
         "description": "A Task required to fulfill a Promise",
         "type": "object",
         "required": [
-          "type",
+          "_type",
           "id",
           "caseId",
           "morId",
@@ -2415,7 +2415,7 @@
       "DoseTask": {
         "type": "object",
         "required": [
-          "type",
+          "_type",
           "id",
           "caseId",
           "morId",
