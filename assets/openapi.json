@@ -2314,25 +2314,16 @@
         "description": "A Task required to fulfill a Promise",
         "type": "object",
         "required": [
-          "_type",
           "id",
           "caseId",
           "morId",
           "vorId",
-          "act",
+          "promID",
           "animalId",
           "doAt",
           "status"
         ],
         "properties": {
-          "_type": {
-            "type": "string",
-            "description": "identifies subtype of AnimalTask",
-            "enum": [
-              "models.Ptask"
-            ],
-            "example": "models.Ptask"
-          },
           "id": {
             "description": "PTask ID number",
             "type": "integer",
@@ -2352,15 +2343,16 @@
             "example": 123
           },
           "vorId": {
-            "description": "set null or zero if User wishes to be anonymous",
+            "description": "ID of VOR prescribing the task",
             "type": "integer",
             "format": "int64",
             "example": 123
           },
-          "act": {
-            "description": "explanation of the task",
-            "type": "string",
-            "example": "fix it"
+          "promId": {
+            "description": "ID of Promise",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
           },
           "animalId": {
             "type": "string",
@@ -2415,25 +2407,18 @@
       "DoseTask": {
         "type": "object",
         "required": [
-          "_type",
           "id",
           "caseId",
           "morId",
           "vorId",
-          "act",
+          "product",
+          "dose",
+          "route",
           "animalId",
           "doAt",
           "status"
         ],
         "properties": {
-          "_type": {
-            "type": "string",
-            "description": "identifies subtype of AnimalTask",
-            "enum": [
-              "models.DoseTask"
-            ],
-            "example": "models.DoseTask"
-          },
           "id": {
             "description": "DoseTask ID number",
             "type": "integer",
@@ -2457,11 +2442,6 @@
             "type": "integer",
             "format": "int64",
             "example": 123
-          },
-          "act": {
-            "description": "explanation of the task",
-            "type": "string",
-            "example": "fix it"
           },
           "product": {
             "description": "product to be administered",
