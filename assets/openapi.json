@@ -2320,7 +2320,6 @@
           "morId",
           "vorId",
           "promId",
-          "animalId",
           "doAt",
           "status"
         ],
@@ -2421,10 +2420,6 @@
           "caseId",
           "morId",
           "vorId",
-          "product",
-          "dose",
-          "route",
-          "animalId",
           "doAt",
           "status"
         ],
