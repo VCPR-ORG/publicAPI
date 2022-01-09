@@ -2329,9 +2329,9 @@
             "type": "string",
             "description": "identifies subtype of AnimalTask",
             "enum": [
-              "models.PreferredDoseData"
+              "models.Ptask"
             ],
-            "example": "models.PreferredDoseData"
+            "example": "models.Ptask"
           },
           "id": {
             "description": "PTask ID number",
@@ -2430,9 +2430,9 @@
             "type": "string",
             "description": "identifies subtype of AnimalTask",
             "enum": [
-              "models.PreferredDoseData"
+              "models.DoseTask"
             ],
-            "example": "models.PreferredDoseData"
+            "example": "models.DoseTask"
           },
           "id": {
             "description": "DoseTask ID number",
