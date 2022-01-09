@@ -2318,7 +2318,7 @@
           "caseId",
           "morId",
           "vorId",
-          "promID",
+          "promId",
           "animalId",
           "doAt",
           "status"
