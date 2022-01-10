@@ -1218,7 +1218,6 @@
       "MassQuantity": {
         "type": "object",
         "required": [
-          "dimension",
           "value",
           "symbol"
         ],
@@ -1265,7 +1264,6 @@
       "VolumeQuantity": {
         "type": "object",
         "required": [
-          "dimension",
           "value",
           "symbol"
         ],
@@ -1302,7 +1300,6 @@
       "DimensionlessQuantity": {
         "type": "object",
         "required": [
-          "dimension",
           "value",
           "symbol"
         ],
