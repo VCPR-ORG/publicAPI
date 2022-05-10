@@ -5,7 +5,7 @@
     "version": "2.0.2",
     "contact": {
       "name": "Jim Ehrlich, DVM",
-      "url": "https://github.com/jehrlich/VCPR_API",
+      "url": "https://github.com/VCPR-ORG/publicAPI",
       "email": "jehrlich@vcpr.org"
     },
     "description": "API serving the Veterinary Protocol Manager&trade; application. &copy; DairySight LLC, Argyle NY 2020"
@@ -1234,7 +1234,6 @@
             "type": "number",
             "description": "number of units",
             "default": 1,
-            "exclusiveMinimum": 0,
             "example": 50
           },
           "symbol": {
@@ -1279,8 +1278,7 @@
           "value": {
             "type": "number",
             "description": "number of units",
-            "example": 3,
-            "exclusiveMinimum": 0
+            "example": 3
           },
           "symbol": {
             "$ref": "#/components/schemas/VolumeUnit"
@@ -1315,8 +1313,7 @@
           "value": {
             "type": "number",
             "description": "number of units",
-            "example": 3,
-            "exclusiveMinimum": 0
+            "example": 3
           },
           "symbol": {
             "$ref": "#/components/schemas/DimensionlessUnit"
