@@ -88,30 +88,57 @@
     }
   ],
   "paths": {
-    "/api/editor": {
+    "/editor": {
       "get": {
         "operationId": "loadEditor",
+        "description": "load Editor app",
         "responses": {
+          "200": {
+            "description": "load SPA",
+            "content": {
+              "text/html": {
+                "schema": {}
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
     },
-    "/api/farm": {
+    "/farm": {
       "get": {
         "operationId": "loadFarmApp",
+        "description": "load Farm app",
         "responses": {
+          "200": {
+            "description": "load SPA",
+            "content": {
+              "text/html": {
+                "schema": {}
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
     },
-    "/api/admin": {
+    "/admin": {
       "get": {
-        "operationId": "loadAdminAppr",
+        "operationId": "loadAdminApp",
+        "description": "load Admin app",
         "responses": {
+          "200": {
+            "description": "load SPA",
+            "content": {
+              "text/html": {
+                "schema": {}
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -120,12 +147,29 @@
     },
     "/api/users": {
       "get": {
-        "operationId": "getUser_Id",
+        "operationId": "getUsers",
         "tags": [
           "VOR"
         ],
         "summary": "list of Users IDs",
         "description": "Returns the ID and names of all active VOR Users.",
+        "parameters": [
+          {
+            "name": "usertypes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "VOR"
+              ]
+            },
+            "description": "User types to include"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -271,14 +315,14 @@
                   },
                   "identifier": {
                     "type": "string",
-                    "description": "`User.Username`, normally the same as `User.email`",
-                    "example": "testVOR"
+                    "description": "`User.uname`, normally the same as `User.email`",
+                    "example": "someUser"
                   },
                   "password": {
                     "type": "string",
-                    "description": "User password any characters or numbers allowed, with a minimum length of 10.",
+                    "description": "User password",
                     "minLength": 6,
-                    "example": "tVpass"
+                    "example": "somePassword"
                   }
                 }
               }
@@ -498,7 +542,43 @@
     "/api/users/addresses": {
       "put": {
         "operationId": "updateAddress",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "summary": "update address",
+        "description": "A User may update their own address.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "User updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "updated-records": {
+                      "type": "integer",
+                      "description": "number of db records altered"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -508,7 +588,40 @@
     "/api/users/addresses/{id}": {
       "get": {
         "operationId": "getAddress",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "summary": "address of user",
+        "description": "Address of user specified by `id`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "User ID key",
+            "example": 2
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/Address"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -518,7 +631,43 @@
     "/api/users/profiles": {
       "put": {
         "operationId": "updateProfile",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "summary": "update profile",
+        "description": "A User may update their own profile.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/Profile"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "User updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "updated-records": {
+                      "type": "integer",
+                      "description": "number of db records altered"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -528,7 +677,40 @@
     "/api/users/profiles/{id}": {
       "get": {
         "operationId": "getProfile",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "summary": "Profile of user",
+        "description": "Profile of user specified by `id`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "User ID key",
+            "example": 2
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/Address"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -548,9 +730,29 @@
     "/api/users/withholds": {
       "get": {
         "operationId": "getWithholds",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "MOR"
+        ],
+        "summary": "withholds",
+        "description": "get withholds that include present or future time.",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Withhold"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1059,9 +1261,39 @@
     "/api/protocols/amducatags": {
       "put": {
         "operationId": "getAMDUCATags",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "AMDUCA-tag protocol",
+        "description": "add tags to protocol per AMDUCA rules",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Protocol"
+              }
+            }
+          }
+        },
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "Success – updated Protocol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/Protocol"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
           }
         }
       }
@@ -1069,9 +1301,29 @@
     "/api/protocols/tags": {
       "get": {
         "operationId": "getProtocolTags",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "list of all Tags",
+        "x-reviewed": "JLE 2022/5/31",
+        "description": "Returns the full array of tags for protocols and treatments.",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Tag"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1079,9 +1331,29 @@
     "/api/protocols/promises": {
       "get": {
         "operationId": "getPromisess",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "list of all Promises",
+        "description": "This endpoint returns the full array of available Promises.",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "labels": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Promise"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -1097,9 +1369,35 @@
     "/api/protocols/promises/{id}": {
       "get": {
         "operationId": "getProtocolPromisess",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "Promises in a Protocol",
+        "description": "Return Promises contained within a Protocol.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "protocol  ID",
+            "example": 32
+          }
+        ],
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/LabelClaim"
+                }
+              }
+            }
           }
         }
       }
@@ -1258,7 +1556,40 @@
       },
       "post": {
         "operationId": "createEligibility",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "create Eligibility",
+        "description": "Creation  a Eligibility.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Eligibility"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Success –  Eligibility recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/Eligibility"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1268,7 +1599,38 @@
     "/api/protocols/eligibilities/{id}}": {
       "delete": {
         "operationId": "deleteEligibility",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "Eligibility",
+        "description": "Delete Eligibility.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "deleted": {
+                      "type": "integer",
+                      "description": "number of db records deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1278,9 +1640,30 @@
     "/api/protocols/eligibilities/fdaspecies": {
       "get": {
         "operationId": "getExFDASpecies",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "list of fda species",
+        "description": "\"Species\" is the term FDA uses to describe a class of animals in a label claim.",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "array of FDASpecies",
+                  "type": "object",
+                  "properties": {
+                    "eligibilities": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/FDASpecies"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1317,7 +1700,40 @@
       },
       "post": {
         "operationId": "createDiagnosis",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "create Eligibility",
+        "description": "Create  a Diagnosis.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Diagnosis"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Success –  Diagnosis recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/Diagnosis"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1327,7 +1743,38 @@
     "/api/protocols/diagnoses/{id}": {
       "delete": {
         "operationId": "deleteDiagnosis",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "Diagnosis",
+        "description": "Delete Diagnosis.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "deleted": {
+                      "type": "integer",
+                      "description": "number of db records deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1368,9 +1815,30 @@
     "/api/protocols/exclusivestubs": {
       "get": {
         "operationId": "getExclusivestubs",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "list of all diagnoses",
+        "description": "returns an array of Pxes .",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "array of pxes owned by the VOR",
+                  "type": "object",
+                  "properties": {
+                    "diagnoses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Px"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1530,9 +1998,30 @@
     "/api/protocols/prescriptions": {
       "get": {
         "operationId": "getPrescriptions",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "list of all diagnoses",
+        "description": "This",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "array of prescriptions",
+                  "type": "object",
+                  "properties": {
+                    "diagnoses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Prescription"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1540,9 +2029,41 @@
     "/api/protocols/{id}/prescriptions": {
       "get": {
         "operationId": "getPrescriptionsOfProtocol",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "list of all diagnoses",
+        "description": "This endpoint returns an array of Diagnoses from which a User may choose. The ID field is authoritative, i.e., is all that is needed to identify a particular Diagnosis.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Protocol ID key"
+          }
+        ],
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "array of prescriptions",
+                  "type": "object",
+                  "properties": {
+                    "diagnoses": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Prescription"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1599,25 +2120,119 @@
     "/api/helpkeys": {
       "get": {
         "operationId": "getHelpkeys",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "summary": "list of all diagnoses",
+        "description": "This endpoint returns an array of Diagnoses from which a User may choose. The ID field is authoritative, i.e., is all that is needed to identify a particular Diagnosis.",
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "array of help keys",
+                  "type": "object",
+                  "properties": {
+                    "keys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/help": {
+    "/api/help/{key}": {
       "get": {
         "operationId": "getHelp",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "summary": "help message",
+        "description": "return a help message.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "help screen key"
+          }
+        ],
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "help": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "operationId": "createHelp",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "create help screen",
+        "description": "Creation  a help screen.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "help screen key"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HelpScreen"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Success –  help screen recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/HelpScreen"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1625,7 +2240,39 @@
       },
       "delete": {
         "operationId": "deleteHelp",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "delete help screen",
+        "description": "Delete help screen.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "help screen key"
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "deleted": {
+                      "type": "integer",
+                      "description": "number of db records deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1662,15 +2309,77 @@
       },
       "post": {
         "operationId": "createLabelClaim",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "create labelclaim",
+        "description": "Creation  a labelclaim.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelClaim"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Success –  labelclaim recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/LabelClaim"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
       "put": {
-        "operationId": "updateLabelCalim",
+        "operationId": "updateLabelClaim",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "update labelclaim",
+        "description": "update a labelclaim.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelClaim"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Success – © Protocol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/LabelClaim"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1683,22 +2392,29 @@
         "tags": [
           "VOR"
         ],
-        "summary": "list of all labelclaims",
-        "description": "This endpoint returns the full array of drug labels.",
+        "summary": "labelclaim",
+        "description": "Return specified labelclaim.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "labelclaim  ID",
+            "example": 32
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "properties": {
-                    "labels": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/LabelClaim"
-                      }
-                    }
-                  }
+                  "type": "object",
+                  "$ref": "#/components/schemas/LabelClaim"
                 }
               }
             }
@@ -1707,7 +2423,52 @@
       },
       "put": {
         "operationId": "updateLabelClaim",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "create help screen",
+        "description": "update a labelclaim.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "labelclaim id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LabelClaim"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Success –  labelclaim updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/LabelClaim"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -1864,7 +2625,38 @@
     "/api/prescriptions/{id}/": {
       "delete": {
         "operationId": "deletePrescription",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "invalidate prescription",
+        "description": "invalidate prescription",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Prescription identifier"
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "invalidated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "updated": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -2102,7 +2894,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/GreenbookHeader"
+                    "$ref": "#/components/schemas/Product"
                   }
                 }
               }
@@ -2137,7 +2929,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GreenbookHeader"
+                  "$ref": "#/components/schemas/Product"
                 }
               },
               "text/html": {
@@ -2153,17 +2945,110 @@
     "/api/admin/gbd": {
       "get": {
         "operationId": "getGreenbookDrugs",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "greenbook drugs",
+        "description": "Return GBDs.",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "ndcProd",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "first section labeler code of a NDC"
+          },
+          {
+            "name": "ndcLabeler",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "mid section product code of a NDC"
+          },
+          {
+            "name": "ndcBrand",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "starting row number in GBD table"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "maximum number of rows to return"
+          },
+          {
+            "name": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleUp3Y205MmFXUmxja2xFSWpvaVkzSmxaR1Z1ZEdsaGJITWlMQ0p3Y205MmFXUmxja3RsZVNJNkluUmxjM1JXVDFJaWZRPT0iLCJpc3MiOiJwbGF5LXNpbGhvdWV0dGUiLCJle***...",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "end section package code of a NDC"
+          }
+        ],
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GreenbookDrug"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "put": {
         "operationId": "updateGreenbookDrugs",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "update GBD",
+        "description": "M",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GreenbookDrug"
+              }
+            }
+          }
+        },
         "responses": {
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+          "200": {
+            "description": "Success, GreenbookDrug updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "case": {
+                      "$ref": "#/components/schemas/GreenbookDrug"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
           }
         }
       }
@@ -2171,6 +3056,18 @@
     "/api/admin/gbd/{ndc}": {
       "get": {
         "operationId": "getGreenbookDrug",
+        "parameters": [
+          {
+            "name": "ndc",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
+            "example": "0061-4321-03"
+          }
+        ],
         "responses": {
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -2181,7 +3078,34 @@
     "/api/admin/ConfirmVOR": {
       "put": {
         "operationId": "confirmVOR",
+        "x-reviewed": "JLE 2022/5/31",
+        "parameters": [
+          {
+            "name": "sendEmail",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false
+          }
+        ],
         "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "vor": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
@@ -3978,6 +4902,35 @@
           }
         }
       },
+      "Product": {
+        "type": "object",
+        "required": [
+          "id",
+          "nada",
+          "name",
+          "companyId"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "companyId": {
+            "type": "integer"
+          },
+          "nada": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "imageURL": {
+            "type": "string"
+          },
+          "insertURL": {
+            "type": "string"
+          }
+        }
+      },
       "Case": {
         "description": "A **_Case_** records use of a **_Prescription_** on an individual animal or group",
         "type": "object",
@@ -4578,6 +5531,52 @@
           }
         }
       },
+      "Withhold": {
+        "description": "a time before which meat or milk may not be sold.",
+        "type": "object",
+        "required": [
+          "id",
+          "caseId",
+          "animalId",
+          "initiated",
+          "wtMeatUntil",
+          "wtMilkUntil"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "key for withhold"
+          },
+          "caseId": {
+            "type": "integer",
+            "description": "key identifying Case"
+          },
+          "animalId": {
+            "type": "string",
+            "description": "key identifying animal or group",
+            "example": "Bossie"
+          },
+          "initiated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the Withhold was initiated"
+          },
+          "wtMeatUntil": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the Withhold ends for meat products"
+          },
+          "wtMilkUntil": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the Withhold ends for milk"
+          },
+          "note": {
+            "type": "string",
+            "description": "note"
+          }
+        }
+      },
       "AnimalTask": {
         "description": "a task",
         "oneOf": [
@@ -4751,7 +5750,7 @@
           "example": "ChickensBroilers"
         }
       },
-      "GreenbookHeader": {
+      "GreenbookDrug": {
         "required": [
           "ndc",
           "proprietery",
@@ -4822,6 +5821,27 @@
             "format": "date-time",
             "description": "date of last label change",
             "example": "2020-05-16T16:19:12Z"
+          }
+        }
+      },
+      "HelpScreen": {
+        "required": [
+          "key",
+          "msg"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "msg": {
+            "description": "the html message to display",
+            "type": "string",
+            "format": "html"
+          },
+          "lang": {
+            "type": "string",
+            "description": "language code"
           }
         }
       }
