@@ -1305,7 +1305,6 @@
           "VOR"
         ],
         "summary": "list of all Tags",
-        "x-reviewed": "JLE 2022/5/31",
         "description": "Returns the full array of tags for protocols and treatments.",
         "responses": {
           "200": {
@@ -1324,6 +1323,87 @@
                 }
               }
             }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTag",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "create Tag",
+        "description": "Create a Tag.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tag"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success –  Tag recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/Tag"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/protocols/tags/{id}": {
+      "delete": {
+        "operationId": "deleteTag",
+        "tags": [
+          "SAOR"
+        ],
+        "summary": "Tag",
+        "description": "Delete Tag.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "deleted": {
+                      "type": "integer",
+                      "description": "number of db records deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -4290,11 +4370,24 @@
         "description": "keyword or tag for classification",
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Tag ID number",
+            "example": 8
+          },
           "code": {
             "type": "string",
-            "description": "keyword code identifying tag",
             "maxLength": 15,
-            "example": "Example-code"
+            "description": "keyword code identifying tag"
+          },
+          "name": {
+            "type": "string",
+            "description": "free-form text description of the Tag"
+          },
+          "color": {
+            "type": "string",
+            "description": "color code",
+            "example": "#516cc6"
           }
         }
       },
@@ -4422,14 +4515,9 @@
             "description": "Diagnosis ID number",
             "example": 8
           },
-          "code": {
-            "type": "string",
-            "maxLength": 25,
-            "description": "wip should this be an enum?",
-            "example": "PAIN"
-          },
           "name": {
             "type": "string",
+            "maxLength": 255,
             "description": "free-form text description of the Diagnosis",
             "example": "Pain/inflammation (musculoskeletal), treatment"
           }
