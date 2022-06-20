@@ -5683,7 +5683,6 @@
           "fdaSpecies",
           "diagnosis",
           "dxId",
-          "dxCode",
           "product",
           "route",
           "wtMeatHrs",
@@ -5707,11 +5706,6 @@
             "type": "integer",
             "description": "id of label diagnosis",
             "example": 2002
-          },
-          "dxCode": {
-            "type": "string",
-            "description": "code of label diagnosis",
-            "example": "2002"
           },
           "product": {
             "type": "string",
