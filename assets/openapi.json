@@ -1313,7 +1313,7 @@
               "application/json": {
                 "schema": {
                   "properties": {
-                    "labels": {
+                    "tags": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Tag"
@@ -1351,7 +1351,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "protocol": {
+                    "tag": {
                       "$ref": "#/components/schemas/Tag"
                     }
                   }
