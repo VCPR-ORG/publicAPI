@@ -2706,11 +2706,11 @@
       "delete": {
         "operationId": "deletePrescription",
         "tags": [
-          "VOR"
+          "VOR",
+          "MOR"
         ],
-        "summary": "invalidate prescription",
-        "description": "invalidate prescription",
-        "x-reviewed": "JLE 2022/5/31",
+        "summary": "recall or decline a prescription",
+        "description": "Prescriptions are immutable except for metadata, and cannot actually be deleted. This endpoint makes a prescription unavailable for use. If called by the VOR, it sets staus to RECALLED. If called by the MOR to whom it is prescribed, it sets status to DECLINED. New cases  cannot be enrolled if either RECALLED or DECLIENED.",
         "parameters": [
           {
             "name": "key",
@@ -3539,6 +3539,7 @@
           "INITIATED",
           "DEPRECATED",
           "RECALLED",
+          "DECLINED",
           "UNKNOWN"
         ],
         "example": "PRESCRIBED"
