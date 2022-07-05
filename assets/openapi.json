@@ -152,7 +152,7 @@
           "VOR"
         ],
         "summary": "list of Users IDs",
-        "description": "Returns the ID and names of all active VOR Users.",
+        "description": "Returns the ID and names of all active Users of the type(s) specified.",
         "parameters": [
           {
             "name": "usertypes",
@@ -282,6 +282,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
           }
         }
       }
@@ -450,6 +456,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
           }
         }
       }
@@ -499,9 +511,36 @@
         "tags": [
           "VOR"
         ],
-        "summary": "get user data",
-        "description": "Returns User da.",
+        "summary": "create a sandbox user",
+        "description": "Create a sandbox user of MOR `UserType` who is a `CLIENT` of logged-in VOR. This allows the VOR to prescribe to the sandbox client, then view prescriptions from the client's point of view using the Farm App.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "description": "The username for the sandbox client. This must not match an existing `User.username`"
+              }
+            }
+          }
+        },
         "responses": {
+          "200": {
+            "description": "Sandbox user created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sandboxClient": {
+                      "type": "string",
+                      "description": "username of sandbox client"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
@@ -517,10 +556,10 @@
           "VOR"
         ],
         "summary": "delete sandboxClient",
-        "description": "This endpoint supports the (reversible) \"delete\" of a User by setting user.status to `REMOVED`. Removed Users are not visible in normal queries.",
+        "description": "Delete the User and CLIENT Relation records from the database,  irreversibly removing the sandbocx client, but not any existing Prescriptions.",
         "responses": {
           "200": {
-            "description": "User deleted",
+            "description": "Sandbox user deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -534,6 +573,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -541,7 +586,6 @@
     "/api/users/addresses": {
       "put": {
         "operationId": "updateAddress",
-        "x-reviewed": "JLE 2022/5/31",
         "tags": [
           "ALL_USERS"
         ],
@@ -824,6 +868,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -880,6 +930,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -933,6 +989,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -963,6 +1025,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1043,6 +1111,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -1083,6 +1157,9 @@
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -1132,6 +1209,9 @@
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1189,6 +1269,9 @@
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1260,7 +1343,6 @@
     "/api/protocols/amducatags": {
       "put": {
         "operationId": "getAMDUCATags",
-        "x-reviewed": "JLE 2022/5/31",
         "tags": [
           "VOR"
         ],
@@ -1293,6 +1375,9 @@
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1401,7 +1486,10 @@
               }
             }
           },
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1439,7 +1527,10 @@
       "post": {
         "operationId": "createPromise",
         "responses": {
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1524,6 +1615,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -1562,6 +1659,9 @@
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -1599,6 +1699,9 @@
           },
           "400": {
             "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1669,7 +1772,7 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
-          "401": {
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1710,7 +1813,10 @@
               }
             }
           },
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1773,6 +1879,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -1812,7 +1924,7 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
-          "401": {
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1853,7 +1965,10 @@
               }
             }
           },
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1917,6 +2032,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1954,6 +2075,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -1985,6 +2112,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2032,6 +2165,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -2069,6 +2208,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2100,6 +2245,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2142,6 +2293,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2191,6 +2348,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2222,6 +2385,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
@@ -2259,6 +2428,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -2350,7 +2525,10 @@
               }
             }
           },
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -2381,6 +2559,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -2420,7 +2604,7 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
-          "401": {
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -2457,7 +2641,10 @@
               }
             }
           },
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -2495,6 +2682,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       },
@@ -2546,7 +2739,7 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
-          "401": {
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -2584,7 +2777,10 @@
               }
             }
           },
-          "401": {
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
             "$ref": "#/components/responses/Unauthorized"
           },
           "404": {
