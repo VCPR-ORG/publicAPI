@@ -2150,7 +2150,7 @@
     },
     "/api/protocols/prescriptions/{id}": {
       "get": {
-        "operationId": "getPrescription",
+        "operationId": "XgetPrescription",
         "tags": [
           "VOR"
         ],
@@ -2703,6 +2703,53 @@
       }
     },
     "/api/prescriptions/{id}/": {
+      "get": {
+        "operationId": "getPrescription",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "retrieve prescription by ID",
+        "description": "Retrieve a Prescription by `prescription.id`.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Vi1y9kbpEj7Upqy7",
+            "required": true,
+            "description": "Prescription ID key"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "prescription": {
+                      "$ref": "#/components/schemas/Prescription"
+                    }
+                  }
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "operationId": "deletePrescription",
         "tags": [
