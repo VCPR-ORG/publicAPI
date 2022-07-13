@@ -481,7 +481,9 @@
     "/api/visits/{id}": {
       "get": {
         "operationId": "getVisits",
-        "tags": [],
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "list of all",
         "description": "list of .",
         "parameters": [
@@ -3749,7 +3751,7 @@
         "description": "a strategy for fixing a problem",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/WarningRemedy"
+            "$ref": "#/components/schemas/RestrictionRemedy"
           },
           {
             "$ref": "#/components/schemas/LinkRemedy"
@@ -3765,7 +3767,7 @@
           }
         ]
       },
-      "WarningRemedy": {
+      "RestrictionRemedy": {
         "type": "object",
         "properties": {
           "code": {
