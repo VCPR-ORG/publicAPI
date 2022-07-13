@@ -92,6 +92,10 @@
       "get": {
         "operationId": "loadEditor",
         "description": "load Protocol Editor",
+        "tags": [
+          "SAOR",
+          "VOR"
+        ],
         "responses": {
           "200": {
             "description": "load Protocol Editor",
@@ -111,6 +115,11 @@
       "get": {
         "operationId": "loadFarmApp",
         "description": "load Farm App",
+        "tags": [
+          "SAOR",
+          "VOR",
+          "MOR"
+        ],
         "responses": {
           "200": {
             "description": "load Farm App",
@@ -130,6 +139,9 @@
       "get": {
         "operationId": "loadAdminApp",
         "description": "load Admin app",
+        "tags": [
+          "SAOR"
+        ],
         "responses": {
           "200": {
             "description": "load SPA",
@@ -763,6 +775,9 @@
       "get": {
         "operationId": "confirmToken",
         "description": "used for clickable link to confirm a token sent in email.",
+        "tags": [
+          "ALL_USERS"
+        ],
         "responses": {
           "200": {
             "401": null,
@@ -1509,6 +1524,10 @@
     "/api/protocols/tags/remedies": {
       "put": {
         "operationId": "executeRemedy",
+        "tags": [
+          "VOR"
+        ],
+        "description": "Apply a Remedy to a Protocol, returning the fixed Protocol.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1577,6 +1596,9 @@
       },
       "post": {
         "operationId": "createPromise",
+        "tags": [
+          "SAOR"
+        ],
         "responses": {
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -3427,6 +3449,9 @@
     "/api/admin/gbd/{ndc}": {
       "get": {
         "operationId": "getGreenbookDrug",
+        "tags": [
+          "SAOR"
+        ],
         "parameters": [
           {
             "name": "ndc",
@@ -3449,7 +3474,9 @@
     "/api/admin/ConfirmVOR": {
       "put": {
         "operationId": "confirmVOR",
-        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
         "parameters": [
           {
             "name": "sendEmail",
@@ -3746,6 +3773,9 @@
           },
           "message": {
             "type": "string"
+          },
+          "detail": {
+            "type": "string"
           }
         }
       },
@@ -3756,6 +3786,9 @@
             "type": "string"
           },
           "message": {
+            "type": "string"
+          },
+          "link": {
             "type": "string"
           }
         }
@@ -3768,6 +3801,12 @@
           },
           "message": {
             "type": "string"
+          },
+          "substitutes": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
           }
         }
       },
@@ -3779,6 +3818,9 @@
           },
           "message": {
             "type": "string"
+          },
+          "promise": {
+            "$ref": "#/components/schemas/Promise"
           }
         }
       },
@@ -3790,6 +3832,9 @@
           },
           "message": {
             "type": "string"
+          },
+          "action": {
+            "type": "object"
           }
         }
       },
