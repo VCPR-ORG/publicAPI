@@ -91,10 +91,10 @@
     "/editor": {
       "get": {
         "operationId": "loadEditor",
-        "description": "load Editor app",
+        "description": "load Protocol Editor",
         "responses": {
           "200": {
-            "description": "load SPA",
+            "description": "load Protocol Editor",
             "content": {
               "text/html": {
                 "schema": {}
@@ -110,10 +110,10 @@
     "/farm": {
       "get": {
         "operationId": "loadFarmApp",
-        "description": "load Farm app",
+        "description": "load Farm App",
         "responses": {
           "200": {
-            "description": "load SPA",
+            "description": "load Farm App",
             "content": {
               "text/html": {
                 "schema": {}
@@ -720,7 +720,6 @@
     "/api/users/profiles/{id}": {
       "get": {
         "operationId": "getProfile",
-        "x-reviewed": "JLE 2022/5/31",
         "tags": [
           "ALL_USERS"
         ],
@@ -762,9 +761,21 @@
     },
     "/api/users/token/{token}": {
       "get": {
-        "operationId": "getProfile",
+        "operationId": "confirmToken",
+        "description": "used for clickable link to confirm a token sent in email.",
         "responses": {
-          "401": {
+          "200": {
+            "401": null,
+            "description": "OK",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "description": "web page confirmation.",
+                  "type": "string",
+                  "format": "html"
+                }
+              }
+            },
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1482,6 +1493,46 @@
                       "description": "number of db records deleted"
                     }
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/protocols/tags/remedies": {
+      "put": {
+        "operationId": "executeRemedy",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "protocol": {
+                    "$ref": "#/components/schemas/Protocol"
+                  },
+                  "remedy": {
+                    "$ref": "#/components/schemas/Remedy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Protocol"
                 }
               }
             }
@@ -3667,6 +3718,81 @@
         ],
         "example": "CLIENT"
       },
+      "Remedy": {
+        "description": "a strategy for fixing a problem",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/WarningRemedy"
+          },
+          {
+            "$ref": "#/components/schemas/LinkRemedy"
+          },
+          {
+            "$ref": "#/components/schemas/SubstituteLabelClaimRemedy"
+          },
+          {
+            "$ref": "#/components/schemas/PromiseRemedy"
+          },
+          {
+            "$ref": "#/components/schemas/JsonRemedy"
+          }
+        ]
+      },
+      "WarningRemedy": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "LinkRemedy": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "SubstituteLabelClaimRemedy": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PromiseRemedy": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "JsonRemedy": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "SuccessfulLogin": {
         "description": "User object and generated auth token",
         "type": "object",
@@ -4595,25 +4721,32 @@
       "Tag": {
         "description": "keyword or tag for classification",
         "type": "object",
+        "required": [
+          "id",
+          "color",
+          "name"
+        ],
         "properties": {
           "id": {
             "type": "integer",
             "description": "Tag ID number",
             "example": 8
           },
-          "code": {
-            "type": "string",
-            "maxLength": 15,
-            "description": "keyword code identifying tag"
-          },
-          "name": {
-            "type": "string",
-            "description": "free-form text description of the Tag"
-          },
           "color": {
             "type": "string",
             "description": "color code",
             "example": "#516cc6"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 15,
+            "description": "keyword code identifying tag"
+          },
+          "fixes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Remedy"
+            }
           }
         }
       },
