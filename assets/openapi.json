@@ -3826,7 +3826,7 @@
         ],
         "example": {
           "_type": "models.RestrictionRemedy",
-          "code": "exCode",
+          "title": "exCode",
           "message": "exMessage",
           "detail": "exDetail"
         }
