@@ -3748,7 +3748,7 @@
         "example": "CLIENT"
       },
       "Remedy": {
-        "description": "a strategy for fixing a problem",
+        "description": "directions for a proposed solution to a problem",
         "oneOf": [
           {
             "$ref": "#/components/schemas/RestrictionRemedy"
@@ -3765,21 +3765,59 @@
           {
             "$ref": "#/components/schemas/JsonRemedy"
           }
-        ]
-      },
-      "RestrictionRemedy": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "detail": {
-            "type": "string"
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.RestrictionRemedy": "#/components/schemas/RestrictionRemedy",
+            "models.LinkRemedy": "#/components/schemas/LinkRemedy",
+            "models.SubstituteLabelClaimRemedy": "#/components/schemas/SubstituteLabelClaimRemedy",
+            "models.PromiseRemedy": "#/components/schemas/PromiseRemedy",
+            "models.JsonRemedy": "#/components/schemas/JsonRemedy"
           }
         }
+      },
+      "RemedyBase": {
+        "description": "the base data common to all the polymorphic Remedy subtypes",
+        "type": "object",
+        "required": [
+          "_type",
+          "code",
+          "message"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies the Remedy subtype as shown in the Remedy discriminator mapping, like `models.RestrictionRemedy`"
+          },
+          "code": {
+            "type": "string",
+            "description": "a short descriptive name of the Remedy"
+          },
+          "message": {
+            "type": "string",
+            "description": "a longer description of the Remedy"
+          }
+        }
+      },
+      "RestrictionRemedy": {
+        "description": "Adds `detail` to the protocol instructions in the `Restrictions` section.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RemedyBase"
+          },
+          {
+            "type": "object",
+            "required": [
+              "detail"
+            ],
+            "properties": {
+              "detail": {
+                "type": "string"
+              }
+            }
+          }
+        ]
       },
       "LinkRemedy": {
         "type": "object",
