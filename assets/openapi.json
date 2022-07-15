@@ -1704,8 +1704,8 @@
         "tags": [
           "VOR"
         ],
-        "summary": "record protocol",
-        "description": "This endpoint supports the creation of a Protocol.",
+        "summary": "record and validate aprotocol",
+        "description": "This endpoint saves and validates a Protocol.",
         "requestBody": {
           "required": true,
           "content": {
@@ -1746,7 +1746,49 @@
           "VOR"
         ],
         "summary": "update protocol",
-        "description": "This endpoint updates a Protocol.",
+        "description": "This endpoint updates and validates a Protocol.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Protocol"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success – updated Protocol",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "protocol": {
+                      "$ref": "#/components/schemas/Protocol"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/protocols/validate": {
+      "put": {
+        "operationId": "validateProtocol",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "This endpoint validates a protocol without saving it.",
+        "description": "This endpoint validates a protocol for prescribing without saving it. It should only be called if the user wants to prescribe a protocol without saving changes. The endpoints to save or update protocols automatically include validation.4",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4430,7 +4472,17 @@
           {
             "$ref": "#/components/schemas/SeqSeries"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.SeqSingleDose": "#/components/schemas/SeqSingleDose",
+            "models.SeqPerDay": "#/components/schemas/SeqPerDay",
+            "models.SeqPerDayRange": "#/components/schemas/SeqPerDayRange",
+            "models.SeqInterval": "#/components/schemas/SeqInterval",
+            "models.SeqSeries": "#/components/schemas/SeqSeries"
+          }
+        }
       },
       "MassUnit": {
         "description": "unit of mass or weight",
@@ -4822,7 +4874,17 @@
           {
             "$ref": "#/components/schemas/DoseRangeByWeightFunction"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.FixedDoseFunction": "#/components/schemas/FixedDoseFunction",
+            "models.DoseByWeightFunction": "#/components/schemas/DoseByWeightFunction",
+            "models.LoadingDoseByWeightFunction": "#/components/schemas/LoadingDoseByWeightFunction",
+            "models.DoseRangeFunction": "#/components/schemas/DoseRangeFunction",
+            "models.DoseRangeByWeightFunction": "#/components/schemas/SeqSeries"
+          }
+        }
       },
       "DoseFunctions": {
         "type": "object",
@@ -5549,6 +5611,7 @@
       "PDataNone": {
         "type": "object",
         "required": [
+          "_type",
           "promiseId"
         ],
         "properties": {
@@ -5696,83 +5759,15 @@
           {
             "$ref": "#/components/schemas/PDataMass"
           }
-        ]
-      },
-      "PTask": {
-        "description": "A Task required to fulfill a Promise",
-        "type": "object",
-        "required": [
-          "_type",
-          "id",
-          "caseId",
-          "morId",
-          "vorId",
-          "promId",
-          "animalId",
-          "doAt",
-          "status"
         ],
-        "properties": {
-          "_type": {
-            "type": "string",
-            "description": "class of AnimalTask",
-            "enum": [
-              "models.PTask"
-            ],
-            "example": "models.PTask"
-          },
-          "id": {
-            "description": "PTask ID number",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "caseId": {
-            "description": "ID number of Case that includes this task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "morId": {
-            "description": "ID of MOR user responsible for execution of this task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "vorId": {
-            "description": "ID of VOR prescribing the task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "promId": {
-            "description": "ID of Promise",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "animalId": {
-            "type": "string",
-            "description": "ID of animal to which the task applies",
-            "example": "this"
-          },
-          "doAt": {
-            "description": "ISO-8601-formatted datetime when the task should be executed",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "executor": {
-            "description": "ID of Person who should execute the task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "status": {
-            "$ref": "#/components/schemas/TaskStatus"
-          },
-          "data": {
-            "$ref": "#/components/schemas/PData"
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.PDataNone": "#/components/schemas/PDataNone",
+            "models.PDataString": "#/components/schemas/PDataString",
+            "models.PDataNumber": "#/components/schemas/PDataNumber",
+            "models.PDataBoolean": "#/components/schemas/PDataBoolean",
+            "models.PDataMass": "#/components/schemas/PDataMass"
           }
         }
       },
@@ -5800,89 +5795,6 @@
           }
         },
         "example": "{\"_type\":\"models.DoseByClass\",\"animalClasses\":[{\"animalClass\":\"Jabberwocks\",\"sizeFunction\":{\"unit\":\"mg\",\"size\":3.2,\"_type\":\"models.DrugQuantity\"}},{\"animalClass\":\"Borogoves\",\"sizeFunction\":{\"_type\":\"models.DoseRangeFunction\",\"maxDose\":{\"size\":20,\"unit\":\"ml\"},\"minDose\":{\"size\":10,\"unit\":\"ml\"}}}]}"
-      },
-      "DoseTask": {
-        "type": "object",
-        "required": [
-          "_type",
-          "id",
-          "caseId",
-          "morId",
-          "vorId",
-          "product",
-          "dose",
-          "route",
-          "animalId",
-          "doAt",
-          "status"
-        ],
-        "properties": {
-          "_type": {
-            "type": "string",
-            "description": "class of AnimalTask",
-            "enum": [
-              "models.DoseTask"
-            ],
-            "example": "models.DoseTask"
-          },
-          "id": {
-            "description": "DoseTask ID number",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "caseId": {
-            "description": "ID number of Case that includes this task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "morId": {
-            "description": "ID of MOR user responsible for execution of this task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "vorId": {
-            "description": "ID of VOR user who prescribed this task",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "product": {
-            "description": "product to be administered",
-            "type": "string",
-            "example": "Calcium gluconate 23%"
-          },
-          "route": {
-            "description": "route of administration",
-            "type": "string",
-            "example": "IV"
-          },
-          "dose": {
-            "$ref": "#/components/schemas/DrugQuantity"
-          },
-          "animalId": {
-            "type": "string",
-            "description": "ID of animal to receive the dose",
-            "example": "this"
-          },
-          "doAt": {
-            "description": "ISO-8601-formatted datetime, time the task should be executed",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
-          },
-          "executor": {
-            "description": "set nu",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "status": {
-            "$ref": "#/components/schemas/TaskStatus"
-          }
-        }
       },
       "CaseData": {
         "description": "data for an individual Case",
@@ -5916,6 +5828,16 @@
                 "$ref": "#/components/schemas/AnimalClassData"
               }
             ]
+          }
+        },
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.IdData": "#/components/schemas/IdData",
+            "models.WeightData": "#/components/schemas/WeightData",
+            "models.PreferredDoseData": "#/components/schemas/PreferredDoseData",
+            "models.PrefDoseRateData": "#/components/schemas/PrefDoseRateData",
+            "models.AnimalClassData": "#/components/schemas/AnimalClassData"
           }
         }
       },
@@ -6142,7 +6064,7 @@
         }
       },
       "AnimalTask": {
-        "description": "a task",
+        "description": "a task related to an animal or group of animals",
         "oneOf": [
           {
             "$ref": "#/components/schemas/PTask"
@@ -6150,7 +6072,153 @@
           {
             "$ref": "#/components/schemas/DoseTask"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.PTask": "#/components/schemas/PTask",
+            "models.DoseTask": "#/components/schemas/DoseTask"
+          }
+        }
+      },
+      "TaskBase": {
+        "description": "the base data common to all the polymorphic AnimalTask subtypes",
+        "type": "object",
+        "required": [
+          "_type",
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "promId",
+          "animalId",
+          "doAt",
+          "status"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies the task subtype as shown in the AnimalTask discriminator mapping, like ` models.DoseTask`"
+          },
+          "id": {
+            "description": "PTask ID number",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "caseId": {
+            "description": "ID number of Case that includes this task",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "morId": {
+            "description": "ID of MOR user responsible for execution of this task",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "vorId": {
+            "description": "ID of VOR prescribing the task",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "animalId": {
+            "type": "string",
+            "description": "ID of animal to which the task applies",
+            "example": "this"
+          },
+          "doAt": {
+            "description": "ISO-8601-formatted datetime when the task should be executed",
+            "type": "string",
+            "format": "date-time",
+            "example": "2020-01-10T10:30:37Z"
+          },
+          "executor": {
+            "description": "ID of Person who should execute the task",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          }
+        }
+      },
+      "PTask": {
+        "description": "A Task required to fulfill a Promise",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TaskBase"
+          },
+          {
+            "type": "object",
+            "required": [
+              "detail"
+            ],
+            "properties": {
+              "detail": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "type": "object",
+        "required": [
+          "promId",
+          "data"
+        ],
+        "properties": {
+          "promId": {
+            "description": "ID of Promise",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "data": {
+            "$ref": "#/components/schemas/PData"
+          }
+        }
+      },
+      "DoseTask": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TaskBase"
+          },
+          {
+            "type": "object",
+            "required": [
+              "detail"
+            ],
+            "properties": {
+              "detail": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "type": "object",
+        "required": [
+          "product",
+          "route",
+          "dose"
+        ],
+        "properties": {
+          "product": {
+            "description": "product to be administered",
+            "type": "string",
+            "example": "Calcium gluconate 23%"
+          },
+          "route": {
+            "description": "route of administration",
+            "type": "string",
+            "example": "IV"
+          },
+          "dose": {
+            "$ref": "#/components/schemas/DrugQuantity"
+          }
+        }
       },
       "LabelClaim": {
         "type": "object",
