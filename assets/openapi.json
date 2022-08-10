@@ -3100,7 +3100,7 @@
         }
       }
     },
-    "/api/prescriptions/cases": {
+    "/api/cases": {
       "post": {
         "operationId": "enrollCase",
         "tags": [
