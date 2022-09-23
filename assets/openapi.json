@@ -729,6 +729,41 @@
             "$ref": "#/components/responses/Unauthorized"
           }
         }
+      },
+      "post": {
+        "operationId": "createProfile",
+        "summary": "create profile",
+        "description": "Create a User with Address, and UserPrefs.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "$ref": "#/components/schemas/Profile"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "the created Profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
       }
     },
     "/api/users/profiles/{id}": {
@@ -3648,60 +3683,29 @@
         },
         "required": [
           "id",
+          "uname",
           "userType",
-          "email",
           "firstname",
-          "lastname",
-          "suffix"
+          "lastname"
         ]
       },
       "Profile": {
-        "description": "a User along with Profile data",
+        "description": "User data including Address and preferences",
         "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "User ID number",
-            "example": 1
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User"
           },
-          "uname": {
-            "description": "username",
-            "type": "string",
-            "example": "testVOR"
-          },
-          "userType": {
-            "$ref": "#/components/schemas/UserType"
-          },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "description": "email address",
-            "example": "testVOR@dairysight.com"
-          },
-          "firstname": {
-            "type": "string",
-            "description": "first name",
-            "example": "Test"
-          },
-          "lastname": {
-            "type": "string",
-            "description": "last name",
-            "example": "Vet"
-          },
-          "suffix": {
-            "type": "string",
-            "description": "degree or qualifier following the name",
-            "example": "DVM"
-          },
-          "address": {
+          {
             "$ref": "#/components/schemas/Address"
           },
-          "prefs": {
+          {
             "$ref": "#/components/schemas/UserPrefs"
           }
-        },
+        ],
         "required": [
           "id",
+          "uname",
           "userType",
           "email",
           "firstname",
@@ -3710,11 +3714,11 @@
         ]
       },
       "UserPrefs": {
-        "description": "an address",
+        "description": "values a user may set to customize performance",
         "type": "object",
         "properties": {
           "userId": {
-            "$ref": "#/components/schemas/UserId"
+            "type": "integer"
           },
           "sandboxName": {
             "type": "string"
@@ -3728,22 +3732,24 @@
           "rxHeader": {
             "type": "string"
           }
-        }
-      },
-      "UserId": {
-        "type": "integer",
-        "description": "unique identifier for the User",
-        "example": 1
+        },
+        "required": [
+          "userId",
+          "sandboxName",
+          "emailTips",
+          "emailNews",
+          "rxHeader"
+        ]
       },
       "Address": {
-        "description": "an address",
+        "description": "a mailing address",
         "type": "object",
         "properties": {
           "userId": {
-            "$ref": "#/components/schemas/UserId"
+            "type": "integer"
           },
           "busName": {
-            "description": "bussiness name, if appropriate",
+            "description": "business name, if appropriate",
             "type": "string",
             "example": "testVOR Clinic"
           },
@@ -3777,7 +3783,15 @@
             "description": "country",
             "example": "USA"
           }
-        }
+        },
+        "required": [
+          "userId",
+          "address1",
+          "address2",
+          "town",
+          "state",
+          "zip"
+        ]
       },
       "Relationship": {
         "type": "string",
