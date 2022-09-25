@@ -3414,6 +3414,33 @@
         }
       }
     },
+    "/api/admin/spl{ndc}": {
+      "get": {
+        "operationId": "getSPL",
+        "tags": [
+          "VOR",
+          "MOR",
+          "SAOR"
+        ],
+        "parameters": [
+          {
+            "name": "ndc",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
+            "example": "0061-4321-03"
+          }
+        ],
+        "responses": {
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
     "/api/admin/gbd": {
       "get": {
         "operationId": "getGreenbookDrugs",
