@@ -1746,8 +1746,9 @@
     "/messages/ok/{token}/": {
       "get": {
         "operationId": "okMessage",
+        "security": [],
         "tags": [
-          "ANY"
+          "ALL_USERS"
         ],
         "summary": "respond to a message identified by token",
         "description": "Respond to a message according to the content in the message, secured by a token that links the response to a UserMessage. Typically token expires in 48 hr.",
@@ -4019,6 +4020,8 @@
         ],
         "discriminator": {
           "propertyName": "_type",
+          "description": "identifies the UserMessage subtype",
+          "example": "models.SimpleMessage",
           "mapping": {
             "models.SimpleMessage": "#/components/schemas/SimpleMessage",
             "models.RenewRequest": "#/components/schemas/RenewRequest"
@@ -4044,7 +4047,8 @@
         "properties": {
           "_type": {
             "type": "string",
-            "description": "identifies the Remedy subtype as shown in the Remedy discriminator mapping, like `models.RestrictionRemedy`"
+            "description": "identifies the UserMessage subtype",
+            "example": "models.SimpleMessage"
           },
           "from": {
             "$ref": "#/components/schemas/UserNumber"
