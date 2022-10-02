@@ -28,11 +28,74 @@
       "url": "http://localhost"
     }
   ],
+  "tags": [
+    {
+      "name": "VOR",
+      "description": "available to veterinarians."
+    },
+    {
+      "name": "MOR",
+      "description": "available to farm managers."
+    },
+    {
+      "name": "ALL_USERS",
+      "description": "available to all users."
+    },
+    {
+      "name": "SAOR",
+      "description": "available to system administrators."
+    },
+    {
+      "name": "TOR",
+      "description": "available to farm employees."
+    },
+    {
+      "name": "LOR",
+      "description": "available to pharmacy curators."
+    },
+    {
+      "name": "FARM",
+      "description": "available to farm accounts."
+    },
+    {
+      "name": "CLINIC",
+      "description": "available to vet clinic accounts."
+    },
+    {
+      "name": "User",
+      "description": "Endpoints and models related to user management."
+    },
+    {
+      "name": "Protocol",
+      "description": "Endpoints and models related to protocol management."
+    },
+    {
+      "name": "Prescription",
+      "description": "Endpoints and models related to prescription management."
+    },
+    {
+      "name": "Case",
+      "description": "Endpoints and models related to case management."
+    },
+    {
+      "name": "Promise",
+      "description": "Endpoints and models related to promise management."
+    }
+  ],
+  "security": [
+    {
+      "authToken": []
+    }
+  ],
   "paths": {
     "/editor": {
       "get": {
         "operationId": "loadEditor",
         "description": "load Protocol Editor",
+        "tags": [
+          "SAOR",
+          "VOR"
+        ],
         "responses": {
           "200": {
             "description": "load Protocol Editor",
@@ -45,17 +108,18 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR",
-          "VOR"
-        ]
+        }
       }
     },
     "/farm": {
       "get": {
         "operationId": "loadFarmApp",
         "description": "load Farm App",
+        "tags": [
+          "SAOR",
+          "VOR",
+          "MOR"
+        ],
         "responses": {
           "200": {
             "description": "load Farm App",
@@ -68,18 +132,16 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR",
-          "VOR",
-          "MOR"
-        ]
+        }
       }
     },
     "/admin": {
       "get": {
         "operationId": "loadAdminApp",
         "description": "load Admin app",
+        "tags": [
+          "SAOR"
+        ],
         "responses": {
           "200": {
             "description": "load SPA",
@@ -92,22 +154,21 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/users": {
       "get": {
         "operationId": "getUsers",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of Users IDs",
         "description": "Returns the ID and names of all active Users of the type(s) specified.",
         "parameters": [
           {
             "name": "usertypes",
             "in": "path",
-            "description": "User types to include",
             "required": true,
             "schema": {
               "type": "array",
@@ -117,7 +178,8 @@
               "default": [
                 "VOR"
               ]
-            }
+            },
+            "description": "User types to include"
           }
         ],
         "responses": {
@@ -134,8 +196,8 @@
                         "type": "object",
                         "properties": {
                           "users": {
-                            "description": "User's ID",
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "User's ID"
                           }
                         }
                       }
@@ -151,16 +213,17 @@
           "403": {
             "$ref": "#/components/responses/Forbidden"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "put": {
         "operationId": "updateUser",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "update user data",
         "description": "Users may update their own data. A VOR may also update User data of a User in a `CLIENT` relationship with that VOR. A SAOR may update data of any User.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -172,8 +235,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -183,8 +245,8 @@
                 "schema": {
                   "properties": {
                     "updated-records": {
-                      "description": "number of db records altered",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records altered"
                     }
                   }
                 }
@@ -194,15 +256,15 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/users/vors": {
       "get": {
         "operationId": "getVORs",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of VORs",
         "description": "list of VOR users.",
         "responses": {
@@ -218,12 +280,12 @@
                         "type": "object",
                         "properties": {
                           "id": {
-                            "description": "User's ID",
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "User's ID"
                           },
                           "name": {
-                            "description": "User's Name",
-                            "type": "string"
+                            "type": "string",
+                            "description": "User's Name"
                           }
                         }
                       }
@@ -239,49 +301,50 @@
           "403": {
             "$ref": "#/components/responses/Forbidden"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/users/logins": {
       "post": {
         "operationId": "userLogin",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "security": [],
         "summary": "user login",
         "description": "Authenticate a User and the app requesting a token, returning a token for use in future secured requests.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "apikey": {
-                    "description": "An API key assigned to an application for access to this API. To request a free API key please contact the system administrator.",
-                    "type": "string",
-                    "example": "t0CGzpQ4cgu1OBy44sBt"
-                  },
-                  "identifier": {
-                    "description": "`User.uname`, normally the same as `User.email`",
-                    "type": "string",
-                    "example": "someUser"
-                  },
-                  "password": {
-                    "description": "User password",
-                    "type": "string",
-                    "example": "somePassword",
-                    "minLength": 8
-                  }
-                },
                 "required": [
                   "apikey",
                   "identifier",
                   "password"
-                ]
+                ],
+                "properties": {
+                  "apikey": {
+                    "type": "string",
+                    "description": "An API key assigned to an application for access to this API. To request a free API key please contact the system administrator.",
+                    "example": "t0CGzpQ4cgu1OBy44sBt"
+                  },
+                  "identifier": {
+                    "type": "string",
+                    "description": "`User.uname`, normally the same as `User.email`",
+                    "example": "someUser"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User password",
+                    "minLength": 8,
+                    "example": "somePassword"
+                  }
+                }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -297,15 +360,15 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "security": [],
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       },
       "get": {
         "operationId": "renewUserToken",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "renew token",
+        "x-reviewed": "JLE 2022/5/30",
         "description": "Renews the User's access token for use in future secured requests.",
         "responses": {
           "200": {
@@ -321,27 +384,26 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ],
-        "x-reviewed": "JLE 2022/5/30"
+        }
       }
     },
     "/api/users/{id}": {
       "get": {
         "operationId": "getUser",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "get user data",
         "description": "Returns User data as specified by User `id`. Any User may get their own data. A VOR may get User data of Users in a `CLIENT` relationship with that VOR. A SAOR may get data of any User.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "User ID key",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "User ID key",
             "example": 2
           }
         ],
@@ -367,24 +429,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       },
       "delete": {
         "operationId": "deleteUser",
+        "x-no-test": true,
+        "tags": [
+          "SAOR",
+          "VOR"
+        ],
         "summary": "delete user",
         "description": "This endpoint supports the (reversible) \"delete\" of a User by setting user.status to `REMOVED`. Removed Users are not visible in normal queries.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "User ID key",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "User ID key",
             "example": 5
           }
         ],
@@ -397,8 +461,8 @@
                   "type": "object",
                   "properties": {
                     "deleted": {
-                      "description": "number of Users deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of Users deleted"
                     }
                   }
                 }
@@ -411,28 +475,26 @@
           "403": {
             "$ref": "#/components/responses/Forbidden"
           }
-        },
-        "tags": [
-          "SAOR",
-          "VOR"
-        ],
-        "x-no-test": true
+        }
       }
     },
     "/api/visits/{id}": {
       "get": {
         "operationId": "getVisits",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "list of all",
         "description": "list of .",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "User ID key",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "User ID key",
             "example": 2
           }
         ],
@@ -454,27 +516,27 @@
               }
             }
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/users/sandboxClient": {
       "post": {
         "operationId": "createSandboxClient",
+        "tags": [
+          "VOR"
+        ],
         "summary": "create a sandbox user",
         "description": "Create a sandbox user of MOR `UserType` who is a `CLIENT` of logged-in VOR. This allows the VOR to prescribe to the sandbox client, then view prescriptions from the client's point of view using the Farm App.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "description": "The username for the sandbox client. This must not match an existing `User.username`",
-                "type": "string"
+                "type": "string",
+                "description": "The username for the sandbox client. This must not match an existing `User.username`"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -485,8 +547,8 @@
                   "type": "object",
                   "properties": {
                     "sandboxClient": {
-                      "description": "username of sandbox client",
-                      "type": "string"
+                      "type": "string",
+                      "description": "username of sandbox client"
                     }
                   }
                 }
@@ -499,13 +561,14 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "delete": {
         "operationId": "deleteSandboxClient",
+        "tags": [
+          "SAOR",
+          "VOR"
+        ],
         "summary": "delete sandboxClient",
         "description": "Delete the User and CLIENT Relation records from the database,  irreversibly removing the sandbocx client, but not any existing Prescriptions.",
         "responses": {
@@ -517,8 +580,8 @@
                   "type": "object",
                   "properties": {
                     "deleted": {
-                      "description": "number of Users deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of Users deleted"
                     }
                   }
                 }
@@ -531,19 +594,19 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR",
-          "VOR"
-        ]
+        }
       }
     },
     "/api/users/addresses": {
       "put": {
         "operationId": "updateAddress",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "update address",
         "description": "A User may update their own address.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -555,8 +618,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -566,8 +628,8 @@
                 "schema": {
                   "properties": {
                     "updated-records": {
-                      "description": "number of db records altered",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records altered"
                     }
                   }
                 }
@@ -577,26 +639,27 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/users/addresses/{id}": {
       "get": {
         "operationId": "getAddress",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "address of user",
         "description": "Address of user specified by `id`.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "User ID key",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "User ID key",
             "example": 2
           }
         ],
@@ -619,19 +682,20 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       }
     },
     "/api/users/profiles": {
       "put": {
         "operationId": "updateProfile",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "update profile",
         "description": "A User may update their own profile.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -643,8 +707,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -654,8 +717,8 @@
                 "schema": {
                   "properties": {
                     "updated-records": {
-                      "description": "number of db records altered",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records altered"
                     }
                   }
                 }
@@ -665,17 +728,14 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       },
       "post": {
         "operationId": "createProfile",
         "summary": "create profile",
         "description": "Create a User with Address, and UserPrefs.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -687,8 +747,7 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -710,17 +769,20 @@
     "/api/users/profiles/{id}": {
       "get": {
         "operationId": "getProfile",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "Profile of user",
         "description": "Profile of user specified by `id`.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "User ID key",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "User ID key",
             "example": 2
           }
         ],
@@ -743,16 +805,16 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/users/token/{token}": {
       "get": {
         "operationId": "confirmToken",
         "description": "used for clickable link to confirm a token sent in email.",
+        "tags": [
+          "ALL_USERS"
+        ],
         "responses": {
           "200": {
             "401": null,
@@ -768,15 +830,16 @@
             },
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/users/withholds": {
       "get": {
         "operationId": "getWithholds",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "MOR"
+        ],
         "summary": "withholds",
         "description": "get withholds that include present or future time.",
         "responses": {
@@ -797,27 +860,26 @@
               }
             }
           }
-        },
-        "tags": [
-          "MOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       }
     },
     "/api/users/comments": {
       "post": {
         "operationId": "recordComment",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "record a User comment",
         "description": "Records a User comment to the database and emails admin. It supports privacy controls.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Comment"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -838,26 +900,26 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/users/relations": {
       "post": {
         "operationId": "getRelations",
+        "tags": [
+          "VOR"
+        ],
         "summary": "add a relationship",
         "description": "adds a relationship of the type specified by `name` to the current User, who must be a VOR. Defaults to CLIENT relationship.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Relationship"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -876,34 +938,34 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/users/my-right-relations": {
       "get": {
         "operationId": "myRightRelations",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get my right-related users",
         "description": "get my right-related users",
         "parameters": [
           {
-            "name": "relationship",
             "in": "query",
+            "name": "relationship",
             "schema": {
               "$ref": "#/components/schemas/Relationship"
             }
           },
           {
-            "name": "withAddress",
             "in": "query",
-            "description": "whether to return user's addresses too",
+            "name": "withAddress",
             "schema": {
               "type": "boolean",
               "default": false
             },
-            "example": false
+            "example": false,
+            "description": "whether to return user's addresses too"
           }
         ],
         "responses": {
@@ -938,13 +1000,13 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createRightRelation",
+        "tags": [
+          "VOR"
+        ],
         "summary": "add a User with relationship",
         "description": "This endpoint adds a User and a relationship of the type specified by `name` to the current User, who must be a VOR. Defaults to CLIENT relationship.",
         "parameters": [
@@ -966,14 +1028,14 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/User"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -997,15 +1059,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/prescriptions/by": {
       "get": {
         "operationId": "getRxBy",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get my prescriptions",
         "description": "get prescriptions prescribed by the current User.",
         "responses": {
@@ -1033,15 +1095,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/prescriptions/to": {
       "get": {
         "operationId": "getRxTo",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get my prescriptions",
         "description": "get prescriptions prescribed to the current User.",
         "responses": {
@@ -1063,35 +1125,35 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/shares": {
       "get": {
         "operationId": "getMyProtocolShares",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get my protocol shares",
         "description": "This endpoint retrieves a User's Protocol shares, optionally filtered by Protocol and recipient.",
         "parameters": [
           {
             "name": "pxFilter",
             "in": "query",
-            "description": "select only shares of this Protocol ID",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "select only shares of this Protocol ID"
           },
           {
             "name": "toFilter",
             "in": "query",
-            "description": "select only shares to this VOR User",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "select only shares to this VOR User"
           }
         ],
         "responses": {
@@ -1119,24 +1181,24 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createProtocolShare",
+        "tags": [
+          "VOR"
+        ],
         "summary": "create protocol share",
         "description": "This endpoint shares a protocol with another VOR User.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ProtocolShare"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1147,8 +1209,8 @@
                   "type": "object",
                   "properties": {
                     "shared": {
-                      "description": "number of shares created",
                       "type": "integer",
+                      "description": "number of shares created",
                       "example": 1
                     }
                   }
@@ -1162,33 +1224,33 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "delete": {
         "operationId": "deleteProtocolShare",
+        "tags": [
+          "VOR"
+        ],
         "summary": "delete protocol share",
         "description": "This endpoint retracts a Protocol share with another VOR User.",
         "parameters": [
           {
             "name": "pxId",
             "in": "query",
-            "description": "Protocol ID",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true,
+            "description": "Protocol ID"
           },
           {
             "name": "toVor",
             "in": "query",
-            "description": "ID of VOR to whom Protocol was shared",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true,
+            "description": "ID of VOR to whom Protocol was shared"
           }
         ],
         "responses": {
@@ -1200,8 +1262,8 @@
                   "type": "object",
                   "properties": {
                     "un-shared": {
-                      "description": "number of shares deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of shares deleted"
                     }
                   }
                 }
@@ -1214,15 +1276,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/sharesToAll/": {
       "get": {
         "operationId": "getSharesToAll",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of User's shared protocols",
         "description": "This endpoint retrieves a list of User's protocols shared to all VORs.",
         "responses": {
@@ -1239,16 +1301,16 @@
                         "type": "object",
                         "properties": {
                           "pxId": {
-                            "description": "Protocol ID",
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "Protocol ID"
                           },
                           "name": {
-                            "description": "Protocol name",
-                            "type": "string"
+                            "type": "string",
+                            "description": "Protocol name"
                           },
                           "clonable": {
-                            "description": "switch to determine whether other VORs are allowed to clone this Protocol",
                             "type": "boolean",
+                            "description": "switch to determine whether other VORs are allowed to clone this Protocol",
                             "example": true
                           }
                         }
@@ -1274,35 +1336,35 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/sharesToAll/{pxId}": {
       "post": {
         "operationId": "shareToAll",
+        "tags": [
+          "VOR"
+        ],
         "summary": "share Protocol with all VOR Users",
         "description": "This endpoint shares a User's protocol with all VOR Users.",
         "parameters": [
           {
             "name": "pxId",
             "in": "path",
-            "description": "ID of Protocol to be shared",
-            "required": true,
             "schema": {
               "type": "integer"
             },
-            "explode": true
+            "required": true,
+            "explode": true,
+            "description": "ID of Protocol to be shared"
           },
           {
             "name": "clonable",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "boolean"
             },
+            "required": false,
             "explode": true
           }
         ],
@@ -1313,40 +1375,40 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "delete": {
         "operationId": "unShareToAll",
+        "tags": [
+          "VOR"
+        ],
         "summary": "cancel sharing",
         "description": "wip -- This endpoint probably unshares protocols to all.",
         "parameters": [
           {
             "name": "pxId",
             "in": "path",
-            "description": "ID of Protocol",
-            "required": true,
+            "example": 1,
             "schema": {
               "type": "integer"
             },
-            "example": 1
+            "required": true,
+            "description": "ID of Protocol"
           }
         ],
         "responses": {
           "204": {
             "description": "no content"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/amducatags": {
       "put": {
         "operationId": "getAMDUCATags",
+        "tags": [
+          "VOR"
+        ],
         "summary": "AMDUCA-tag protocol",
         "description": "add tags to protocol per AMDUCA rules",
         "requestBody": {
@@ -1380,15 +1442,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/tags": {
       "get": {
         "operationId": "getProtocolTags",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all Tags",
         "description": "Returns the full array of tags for protocols and treatments.",
         "responses": {
@@ -1409,24 +1471,24 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createTag",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "create Tag",
         "description": "Create a Tag.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Tag"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1450,25 +1512,25 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/protocols/tags/{id}": {
       "delete": {
         "operationId": "deleteTag",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "Tag",
         "description": "Delete Tag.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true
           }
         ],
         "responses": {
@@ -1479,8 +1541,8 @@
                 "schema": {
                   "properties": {
                     "deleted": {
-                      "description": "number of db records deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records deleted"
                     }
                   }
                 }
@@ -1493,15 +1555,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/protocols/tags/remedies": {
       "put": {
         "operationId": "executeRemedy",
+        "tags": [
+          "VOR"
+        ],
         "description": "Apply a Remedy to a Protocol, returning the fixed Protocol.",
         "requestBody": {
           "content": {
@@ -1537,15 +1599,16 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/promises": {
       "get": {
         "operationId": "getPromisess",
+        "x-reviewed": "JLE 2022/5/31",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all Promises",
         "description": "This endpoint returns the full array of available Promises.",
         "responses": {
@@ -1566,14 +1629,13 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       },
       "post": {
         "operationId": "createPromise",
+        "tags": [
+          "SAOR"
+        ],
         "responses": {
           "400": {
             "$ref": "#/components/responses/BadRequest"
@@ -1581,26 +1643,27 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/protocols/promises/{id}": {
       "get": {
         "operationId": "getProtocolPromisess",
+        "tags": [
+          "VOR"
+        ],
         "summary": "Promises in a Protocol",
         "description": "Return Promises contained within a Protocol.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "protocol  ID",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "protocol  ID",
             "example": 32
           }
         ],
@@ -1616,32 +1679,147 @@
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/api/messages": {
+      "post": {
+        "operationId": "sendMessage",
         "tags": [
-          "VOR"
+          "VOR",
+          "MOR",
+          "SAOR"
         ],
-        "x-reviewed": "JLE 2022/5/31"
+        "summary": "send a message to another user",
+        "description": "send a message to another user",
+        "parameters": [
+          {
+            "name": "modes",
+            "in": "query",
+            "required": false,
+            "style": "pipeDelimited",
+            "explode": false,
+            "description": "Mode(s) or channel(s) to use in messaging, defaulting to EMAIL",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MessageMode"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "$ref": "#/components/schemas/UserMessage"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/messages/ok/{token}/": {
+      "get": {
+        "operationId": "okMessage",
+        "tags": [
+          "ANY"
+        ],
+        "summary": "respond to a message identified by token",
+        "description": "Respond to a message according to the content in the message, secured by a token that links the response to a UserMessage. Typically token expires in 48 hr.",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "description": "a token supplied in a message asking for a response. Token typically expires in 48 hr.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "response",
+            "in": "query",
+            "required": false,
+            "description": "A message may include a question requiring a yes-or-no response. For example, an email message could include links for \"confirm\" or decline\" with only the first setting the response parameter to true.",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "description": "recipient's answer to a binary question."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "description": "web page confirming action requested in a message response",
+                  "type": "string",
+                  "format": "html"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
       }
     },
     "/api/protocols": {
       "get": {
         "operationId": "getMyProtocols",
+        "tags": [
+          "VOR"
+        ],
         "summary": "protocols owned by user",
         "description": "Retrieve all Protocols owned by, or shared with, the current User. The default excludes deleted (status DEPRECATED) protocols.",
         "parameters": [
           {
             "name": "status",
             "in": "query",
-            "description": "filter Protocols to include only Protocols with listed statuses. If this parameter is omitted, the query defaults to all status values **except** DEPRECATED.",
             "required": false,
+            "style": "pipeDelimited",
+            "explode": false,
+            "description": "filter Protocols to include only Protocols with listed statuses. If this parameter is omitted, the query defaults to all status values **except** DEPRECATED.",
             "schema": {
               "type": "array",
               "items": {
                 "$ref": "#/components/schemas/ProtocolStatus"
               }
-            },
-            "explode": false,
-            "style": "pipeDelimited"
+            }
           }
         ],
         "responses": {
@@ -1670,24 +1848,24 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createProtocol",
+        "tags": [
+          "VOR"
+        ],
         "summary": "record and validate aprotocol",
         "description": "This endpoint saves and validates a Protocol.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Protocol"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1711,13 +1889,13 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "put": {
         "operationId": "updateProtocol",
+        "tags": [
+          "VOR"
+        ],
         "summary": "update protocol",
         "description": "This endpoint updates and validates a Protocol.",
         "requestBody": {
@@ -1751,15 +1929,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/validate": {
       "put": {
         "operationId": "validateProtocol",
+        "tags": [
+          "VOR"
+        ],
         "summary": "This endpoint validates a protocol without saving it.",
         "description": "This endpoint validates a protocol for prescribing without saving it. It should only be called if the user wants to prescribe a protocol without saving changes. The endpoints to save or update protocols automatically include validation.4",
         "requestBody": {
@@ -1793,15 +1971,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/eligibilities": {
       "get": {
         "operationId": "getEligibilities",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all eligibilities",
         "description": "This endpoint returns an array of Eligibilities from which a User may choose. The ID field is authoritative, i.e., is all that is needed to identify a particular Eligibility.",
         "responses": {
@@ -1824,24 +2002,24 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createEligibility",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "create Eligibility",
         "description": "Creation  a Eligibility.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Eligibility"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1865,25 +2043,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/protocols/eligibilities/{id}}": {
       "delete": {
         "operationId": "deleteEligibility",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "Eligibility",
         "description": "Delete Eligibility.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true
           }
         ],
         "responses": {
@@ -1894,8 +2073,8 @@
                 "schema": {
                   "properties": {
                     "deleted": {
-                      "description": "number of db records deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records deleted"
                     }
                   }
                 }
@@ -1908,16 +2087,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       }
     },
     "/api/protocols/eligibilities/fdaspecies": {
       "get": {
         "operationId": "getExFDASpecies",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of fda species",
         "description": "\"Species\" is the term FDA uses to describe a class of animals in a label claim.",
         "responses": {
@@ -1940,15 +2118,15 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/diagnoses": {
       "get": {
         "operationId": "getDiagnoses",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all diagnoses",
         "description": "Returns an array of all coded Diagnoses known to the system.",
         "responses": {
@@ -1976,24 +2154,24 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createDiagnosis",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "create Eligibility",
         "description": "Create  a Diagnosis.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Diagnosis"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2017,25 +2195,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/protocols/diagnoses/{id}": {
       "delete": {
         "operationId": "deleteDiagnosis",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "Diagnosis",
         "description": "Delete Diagnosis.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true
           }
         ],
         "responses": {
@@ -2046,8 +2225,8 @@
                 "schema": {
                   "properties": {
                     "deleted": {
-                      "description": "number of db records deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records deleted"
                     }
                   }
                 }
@@ -2060,16 +2239,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       }
     },
     "/api/protocols/libs": {
       "get": {
         "operationId": "getLibraryProtocols",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of library protocols",
         "description": "This endpoint retrieves all protocols owned by, or shared with, the current User.",
         "responses": {
@@ -2092,15 +2270,15 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/exclusivestubs": {
       "get": {
         "operationId": "getExclusivestubs",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all diagnoses",
         "description": "returns an array of Pxes .",
         "responses": {
@@ -2129,26 +2307,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/dosages": {
       "post": {
         "operationId": "validateDosage",
+        "tags": [
+          "VOR"
+        ],
         "summary": "validate a structured Dosage",
         "description": "validate a Dosage with SizeFunction and SequewnceFunction returning an test '_dose\" description.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DoseFunctions"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2158,8 +2336,8 @@
                 "schema": {
                   "properties": {
                     "_dose": {
-                      "description": "string representation of submitted Dosage",
-                      "type": "string"
+                      "type": "string",
+                      "description": "string representation of submitted Dosage"
                     }
                   }
                 }
@@ -2172,15 +2350,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/libstubs": {
       "get": {
         "operationId": "getLibraryPxes",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of library pxes",
         "description": "This endpoint returns all the Protocols owned by, or shared with, the current User.",
         "responses": {
@@ -2209,27 +2387,27 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/{id}": {
       "get": {
         "operationId": "getProtocol",
+        "tags": [
+          "VOR"
+        ],
         "summary": "retrieve protocol by ID",
         "description": "This endpoint retrieves a Protocol by `protocol.id`.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Protocol ID key",
-            "required": true,
             "schema": {
               "type": "integer"
             },
-            "example": 7
+            "example": 7,
+            "required": true,
+            "description": "Protocol ID key"
           }
         ],
         "responses": {
@@ -2262,24 +2440,24 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "delete": {
         "operationId": "deleteProtocol",
+        "tags": [
+          "VOR"
+        ],
         "summary": "delete protocol",
         "description": "Change `protocol.status` to DELETED (this does not actually remove it from the database).",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Protocol ID key",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true,
+            "description": "Protocol ID key"
           }
         ],
         "responses": {
@@ -2291,8 +2469,8 @@
                   "type": "object",
                   "properties": {
                     "deprecated": {
-                      "description": "number of Protocols deprecated",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of Protocols deprecated"
                     }
                   }
                 }
@@ -2305,15 +2483,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/prescriptions": {
       "get": {
         "operationId": "getPrescriptions",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all diagnoses",
         "description": "This",
         "responses": {
@@ -2342,26 +2520,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/{id}/prescriptions": {
       "get": {
         "operationId": "getPrescriptionsOfProtocol",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all diagnoses",
         "description": "returns an array of Prescriptions",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Protocol ID key",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true,
+            "description": "Protocol ID key"
           }
         ],
         "responses": {
@@ -2390,27 +2568,27 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/protocols/prescriptions/{id}": {
       "get": {
         "operationId": "XgetPrescription",
+        "tags": [
+          "VOR"
+        ],
         "summary": "retrieve prescription by ID",
         "description": "Retrieve a Prescription by `prescription.id`.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Prescription ID key",
-            "required": true,
             "schema": {
               "type": "string"
             },
-            "example": "Vi1y9kbpEj7Upqy7"
+            "example": "Vi1y9kbpEj7Upqy7",
+            "required": true,
+            "description": "Prescription ID key"
           }
         ],
         "responses": {
@@ -2426,15 +2604,15 @@
                   }
                 }
               },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
               "application/pdf": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
-                }
-              },
-              "text/html": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -2445,15 +2623,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/helpkeys": {
       "get": {
         "operationId": "getHelpkeys",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "list of all diagnoses",
         "description": "Returns an array of keys used to identify help messages.",
         "responses": {
@@ -2482,26 +2660,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     },
     "/api/help/{key}": {
       "get": {
         "operationId": "getHelp",
+        "tags": [
+          "ALL_USERS"
+        ],
         "summary": "help message",
         "description": "return a help message, normally to be displayed in a popup help screen.",
         "parameters": [
           {
             "name": "key",
             "in": "path",
-            "description": "help screen key",
-            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": true,
+            "description": "help screen key"
           }
         ],
         "responses": {
@@ -2525,35 +2703,36 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       },
       "post": {
         "operationId": "createHelp",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "create help screen",
         "description": "Creation  a help screen.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "key",
             "in": "path",
-            "description": "help screen key",
-            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": true,
+            "description": "help screen key"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/HelpScreen"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2577,25 +2756,25 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       },
       "delete": {
         "operationId": "deleteHelp",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "delete help screen",
         "description": "Delete help screen.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "key",
             "in": "path",
-            "description": "help screen key",
-            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": true,
+            "description": "help screen key"
           }
         ],
         "responses": {
@@ -2606,8 +2785,8 @@
                 "schema": {
                   "properties": {
                     "deleted": {
-                      "description": "number of db records deleted",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "number of db records deleted"
                     }
                   }
                 }
@@ -2620,16 +2799,15 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       }
     },
     "/api/labels": {
       "get": {
         "operationId": "getLabels",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of all labelclaims",
         "description": "This endpoint returns the full array of drug labels.",
         "responses": {
@@ -2656,24 +2834,24 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "post": {
         "operationId": "createLabelClaim",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "create labelclaim",
         "description": "Creation  a labelclaim.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LabelClaim"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2697,13 +2875,13 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       },
       "put": {
         "operationId": "updateLabelClaim",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "update labelclaim",
         "description": "update a labelclaim.",
         "requestBody": {
@@ -2737,26 +2915,27 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/labels/{id}": {
       "get": {
         "operationId": "getLabel",
+        "tags": [
+          "VOR"
+        ],
         "summary": "labelclaim",
         "description": "Return specified labelclaim.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "labelclaim  ID",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "labelclaim  ID",
             "example": 32
           }
         ],
@@ -2778,36 +2957,36 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       },
       "put": {
         "operationId": "updateLabelClaim",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "create help screen",
         "description": "update a labelclaim.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "labelclaim id",
-            "required": true,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": true,
+            "description": "labelclaim id"
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/LabelClaim"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2831,27 +3010,26 @@
           "403": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       }
     },
     "/api/labels/inserts/{lxId}": {
       "get": {
         "operationId": "getPackageInsert",
+        "tags": [
+          "VOR"
+        ],
         "summary": "package insert",
         "description": "Retrieve the product package insert.",
         "parameters": [
           {
             "name": "lxId",
             "in": "path",
-            "description": "label ID",
-            "required": true,
             "schema": {
               "type": "integer"
             },
+            "required": true,
+            "description": "label ID",
             "example": 32
           }
         ],
@@ -2876,26 +3054,26 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/spl/{ndc}": {
       "get": {
         "operationId": "getGbdLinkByNDC",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get detail of a Greenbook Drug as a link",
         "description": "This",
         "parameters": [
           {
             "name": "ndc",
             "in": "path",
-            "description": "unique hyphenated number with up to 10 digits in 2 or 3 segments as labelerCode-productCode-packageCode. packageCode may not be needed.",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "unique hyphenated number with up to 10 digits in 2 or 3 segments as labelerCode-productCode-packageCode. packageCode may not be needed.",
             "example": "0010-3832"
           }
         ],
@@ -2924,36 +3102,36 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/spl/{ndc}/{image}": {
       "get": {
         "operationId": "getGbdL",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get detail of a Greenbook Drug as a link",
         "description": "This",
         "parameters": [
           {
             "name": "ndc",
             "in": "path",
-            "description": "unique hyphenated number with up to 10 digits in 2 or 3 segments as labelerCode-productCode-packageCode. packageCode may not be needed.",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "unique hyphenated number with up to 10 digits in 2 or 3 segments as labelerCode-productCode-packageCode. packageCode may not be needed.",
             "example": "0010-3495"
           },
           {
             "name": "image",
             "in": "path",
-            "description": "name of image file",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "name of image file",
             "example": "601588-image-fake.jpg"
           }
         ],
@@ -2982,27 +3160,27 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/prescriptions/{id}/": {
       "get": {
         "operationId": "getPrescription",
+        "tags": [
+          "VOR"
+        ],
         "summary": "retrieve prescription by ID",
         "description": "Retrieve a Prescription by `prescription.id`.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "Prescription ID key",
-            "required": true,
             "schema": {
               "type": "string"
             },
-            "example": "Vi1y9kbpEj7Upqy7"
+            "example": "Vi1y9kbpEj7Upqy7",
+            "required": true,
+            "description": "Prescription ID key"
           }
         ],
         "responses": {
@@ -3018,37 +3196,38 @@
                   }
                 }
               },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              },
               "application/pdf": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
                 }
-              },
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       },
       "delete": {
         "operationId": "deletePrescription",
+        "tags": [
+          "VOR",
+          "MOR"
+        ],
         "summary": "recall or decline a prescription",
         "description": "Prescriptions are immutable except for metadata, and cannot actually be deleted. This endpoint makes a prescription unavailable for use. If called by the VOR, it sets staus to RECALLED. If called by the MOR to whom it is prescribed, it sets status to DECLINED. New cases  cannot be enrolled if either RECALLED or DECLIENED.",
         "parameters": [
           {
             "name": "key",
             "in": "path",
-            "description": "Prescription identifier",
-            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "required": true,
+            "description": "Prescription identifier"
           }
         ],
         "responses": {
@@ -3069,27 +3248,27 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR",
-          "MOR"
-        ]
+        }
       }
     },
     "/api/cases": {
       "post": {
         "operationId": "enrollCase",
+        "tags": [
+          "VOR",
+          "MOR"
+        ],
         "summary": "enroll case",
         "description": "Creates a Case linked to a prescription.",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Case"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -3110,14 +3289,13 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "tags": [
-          "VOR",
-          "MOR"
-        ]
+        }
       },
       "get": {
         "operationId": "myCases",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of cases",
         "description": "Get all current cases for this user",
         "responses": {
@@ -3141,26 +3319,26 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/prescriptions/{rxId}/cases": {
       "get": {
         "operationId": "myCases",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list  of cases for a rx",
         "description": "Get all current cases for this prescription and this user",
         "parameters": [
           {
             "name": "rxId",
             "in": "path",
-            "description": "prescription uuid",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "prescription uuid",
             "example": "Vi1y9kbpEj7Upqy7"
           }
         ],
@@ -3185,26 +3363,27 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/users/tasks": {
       "post": {
         "operationId": "executeTask",
+        "tags": [
+          "VOR",
+          "MOR"
+        ],
         "summary": "execute task",
         "description": "Mark task status as completed",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/AnimalTask"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -3225,14 +3404,13 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "tags": [
-          "VOR",
-          "MOR"
-        ]
+        }
       },
       "get": {
         "operationId": "myRxCases",
+        "tags": [
+          "VOR"
+        ],
         "summary": "list of cases by Rx",
         "description": "Get all current cases for this Rx",
         "responses": {
@@ -3256,44 +3434,44 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/admin/product": {
       "get": {
         "operationId": "getGbdHeaderArrayByNDC",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get Greenbook Drug summary by NDC pattern",
         "description": "This endpoint returns the summary listing of a Greenbook Drug by NDC pattern.",
         "parameters": [
           {
             "name": "ndcProd",
             "in": "query",
-            "description": "first section labeler code of a NDC",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "first section labeler code of a NDC"
           },
           {
             "name": "ndcLabeler",
             "in": "query",
-            "description": "mid section product code of a NDC",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "mid section product code of a NDC"
           },
           {
             "name": "ndcBrand",
             "in": "query",
-            "description": "end section package code of a NDC",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "end section package code of a NDC"
           }
         ],
         "responses": {
@@ -3310,26 +3488,26 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
     "/api/admin/product/{ndc}": {
       "get": {
         "operationId": "getGbdHeaderByNDC",
+        "tags": [
+          "VOR"
+        ],
         "summary": "get summary listing of a Greenbook Drug",
         "description": "This endpoint returns the summary listing of a Greenbook Drug by ndc identifier.",
         "parameters": [
           {
             "name": "ndc",
             "in": "path",
-            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
             "example": "0061-4321-03"
           }
         ],
@@ -3349,24 +3527,26 @@
               }
             }
           }
-        },
-        "tags": [
-          "VOR"
-        ]
+        }
       }
     },
-    "/api/admin/spl/{ndc}": {
+    "/api/admin/spl{ndc}": {
       "get": {
         "operationId": "getSPL",
+        "tags": [
+          "VOR",
+          "MOR",
+          "SAOR"
+        ],
         "parameters": [
           {
             "name": "ndc",
             "in": "path",
-            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
             "example": "0061-4321-03"
           }
         ],
@@ -3374,64 +3554,63 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "VOR",
-          "MOR",
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/admin/gbd": {
       "get": {
         "operationId": "getGreenbookDrugs",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "greenbook drugs",
         "description": "Return GBDs.",
+        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "ndcProd",
             "in": "query",
-            "description": "first section labeler code of a NDC",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "first section labeler code of a NDC"
           },
           {
             "name": "ndcLabeler",
             "in": "query",
-            "description": "mid section product code of a NDC",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "mid section product code of a NDC"
           },
           {
             "name": "ndcBrand",
             "in": "query",
-            "description": "starting row number in GBD table",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "starting row number in GBD table"
           },
           {
             "name": "offset",
             "in": "query",
-            "description": "maximum number of rows to return",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "maximum number of rows to return"
           },
           {
             "name": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleUp3Y205MmFXUmxja2xFSWpvaVkzSmxaR1Z1ZEdsaGJITWlMQ0p3Y205MmFXUmxja3RsZVNJNkluUmxjM1JXVDFJaWZRPT0iLCJpc3MiOiJwbGF5LXNpbGhvdWV0dGUiLCJle***...",
             "in": "query",
-            "description": "end section package code of a NDC",
-            "required": false,
             "schema": {
               "type": "integer"
-            }
+            },
+            "required": false,
+            "description": "end section package code of a NDC"
           }
         ],
         "responses": {
@@ -3448,25 +3627,24 @@
               }
             }
           }
-        },
-        "tags": [
-          "SAOR"
-        ],
-        "x-reviewed": "JLE 2022/5/31"
+        }
       },
       "put": {
         "operationId": "updateGreenbookDrugs",
+        "tags": [
+          "SAOR"
+        ],
         "summary": "update GBD",
         "description": "M",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GreenbookDrug"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -3487,24 +3665,24 @@
           "400": {
             "$ref": "#/components/responses/BadRequest"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/admin/gbd/{ndc}": {
       "get": {
         "operationId": "getGreenbookDrug",
+        "tags": [
+          "SAOR"
+        ],
         "parameters": [
           {
             "name": "ndc",
             "in": "path",
-            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
-            "required": true,
             "schema": {
               "type": "string"
             },
+            "required": true,
+            "description": "unique 10-digit, 3-segment number. labelerCode-productCode-packageCode",
             "example": "0061-4321-03"
           }
         ],
@@ -3512,24 +3690,24 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "SAOR"
-        ]
+        }
       }
     },
     "/api/admin/ConfirmVOR": {
       "put": {
         "operationId": "confirmVOR",
+        "tags": [
+          "ALL_USERS"
+        ],
         "parameters": [
           {
             "name": "sendEmail",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "boolean",
               "default": true
-            }
+            },
+            "required": false
           }
         ],
         "responses": {
@@ -3551,19 +3729,96 @@
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
-        },
-        "tags": [
-          "ALL_USERS"
-        ]
+        }
       }
     }
   },
   "components": {
+    "securitySchemes": {
+      "authToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Auth-Token",
+        "description": "JWT token stored in request header."
+      }
+    },
+    "responses": {
+      "NoContent": {
+        "description": "There is no content to send for this request."
+      },
+      "BadRequest": {
+        "description": "The server can not understand the request due to invalid syntax.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "text/html": {
+            "schema": {
+              "description": "web page warning",
+              "type": "string",
+              "format": "html"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Authorization required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "text/html": {
+            "schema": {
+              "description": "web page warning",
+              "type": "string",
+              "format": "html"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "The user does not have access rights to the content.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "text/html": {
+            "schema": {
+              "description": "web page warning",
+              "type": "string",
+              "format": "html"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The server can not find the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "text/html": {
+            "schema": {
+              "description": "web page warning",
+              "type": "string",
+              "format": "html"
+            }
+          }
+        }
+      }
+    },
     "schemas": {
       "UserType": {
-        "description": "an ordered list of User types associated with privilege levels: <br>\n* SAOR: a system administrator with top level privileges\n* VOR: a veterinarian who may create and prescribe protocols\n* MOR: a farm manager to whom protocols may be prescribed, and who may create Cases in a protocol\n* TOR: a farm technician who may execute assigned protocols for assigned cases\n* FARM: an account aggregating MOR and TOR Users\n* CLINIC: an account aggregating multiple VOR Users who work together\n* UNCONFIRMED: an account that has been requested but not confirmed by the owner\n* UNVOR: a User who requests VOR status, with neither email or admin approval\n* UNMOR: a User who requests MOR status but email not yet confirmed\n* PREVOR: a confirmed User who requests VOR status but still lacks either email confirmation or approval by admin\n* REMOVED: the record of a User who is no longer active and may not log in\n",
         "type": "string",
-        "example": "VOR",
+        "description": "an ordered list of User types associated with privilege levels: <br>\n* SAOR: a system administrator with top level privileges\n* VOR: a veterinarian who may create and prescribe protocols\n* MOR: a farm manager to whom protocols may be prescribed, and who may create Cases in a protocol\n* TOR: a farm technician who may execute assigned protocols for assigned cases\n* FARM: an account aggregating MOR and TOR Users\n* CLINIC: an account aggregating multiple VOR Users who work together\n* UNCONFIRMED: an account that has been requested but not confirmed by the owner\n* UNVOR: a User who requests VOR status, with neither email or admin approval\n* UNMOR: a User who requests MOR status but email not yet confirmed\n* PREVOR: a confirmed User who requests VOR status but still lacks either email confirmation or approval by admin\n* REMOVED: the record of a User who is no longer active and may not log in\n",
         "enum": [
           "SAOR",
           "VOR",
@@ -3576,16 +3831,20 @@
           "UNVOR",
           "UNMOR",
           "REMOVED"
-        ]
+        ],
+        "example": "VOR"
+      },
+      "UserNumber": {
+        "description": "Long integer key to a User",
+        "type": "integer",
+        "example": 99
       },
       "User": {
         "description": "a User of a `UserType` class",
         "type": "object",
         "properties": {
           "id": {
-            "description": "User ID number",
-            "type": "integer",
-            "example": 1
+            "$ref": "#/components/schemas/UserNumber"
           },
           "uname": {
             "description": "username",
@@ -3596,24 +3855,24 @@
             "$ref": "#/components/schemas/UserType"
           },
           "email": {
-            "description": "email address",
             "type": "string",
             "format": "email",
+            "description": "email address",
             "example": "exampleUser@email.com"
           },
           "firstname": {
-            "description": "first name",
             "type": "string",
+            "description": "first name",
             "example": "Example"
           },
           "lastname": {
-            "description": "last name",
             "type": "string",
+            "description": "last name",
             "example": "User"
           },
           "suffix": {
-            "description": "degree or qualifier following the name",
             "type": "string",
+            "description": "degree or qualifier following the name",
             "example": "DVM"
           }
         },
@@ -3710,13 +3969,13 @@
             "example": "Any State"
           },
           "zip": {
-            "description": "zip or postal code",
             "type": "string",
+            "description": "zip or postal code",
             "example": "12345-abcd"
           },
           "country": {
-            "description": "country",
             "type": "string",
+            "description": "country",
             "example": "USA"
           }
         },
@@ -3730,33 +3989,109 @@
         ]
       },
       "Relationship": {
-        "description": "a link between two Users defining a relationship:\n\n- CLIENT: MOR User on right is a client of VOR User on left\n- EMPLOYEE: TOR User on right is an employee of MOR User on left\n- MEMBER: VOR User on right is a member of CLINIC on left, or MOR User on right is a manager of FARM on left\n",
         "type": "string",
-        "example": "CLIENT",
+        "description": "a link between two Users defining a relationship:\n\n- CLIENT: MOR User on right is a client of VOR User on left\n- EMPLOYEE: TOR User on right is an employee of MOR User on left\n- MEMBER: VOR User on right is a member of CLINIC on left, or MOR User on right is a manager of FARM on left\n",
         "enum": [
           "CLIENT",
           "EMPLOYEE",
           "MEMBER"
+        ],
+        "example": "CLIENT"
+      },
+      "MessageMode": {
+        "type": "string",
+        "description": "A mode of messaging another user\n",
+        "enum": [
+          "EMAIL"
+        ],
+        "example": "EMAIL",
+        "default": "EMAIL"
+      },
+      "UserMessage": {
+        "description": "A message to another user, optionally including a response action",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SimpleMessage"
+          },
+          {
+            "$ref": "#/components/schemas/RenewRequest"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.SimpleMessage": "#/components/schemas/SimpleMessage",
+            "models.RenewRequest": "#/components/schemas/RenewRequest"
+          }
+        },
+        "example": {
+          "_type": "models.SimpleMessage",
+          "subject": "message from your vet",
+          "message": "Hello world",
+          "detail": "do not reply"
+        }
+      },
+      "SimpleMessage": {
+        "description": "a simple message with no action from one user to another",
+        "type": "object",
+        "required": [
+          "_type",
+          "from",
+          "to",
+          "subject",
+          "message"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies the Remedy subtype as shown in the Remedy discriminator mapping, like `models.RestrictionRemedy`"
+          },
+          "from": {
+            "$ref": "#/components/schemas/UserNumber"
+          },
+          "to": {
+            "$ref": "#/components/schemas/UserNumber"
+          },
+          "subject": {
+            "type": "string",
+            "description": "subject line for the message"
+          },
+          "message": {
+            "type": "string",
+            "format": "html",
+            "description": "the message",
+            "example": "Hello <b>world</b>"
+          },
+          "detail": {
+            "type": "string",
+            "format": "html"
+          }
+        }
+      },
+      "RenewRequest": {
+        "description": "request renewal of a prescription that has expired or run out of refills (or may do so soon).",
+        "required": [
+          "_type",
+          "subject",
+          "message",
+          "prescription"
+        ],
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/SimpleMessage"
+          },
+          {
+            "properties": {
+              "prescription": {
+                "type": "string",
+                "description": "identifier of prescription requested for renewal"
+              }
+            }
+          }
         ]
       },
       "Remedy": {
         "description": "directions for a proposed solution to a problem",
-        "example": {
-          "_type": "models.RestrictionRemedy",
-          "title": "exCode",
-          "message": "exMessage",
-          "detail": "exDetail"
-        },
-        "discriminator": {
-          "propertyName": "_type",
-          "mapping": {
-            "models.RestrictionRemedy": "#/components/schemas/RestrictionRemedy",
-            "models.LinkRemedy": "#/components/schemas/LinkRemedy",
-            "models.SubstituteLabelClaimRemedy": "#/components/schemas/SubstituteLabelClaimRemedy",
-            "models.PromiseRemedy": "#/components/schemas/PromiseRemedy",
-            "models.JsonRemedy": "#/components/schemas/JsonRemedy"
-          }
-        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/RestrictionRemedy"
@@ -3773,39 +4108,49 @@
           {
             "$ref": "#/components/schemas/JsonRemedy"
           }
-        ]
-      },
-      "RemedyBase": {
-        "description": "the base data common to all the polymorphic Remedy subtypes",
-        "type": "object",
-        "properties": {
-          "_type": {
-            "description": "identifies the Remedy subtype as shown in the Remedy discriminator mapping, like `models.RestrictionRemedy`",
-            "type": "string"
-          },
-          "title": {
-            "description": "a short descriptive name of the Remedy",
-            "type": "string"
-          },
-          "message": {
-            "description": "a longer description of the Remedy",
-            "type": "string"
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.RestrictionRemedy": "#/components/schemas/RestrictionRemedy",
+            "models.LinkRemedy": "#/components/schemas/LinkRemedy",
+            "models.SubstituteLabelClaimRemedy": "#/components/schemas/SubstituteLabelClaimRemedy",
+            "models.PromiseRemedy": "#/components/schemas/PromiseRemedy",
+            "models.JsonRemedy": "#/components/schemas/JsonRemedy"
           }
         },
-        "required": [
-          "_type",
-          "title",
-          "message"
-        ]
-      },
-      "RestrictionRemedy": {
-        "description": "Adds `detail` to the protocol instructions in the `Restrictions` section.",
         "example": {
           "_type": "models.RestrictionRemedy",
           "title": "exCode",
           "message": "exMessage",
           "detail": "exDetail"
-        },
+        }
+      },
+      "RemedyBase": {
+        "description": "the base data common to all the polymorphic Remedy subtypes",
+        "type": "object",
+        "required": [
+          "_type",
+          "title",
+          "message"
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies the Remedy subtype as shown in the Remedy discriminator mapping, like `models.RestrictionRemedy`"
+          },
+          "title": {
+            "type": "string",
+            "description": "a short descriptive name of the Remedy"
+          },
+          "message": {
+            "type": "string",
+            "description": "a longer description of the Remedy"
+          }
+        }
+      },
+      "RestrictionRemedy": {
+        "description": "Adds `detail` to the protocol instructions in the `Restrictions` section.",
         "allOf": [
           {
             "$ref": "#/components/schemas/RemedyBase"
@@ -3821,15 +4166,16 @@
               }
             }
           }
-        ]
+        ],
+        "example": {
+          "_type": "models.RestrictionRemedy",
+          "title": "exCode",
+          "message": "exMessage",
+          "detail": "exDetail"
+        }
       },
       "LinkRemedy": {
         "description": "Adds `detail` to the protocol instructions in the `Restrictions` section.",
-        "properties": {
-          "detail": {
-            "type": "string"
-          }
-        },
         "allOf": [
           {
             "$ref": "#/components/schemas/RemedyBase"
@@ -3840,18 +4186,15 @@
               "detail"
             ]
           }
-        ]
+        ],
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        }
       },
       "SubstituteLabelClaimRemedy": {
         "description": "?.",
-        "properties": {
-          "substitutes": {
-            "type": "array",
-            "items": {
-              "type": "integer"
-            }
-          }
-        },
         "allOf": [
           {
             "$ref": "#/components/schemas/RemedyBase"
@@ -3862,15 +4205,18 @@
               "substitutes"
             ]
           }
-        ]
+        ],
+        "properties": {
+          "substitutes": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
       },
       "PromiseRemedy": {
         "description": "Adds Promise to the protocol.",
-        "properties": {
-          "promise": {
-            "$ref": "#/components/schemas/Promise"
-          }
-        },
         "allOf": [
           {
             "$ref": "#/components/schemas/RemedyBase"
@@ -3881,15 +4227,15 @@
               "promise"
             ]
           }
-        ]
+        ],
+        "properties": {
+          "promise": {
+            "$ref": "#/components/schemas/Promise"
+          }
+        }
       },
       "JsonRemedy": {
         "description": "?.",
-        "properties": {
-          "detail": {
-            "type": "object"
-          }
-        },
         "allOf": [
           {
             "$ref": "#/components/schemas/RemedyBase"
@@ -3900,7 +4246,12 @@
               "detail"
             ]
           }
-        ]
+        ],
+        "properties": {
+          "detail": {
+            "type": "object"
+          }
+        }
       },
       "SuccessfulLogin": {
         "description": "User object and generated auth token",
@@ -3910,18 +4261,18 @@
             "$ref": "#/components/schemas/User"
           },
           "token": {
-            "description": "add this token in X-Auth-Token header to authenticate future requests",
             "type": "string",
+            "description": "add this token in X-Auth-Token header to authenticate future requests",
             "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleUp3Y205MmFXUmxja2xFSWpvaVkzSmxaR1Z1ZEdsaGJITWlMQ0p3Y205MmFXUmxja3RsZVNJNkluUmxjM1JXVDFJaWZRPT0iLCJpc3MiOiJwbGF5LXNpbGhvdWV0dGUiLCJle***..."
           },
           "filePolicy": {
-            "description": "policy object for use in embedded image files, expires in 24 hr",
             "type": "string",
+            "description": "policy object for use in embedded image files, expires in 24 hr",
             "example": "3da8c83495cb00d216369a355322078106ebc2e5eac78333eb90d00de5611d9a"
           },
           "fileSignature": {
-            "description": "signature for file policy object",
             "type": "string",
+            "description": "signature for file policy object",
             "example": "eyJleHBpcnkiOjE1Nzg3NTY2MDIsIm1heFNpemUiOjEwMDAwMDAwfQ=="
           }
         },
@@ -3934,66 +4285,65 @@
         ]
       },
       "Error": {
-        "description": "error response per RFC 7807",
         "type": "object",
-        "properties": {
-          "errorType": {
-            "description": "a URI identifier that categorizes the error",
-            "type": "string",
-            "example": "/errors/incorrect-user-pass"
-          },
-          "title": {
-            "description": "A brief, human-readable message about the error",
-            "type": "string",
-            "example": "incorrect username or password"
-          },
-          "status": {
-            "description": "HTTP status code",
-            "type": "integer",
-            "example": 404
-          },
-          "detail": {
-            "description": "a human-readable description of the specific error",
-            "type": "string",
-            "example": "Authentication failed due to incorrect username or password."
-          },
-          "instance": {
-            "description": "a URI that identifies the specific occurrence of the error",
-            "type": "string",
-            "example": "/login/log/abc123"
-          }
-        },
+        "description": "error response per RFC 7807",
         "required": [
           "title",
           "status"
-        ]
+        ],
+        "properties": {
+          "errorType": {
+            "type": "string",
+            "description": "a URI identifier that categorizes the error",
+            "example": "/errors/incorrect-user-pass"
+          },
+          "title": {
+            "type": "string",
+            "description": "A brief, human-readable message about the error",
+            "example": "incorrect username or password"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": 404
+          },
+          "detail": {
+            "type": "string",
+            "description": "a human-readable description of the specific error",
+            "example": "Authentication failed due to incorrect username or password."
+          },
+          "instance": {
+            "type": "string",
+            "description": "a URI that identifies the specific occurrence of the error",
+            "example": "/login/log/abc123"
+          }
+        }
       },
       "ProtocolShare": {
         "description": "share a protocol with another VOR User",
         "type": "object",
         "properties": {
           "px-id": {
-            "description": "the `id` identifier of a Protocol",
             "type": "integer",
+            "description": "the `id` identifier of a Protocol",
             "example": 1
           },
           "share-to": {
-            "description": "ID f a VOR User who may use the Protocol identified by pxId",
             "type": "integer",
+            "description": "ID f a VOR User who may use the Protocol identified by pxId",
             "example": 2
           },
           "clonable": {
             "description": "whether User identified by `shareTo` has permission to create a clone and modify the clone",
             "type": "boolean",
-            "example": true,
-            "default": false
+            "default": false,
+            "example": true
           }
         }
       },
       "ProtocolStatus": {
-        "description": "status markers for protocols, in order of normal usage flow:\n\n- UNKNOWN: initial status when a protocol is being designed\n- VALIDATED: currently not used, for use when a validation process is implemented\n- PRESCRIBED: after a protocol has been prescribed for at least one client\n- INITIATED: after a protocol has been initiated (i.e., has one or more Cases)\n- RECALLED: protocol may no longer be prescribed and existing prescriptions are recalled\n- DEPRECATED: protocol has been \"deleted\" by the owner\n",
         "type": "string",
-        "example": "PRESCRIBED",
+        "description": "status markers for protocols, in order of normal usage flow:\n\n- UNKNOWN: initial status when a protocol is being designed\n- VALIDATED: currently not used, for use when a validation process is implemented\n- PRESCRIBED: after a protocol has been prescribed for at least one client\n- INITIATED: after a protocol has been initiated (i.e., has one or more Cases)\n- RECALLED: protocol may no longer be prescribed and existing prescriptions are recalled\n- DEPRECATED: protocol has been \"deleted\" by the owner\n",
         "enum": [
           "PRESCRIBED",
           "VALIDATED",
@@ -4002,7 +4352,8 @@
           "RECALLED",
           "DECLINED",
           "UNKNOWN"
-        ]
+        ],
+        "example": "PRESCRIBED"
       },
       "Instructions": {
         "description": "instructions to execute a protocol",
@@ -4057,23 +4408,23 @@
         "type": "object",
         "properties": {
           "requireId": {
-            "description": "the Case must include specific ID/s of animal/s to be enrolled",
             "type": "boolean",
-            "example": false,
-            "default": false
+            "description": "the Case must include specific ID/s of animal/s to be enrolled",
+            "default": false,
+            "example": false
           },
           "requireMor": {
-            "description": "if true, the MOR enrolling the Case must be identified with a Signature",
             "type": "boolean",
-            "example": false,
-            "default": false
+            "description": "if true, the MOR enrolling the Case must be identified with a Signature",
+            "default": false,
+            "example": false
           },
           "contraindications": {
             "description": "considerations that prohibit or suggest against use of this Protocol",
             "type": "string",
             "format": "html",
-            "example": "<p>prohibited in animals older than than 24 months</p>",
-            "default": ""
+            "default": "",
+            "example": "<p>prohibited in animals older than than 24 months</p>"
           },
           "medical": {
             "description": "medical considerations in selecting and implementing this Protocol",
@@ -4085,20 +4436,23 @@
             "description": "economic considerations in selecting and implementing this Protocol",
             "type": "string",
             "format": "html",
-            "example": "culling should be considered as an alternative, as milk production is unlikely to return to normal after treatment",
-            "default": ""
+            "default": "",
+            "example": "culling should be considered as an alternative, as milk production is unlikely to return to normal after treatment"
           },
           "note": {
             "description": "optional note",
             "type": "string",
             "format": "html",
-            "example": "<p>overcrowding may be contributing to issues</p>",
-            "default": ""
+            "default": "",
+            "example": "<p>overcrowding may be contributing to issues</p>"
           }
         }
       },
       "Comment": {
         "type": "object",
+        "required": [
+          "comment"
+        ],
         "properties": {
           "userId": {
             "description": "set null or zero if User wishes to be anonymous",
@@ -4117,23 +4471,24 @@
             "type": "string",
             "example": "some comment"
           }
-        },
-        "required": [
-          "comment"
-        ]
+        }
       },
       "Degree": {
         "description": "an academic degree qualifying a User as a veterinarian",
         "type": "object",
+        "required": [
+          "school",
+          "year"
+        ],
         "properties": {
           "school": {
-            "description": "institution granting the degree",
             "type": "string",
+            "description": "institution granting the degree",
             "example": "University of ***"
           },
           "year": {
-            "description": "year granted",
             "type": "string",
+            "description": "year granted",
             "example": 1999
           },
           "license": {
@@ -4142,25 +4497,21 @@
             "example": 12345
           },
           "license-state": {
-            "description": "state or province granting the license",
             "type": "string",
+            "description": "state or province granting the license",
             "example": "Maine"
           },
           "confirmVet": {
-            "description": "confirm the user is a veterinarian",
             "type": "boolean",
-            "example": true,
-            "default": false
+            "description": "confirm the user is a veterinarian",
+            "default": false,
+            "example": true
           }
-        },
-        "required": [
-          "school",
-          "year"
-        ]
+        }
       },
       "FDASpecies": {
-        "description": "a class of animals recognized by the FDA. In FDA literature this is called a \"species\", which conflicts with the typical usage of that word. \"fdaSpecies\" in the labeling domain usually corresponds with \"Eligibility\" in the Protocol domain.",
         "type": "array",
+        "description": "a class of animals recognized by the FDA. In FDA literature this is called a \"species\", which conflicts with the typical usage of that word. \"fdaSpecies\" in the labeling domain usually corresponds with \"Eligibility\" in the Protocol domain.",
         "items": {
           "type": "string",
           "enum": [
@@ -4194,6 +4545,9 @@
       "Eligibility": {
         "description": "A class of animal for which a protocol may be used. Normally the `name` field is all that is shown in the UI, but the `id` is used internally to identify each Eligibility, which should be treated as an immutable object. Changes to the array of Eligibilities in a Protocol are done by changing the array of `id` numbers. Changes to other fields will have no effect at the persistent layer.\n",
         "type": "object",
+        "required": [
+          "id"
+        ],
         "properties": {
           "id": {
             "description": "Eligibility ID number",
@@ -4208,14 +4562,16 @@
           "fdaSpecies": {
             "$ref": "#/components/schemas/FDASpecies"
           }
-        },
-        "required": [
-          "id"
-        ]
+        }
       },
       "Dose": {
         "description": "a single dose to be given at a specified time",
         "type": "object",
+        "required": [
+          "product",
+          "doseSize",
+          "time"
+        ],
         "properties": {
           "id": {
             "description": "ID of animal to be dosed",
@@ -4236,154 +4592,153 @@
             "example": "wip"
           },
           "time": {
-            "description": "wip ISO-8601-formatted datetime added by the server when the dose is saved",
             "type": "string",
             "format": "date-time",
-            "example": "2020-01-10T22:20:39Z"
+            "example": "2020-01-10T22:20:39Z",
+            "description": "wip ISO-8601-formatted datetime added by the server when the dose is saved"
           },
           "note": {
-            "description": "additional information aboutthe dose",
             "type": "string",
             "format": "html",
+            "description": "additional information aboutthe dose",
             "example": "exceeding recommended dose can cause something"
           }
         },
-        "example": "{\"id\":\"B-123\",\"product\":\"MiracleMed\",\"size\":{\"size\":2,\"unit\":\"ml\"},\"route\":\"intramuscular injection\",\"time\":\"2020-01-10T10:30:37Z\"}",
-        "required": [
-          "product",
-          "doseSize",
-          "time"
-        ]
+        "example": "{\"id\":\"B-123\",\"product\":\"MiracleMed\",\"size\":{\"size\":2,\"unit\":\"ml\"},\"route\":\"intramuscular injection\",\"time\":\"2020-01-10T10:30:37Z\"}"
       },
       "SeqSingleDose": {
         "description": "a single dose",
-        "type": "object",
-        "properties": {
-          "_type": {
-            "description": "identifies class of SequenceFunction",
-            "type": "string",
-            "example": "models.SeqSingleDose",
-            "enum": [
-              "models.SeqSingleDose"
-            ]
-          }
-        },
         "required": [
           "_type"
-        ]
-      },
-      "SeqPerDay": {
-        "description": "a series of equally-spaced doses specified by the total number of doses and an integer number of doses per day",
+        ],
         "type": "object",
         "properties": {
           "_type": {
-            "description": "identifies class of SequenceFunction",
             "type": "string",
-            "example": "models.SeqPerDay",
+            "description": "identifies class of SequenceFunction",
             "enum": [
-              "models.SeqPerDay"
-            ]
-          },
-          "frequency": {
-            "description": "how many doses per day",
-            "type": "integer",
-            "example": 2,
-            "default": 1
-          },
-          "totalDoses": {
-            "description": "total number of doses",
-            "type": "integer",
-            "example": 3,
-            "default": 1
+              "models.SeqSingleDose"
+            ],
+            "example": "models.SeqSingleDose"
           }
-        },
+        }
+      },
+      "SeqPerDay": {
         "required": [
           "_type",
           "frequency",
           "totalDoses"
-        ]
-      },
-      "SeqPerDayRange": {
+        ],
         "description": "a series of equally-spaced doses specified by the total number of doses and an integer number of doses per day",
         "type": "object",
         "properties": {
           "_type": {
-            "description": "identifies class of SequenceFunction",
             "type": "string",
-            "example": "models.SeqPerDayRange",
+            "description": "identifies class of SequenceFunction",
             "enum": [
-              "models.SeqPerDayRange"
-            ]
+              "models.SeqPerDay"
+            ],
+            "example": "models.SeqPerDay"
           },
           "frequency": {
+            "type": "integer",
             "description": "how many doses per day",
-            "type": "integer",
-            "example": 2,
-            "default": 1
+            "default": 1,
+            "example": 2
           },
-          "minDoses": {
-            "description": "minimum total number of doses",
+          "totalDoses": {
             "type": "integer",
-            "example": 3,
-            "default": 1
-          },
-          "maxDoses": {
-            "description": "maximum total number of doses",
-            "type": "integer",
-            "example": 9,
-            "default": 1
+            "description": "total number of doses",
+            "default": 1,
+            "example": 3
           }
-        },
+        }
+      },
+      "SeqPerDayRange": {
         "required": [
           "_type",
           "frequency",
           "minDoses",
           "maxDoses"
-        ]
+        ],
+        "description": "a series of equally-spaced doses specified by the total number of doses and an integer number of doses per day",
+        "type": "object",
+        "properties": {
+          "_type": {
+            "description": "identifies class of SequenceFunction",
+            "type": "string",
+            "enum": [
+              "models.SeqPerDayRange"
+            ],
+            "example": "models.SeqPerDayRange"
+          },
+          "frequency": {
+            "type": "integer",
+            "description": "how many doses per day",
+            "default": 1,
+            "example": 2
+          },
+          "minDoses": {
+            "type": "integer",
+            "description": "minimum total number of doses",
+            "default": 1,
+            "example": 3
+          },
+          "maxDoses": {
+            "type": "integer",
+            "description": "maximum total number of doses",
+            "default": 1,
+            "example": 9
+          }
+        }
       },
       "SeqInterval": {
+        "required": [
+          "_type",
+          "totalDoses",
+          "interval"
+        ],
         "description": "a series of equally-spaced doses specified by the total number of doses and time between sequential doses",
         "type": "object",
         "properties": {
           "_type": {
             "description": "identifies class of SequenceFunction",
             "type": "string",
-            "example": "models.SeqInterval",
             "enum": [
               "models.SeqInterval"
-            ]
+            ],
+            "example": "models.SeqInterval"
           },
           "totalDoses": {
-            "description": "total number of doses",
             "type": "integer",
-            "example": 3,
-            "default": 1
+            "description": "total number of doses",
+            "default": 1,
+            "example": 3
           },
           "interval": {
             "description": "time interval between doses",
             "type": "string",
             "format": "duration",
-            "example": "PT8H",
-            "default": "PT8H"
+            "default": "PT8H",
+            "example": "PT8H"
           }
-        },
-        "required": [
-          "_type",
-          "totalDoses",
-          "interval"
-        ]
+        }
       },
       "SeqSeries": {
         "description": "an ordered sequence of doses at times specified as time since initiation of the Protocol",
+        "required": [
+          "_type",
+          "intervals"
+        ],
         "type": "object",
         "properties": {
           "_type": {
             "description": "identifies class of SequenceFunction",
             "type": "string",
-            "example": "models.SeqSeries",
             "enum": [
               "models.SeqSeries"
-            ]
+            ],
+            "example": "models.SeqSeries"
           },
           "intervals": {
             "type": "array",
@@ -4398,24 +4753,10 @@
               ]
             }
           }
-        },
-        "required": [
-          "_type",
-          "intervals"
-        ]
+        }
       },
       "SequenceFunction": {
         "description": "function to calculate times for a series of doses",
-        "discriminator": {
-          "propertyName": "_type",
-          "mapping": {
-            "models.SeqSingleDose": "#/components/schemas/SeqSingleDose",
-            "models.SeqPerDay": "#/components/schemas/SeqPerDay",
-            "models.SeqPerDayRange": "#/components/schemas/SeqPerDayRange",
-            "models.SeqInterval": "#/components/schemas/SeqInterval",
-            "models.SeqSeries": "#/components/schemas/SeqSeries"
-          }
-        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/SeqSingleDose"
@@ -4432,12 +4773,21 @@
           {
             "$ref": "#/components/schemas/SeqSeries"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.SeqSingleDose": "#/components/schemas/SeqSingleDose",
+            "models.SeqPerDay": "#/components/schemas/SeqPerDay",
+            "models.SeqPerDayRange": "#/components/schemas/SeqPerDayRange",
+            "models.SeqInterval": "#/components/schemas/SeqInterval",
+            "models.SeqSeries": "#/components/schemas/SeqSeries"
+          }
+        }
       },
       "MassUnit": {
         "description": "unit of mass or weight",
         "type": "string",
-        "example": "kg",
         "enum": [
           "lb",
           "t",
@@ -4448,33 +4798,34 @@
           "oz",
           "g",
           "kg"
-        ]
+        ],
+        "example": "kg"
       },
       "MassQuantity": {
         "type": "object",
+        "required": [
+          "value",
+          "symbol"
+        ],
         "properties": {
           "dimension": {
-            "description": "must be Mass",
             "type": "string",
-            "example": "Mass",
             "enum": [
               "Mass"
-            ]
+            ],
+            "description": "must be Mass",
+            "example": "Mass"
           },
           "value": {
-            "description": "number of units",
             "type": "number",
-            "example": 50,
-            "default": 1
+            "description": "number of units",
+            "default": 1,
+            "example": 50
           },
           "symbol": {
             "$ref": "#/components/schemas/MassUnit"
           }
-        },
-        "required": [
-          "value",
-          "symbol"
-        ]
+        }
       },
       "VolumeUnit": {
         "description": "unit of Volume",
@@ -4497,66 +4848,69 @@
       },
       "VolumeQuantity": {
         "type": "object",
+        "required": [
+          "value",
+          "symbol"
+        ],
         "properties": {
           "dimension": {
-            "description": "must be Volume",
             "type": "string",
+            "description": "must be Volume",
             "example": "Volume",
             "enum": [
               "Volume"
             ]
           },
           "value": {
-            "description": "number of units",
             "type": "number",
+            "description": "number of units",
             "example": 3
           },
           "symbol": {
             "$ref": "#/components/schemas/VolumeUnit"
           }
-        },
-        "required": [
-          "value",
-          "symbol"
-        ]
+        }
       },
       "DimensionlessUnit": {
         "description": "dimensionless unit (each)",
         "type": "string",
-        "example": "ea",
         "enum": [
           "ea",
           "%",
           "dz"
-        ]
+        ],
+        "example": "ea"
       },
       "DimensionlessQuantity": {
         "type": "object",
+        "required": [
+          "value",
+          "symbol"
+        ],
         "properties": {
           "dimension": {
-            "description": "must be Dimensionless",
             "type": "string",
+            "description": "must be Dimensionless",
             "example": "Dimensionless",
             "enum": [
               "Dimensionless"
             ]
           },
           "value": {
-            "description": "number of units",
             "type": "number",
+            "description": "number of units",
             "example": 3
           },
           "symbol": {
             "$ref": "#/components/schemas/DimensionlessUnit"
           }
-        },
-        "required": [
-          "value",
-          "symbol"
-        ]
+        }
       },
       "DrugQuantity": {
         "type": "object",
+        "required": [
+          "quantity"
+        ],
         "properties": {
           "quantity": {
             "oneOf": [
@@ -4578,22 +4932,23 @@
             "value": 3,
             "symbol": "oz"
           }
-        },
-        "required": [
-          "quantity"
-        ]
+        }
       },
       "FixedDoseFunction": {
-        "description": "a fixed quantity expressed in any available unit",
         "type": "object",
+        "description": "a fixed quantity expressed in any available unit",
+        "required": [
+          "_type",
+          "dose"
+        ],
         "properties": {
           "_type": {
-            "description": "class of Dose Function",
             "type": "string",
-            "example": "models.FixedDoseFunction",
+            "description": "class of Dose Function",
             "enum": [
               "models.FixedDoseFunction"
-            ]
+            ],
+            "example": "models.FixedDoseFunction"
           },
           "dose": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -4608,19 +4963,20 @@
             }
           },
           "_type": "models.FixedDoseFunction"
-        },
-        "required": [
-          "_type",
-          "dose"
-        ]
+        }
       },
       "DoseByWeightFunction": {
-        "description": "dose is specified as a quantity per unit of animal weight",
         "type": "object",
+        "description": "dose is specified as a quantity per unit of animal weight",
+        "required": [
+          "_type",
+          "dose",
+          "perUnit"
+        ],
         "properties": {
           "_type": {
-            "description": "class of Dose Function",
             "type": "string",
+            "description": "class of Dose Function",
             "example": "models.DoseByWeightFunction",
             "enum": [
               "models.DoseByWeightFunction"
@@ -4647,20 +5003,21 @@
             "symbol": "kg"
           },
           "_type": "models.DoseByWeightFunction"
-        },
-        "required": [
-          "_type",
-          "dose",
-          "perUnit"
-        ]
+        }
       },
       "LoadingDoseByWeightFunction": {
-        "description": "dose is specified as first (loading) dose and following doses per unit of animal weight",
         "type": "object",
+        "description": "dose is specified as first (loading) dose and following doses per unit of animal weight",
+        "required": [
+          "_type",
+          "firstDose",
+          "followDose",
+          "perUnit"
+        ],
         "properties": {
           "_type": {
-            "description": "class of Dose Function",
             "type": "string",
+            "description": "class of Dose Function",
             "example": "DoseByWeightFunction",
             "enum": [
               "models.DoseByWeightFunction"
@@ -4697,16 +5054,14 @@
               "symbol": "ml"
             }
           }
-        },
-        "required": [
-          "_type",
-          "firstDose",
-          "followDose",
-          "perUnit"
-        ]
+        }
       },
       "DrugQuantityRange": {
         "type": "object",
+        "required": [
+          "min",
+          "max"
+        ],
         "properties": {
           "min": {
             "$ref": "#/components/schemas/DrugQuantity"
@@ -4730,44 +5085,45 @@
               "symbol": "ml"
             }
           }
-        },
-        "required": [
-          "min",
-          "max"
-        ]
+        }
       },
       "DoseRangeFunction": {
-        "description": "a range of permissible dose size. The User may select any value within the range (inclusive).",
         "type": "object",
+        "description": "a range of permissible dose size. The User may select any value within the range (inclusive).",
+        "required": [
+          "_type",
+          "range"
+        ],
         "properties": {
           "_type": {
-            "description": "class of Dose Function",
             "type": "string",
-            "example": "models.DoseRangeFunction",
             "enum": [
               "models.DoseRangeFunction"
-            ]
+            ],
+            "description": "class of Dose Function",
+            "example": "models.DoseRangeFunction"
           },
           "range": {
             "$ref": "#/components/schemas/DrugQuantityRange"
           }
-        },
-        "required": [
-          "_type",
-          "range"
-        ]
+        }
       },
       "DoseRangeByWeightFunction": {
-        "description": "dose is specified as a range per unit of animal weight. The User may select any value within the range (inclusive).",
         "type": "object",
+        "description": "dose is specified as a range per unit of animal weight. The User may select any value within the range (inclusive).",
+        "required": [
+          "_type",
+          "range",
+          "perUnit"
+        ],
         "properties": {
           "_type": {
-            "description": "class of Dose Function",
             "type": "string",
-            "example": "models.DoseRangeByWeightFunction",
             "enum": [
               "models.DoseRangeByWeightFunction"
-            ]
+            ],
+            "description": "class of Dose Function",
+            "example": "models.DoseRangeByWeightFunction"
           },
           "range": {
             "$ref": "#/components/schemas/DrugQuantityRange"
@@ -4799,25 +5155,10 @@
               }
             }
           }
-        },
-        "required": [
-          "_type",
-          "range",
-          "perUnit"
-        ]
+        }
       },
       "SizeFunction": {
         "description": "function to calculate dose size",
-        "discriminator": {
-          "propertyName": "_type",
-          "mapping": {
-            "models.FixedDoseFunction": "#/components/schemas/FixedDoseFunction",
-            "models.DoseByWeightFunction": "#/components/schemas/DoseByWeightFunction",
-            "models.LoadingDoseByWeightFunction": "#/components/schemas/LoadingDoseByWeightFunction",
-            "models.DoseRangeFunction": "#/components/schemas/DoseRangeFunction",
-            "models.DoseRangeByWeightFunction": "#/components/schemas/SeqSeries"
-          }
-        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/FixedDoseFunction"
@@ -4834,7 +5175,17 @@
           {
             "$ref": "#/components/schemas/DoseRangeByWeightFunction"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.FixedDoseFunction": "#/components/schemas/FixedDoseFunction",
+            "models.DoseByWeightFunction": "#/components/schemas/DoseByWeightFunction",
+            "models.LoadingDoseByWeightFunction": "#/components/schemas/LoadingDoseByWeightFunction",
+            "models.DoseRangeFunction": "#/components/schemas/DoseRangeFunction",
+            "models.DoseRangeByWeightFunction": "#/components/schemas/SeqSeries"
+          }
+        }
       },
       "DoseFunctions": {
         "type": "object",
@@ -4850,21 +5201,26 @@
       "Tag": {
         "description": "keyword or tag for classification",
         "type": "object",
+        "required": [
+          "id",
+          "color",
+          "name"
+        ],
         "properties": {
           "id": {
-            "description": "Tag ID number",
             "type": "integer",
+            "description": "Tag ID number",
             "example": 8
           },
           "color": {
-            "description": "color code",
             "type": "string",
+            "description": "color code",
             "example": "#516cc6"
           },
           "name": {
-            "description": "keyword code identifying tag",
             "type": "string",
-            "maxLength": 15
+            "maxLength": 15,
+            "description": "keyword code identifying tag"
           },
           "fixes": {
             "type": "array",
@@ -4872,12 +5228,7 @@
               "$ref": "#/components/schemas/Remedy"
             }
           }
-        },
-        "required": [
-          "id",
-          "color",
-          "name"
-        ]
+        }
       },
       "AmducaClass": {
         "type": "string",
@@ -4890,6 +5241,13 @@
       "Treatment": {
         "description": "describes a series of one or more doses of a single product in terms of a sizeFunction (which specifies dose quantity) and a SequenceFunction (which specifies when the doses should be given). These functions are polymorphic and may depend on additional data which only is available when a protocol is assigned to a specific Case. For example, the initiation time will likely be needed to calculate the dose sequence and animal weight or other data may be needed to calculate dose size.",
         "type": "object",
+        "required": [
+          "product",
+          "route",
+          "dosage",
+          "sequenceFunction",
+          "sizeFunction"
+        ],
         "properties": {
           "id": {
             "description": "key value created by the database. If `id` is null or not present, a new database record will be created. If 'id' matches an existing record in the db, that record will be updated instead.",
@@ -4945,13 +5303,13 @@
             "$ref": "#/components/schemas/SizeFunction"
           },
           "wtMeatHrs": {
-            "description": "number of hours that must pass between exposure and slaughter",
             "type": "integer",
+            "description": "number of hours that must pass between exposure and slaughter",
             "example": "wip"
           },
           "wtMilkHrs": {
-            "description": "number of hours that must pass between exposure and extracting milk for consumption",
             "type": "integer",
+            "description": "number of hours that must pass between exposure and extracting milk for consumption",
             "example": "wip"
           },
           "nada": {
@@ -4967,29 +5325,22 @@
             }
           },
           "note": {
-            "description": "further information about the treatment",
             "type": "string",
             "format": "html",
+            "description": "further information about the treatment",
             "example": "<p>a free-form note</p>"
           },
           "amduca": {
             "$ref": "#/components/schemas/AmducaClass"
           }
-        },
-        "required": [
-          "product",
-          "route",
-          "dosage",
-          "sequenceFunction",
-          "sizeFunction"
-        ]
+        }
       },
       "DoseId": {
         "type": "object",
         "properties": {
           "doseId": {
-            "description": "key to a label dosage",
             "type": "integer",
+            "description": "key to a label dosage",
             "example": "wip"
           }
         }
@@ -4999,21 +5350,28 @@
         "type": "object",
         "properties": {
           "id": {
-            "description": "Diagnosis ID number",
             "type": "integer",
+            "description": "Diagnosis ID number",
             "example": 8
           },
           "name": {
-            "description": "free-form text description of the Diagnosis",
             "type": "string",
-            "example": "Pain/inflammation (musculoskeletal), treatment",
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "free-form text description of the Diagnosis",
+            "example": "Pain/inflammation (musculoskeletal), treatment"
           }
         }
       },
       "Promise": {
         "description": "An act which must be executed on or after enrollment of a Case to a Prescription",
         "type": "object",
+        "required": [
+          "_type",
+          "name",
+          "descrip",
+          "query",
+          "when"
+        ],
         "properties": {
           "_type": {
             "description": "Class of Promise",
@@ -5053,18 +5411,11 @@
             "description": "ISO-8601 duration from initiation when promise must be fulfilled",
             "type": "string",
             "format": "duration",
-            "example": "PT24H",
-            "default": "PT0H"
+            "default": "PT0H",
+            "example": "PT24H"
           }
         },
-        "example": "promise",
-        "required": [
-          "_type",
-          "name",
-          "descrip",
-          "query",
-          "when"
-        ]
+        "example": "promise"
       },
       "StringPromise": {
         "description": "identification of animal is required to enroll a case",
@@ -5168,17 +5519,17 @@
         ]
       },
       "Metadata": {
-        "description": "(for future development)",
         "type": "object",
+        "description": "(for future development)",
         "properties": {
           "key": {
-            "description": "key identifying data",
             "type": "string",
+            "description": "key identifying data",
             "example": "popularity"
           },
           "value": {
-            "description": "value associated with key",
             "type": "string",
+            "description": "value associated with key",
             "example": "good 1.2"
           }
         }
@@ -5186,111 +5537,6 @@
       "Px": {
         "description": "the flattened subset of a Protocol which can be retrieved from the Px database table alone, without additional queries.",
         "type": "object",
-        "properties": {
-          "id": {
-            "description": "unique identifier for Protocol",
-            "type": "integer",
-            "example": 0
-          },
-          "ownerId": {
-            "description": "unique identifier for User that owns this Protocol",
-            "type": "integer",
-            "example": 0
-          },
-          "name": {
-            "description": "user-friendly identifier for the Protocol",
-            "type": "string",
-            "example": "example protocol"
-          },
-          "shortname": {
-            "description": "Short name for the Protocol",
-            "type": "string",
-            "example": "EXamp"
-          },
-          "created": {
-            "description": "ISO-8601 timestamp for Protocol creation",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-01-10T22:20:39Z"
-          },
-          "edited": {
-            "description": "ISO-8601 timestamp for Protocol update",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-02-10T22:20:39Z"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ProtocolStatus"
-          },
-          "vetNote": {
-            "description": "note visible only to the prescribing vet",
-            "type": "string",
-            "example": "consider prescribing protocol x instead"
-          },
-          "wtMeatHrs": {
-            "description": "number of hours that meat may not be sold for food after last treatment",
-            "type": "integer",
-            "example": 72
-          },
-          "wtMilkHrs": {
-            "description": "number of hours that milk may not be sold for food after last treatment",
-            "type": "integer",
-            "example": 72
-          },
-          "wtNote": {
-            "description": "note regarding withholding",
-            "type": "string",
-            "example": "Not for use in horses intended for food."
-          },
-          "considerations": {
-            "description": "free-form text specifying special considerations in choosing or using a protocol",
-            "type": "string",
-            "format": "html",
-            "example": "<p>think first</p>"
-          },
-          "restrictions": {
-            "description": "free-form text note specifying restrictions",
-            "type": "string",
-            "format": "html",
-            "example": "<p>not suitable in pregnancy</p>"
-          },
-          "dothis": {
-            "description": "free-form text specifying actions to be completed",
-            "type": "string",
-            "format": "html",
-            "example": "<p>execute protocol</p>"
-          },
-          "recordthis": {
-            "description": "free-form text specifying data to record",
-            "type": "string",
-            "format": "html",
-            "example": "case data"
-          },
-          "success": {
-            "description": "describes a successful outcome of the protocol",
-            "type": "string",
-            "format": "html",
-            "example": "<p>good</p>"
-          },
-          "failure": {
-            "description": "describes a failure of the protocol",
-            "type": "string",
-            "format": "html",
-            "example": "<p>bad</p>"
-          },
-          "references": {
-            "description": "wip references related to the disease or treatment",
-            "type": "string",
-            "format": "html",
-            "example": "<a href=\"https://en.wikipedia.org/wiki/Rickrolling\">Wikipedia</a>"
-          },
-          "shareAll": {
-            "description": "switch to determine whether this Protocol may be shared with all VOR users",
-            "type": "boolean",
-            "example": true,
-            "default": false
-          }
-        },
         "required": [
           "ownerId",
           "name",
@@ -5298,11 +5544,122 @@
           "edited",
           "status",
           "shareAll"
-        ]
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "unique identifier for Protocol",
+            "example": 0
+          },
+          "ownerId": {
+            "type": "integer",
+            "description": "unique identifier for User that owns this Protocol",
+            "example": 0
+          },
+          "name": {
+            "type": "string",
+            "description": "user-friendly identifier for the Protocol",
+            "example": "example protocol"
+          },
+          "shortname": {
+            "type": "string",
+            "description": "Short name for the Protocol",
+            "example": "EXamp"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 timestamp for Protocol creation",
+            "example": "2020-01-10T22:20:39Z"
+          },
+          "edited": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO-8601 timestamp for Protocol update",
+            "example": "2020-02-10T22:20:39Z"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ProtocolStatus"
+          },
+          "vetNote": {
+            "type": "string",
+            "description": "note visible only to the prescribing vet",
+            "example": "consider prescribing protocol x instead"
+          },
+          "wtMeatHrs": {
+            "type": "integer",
+            "description": "number of hours that meat may not be sold for food after last treatment",
+            "example": 72
+          },
+          "wtMilkHrs": {
+            "type": "integer",
+            "description": "number of hours that milk may not be sold for food after last treatment",
+            "example": 72
+          },
+          "wtNote": {
+            "type": "string",
+            "description": "note regarding withholding",
+            "example": "Not for use in horses intended for food."
+          },
+          "considerations": {
+            "type": "string",
+            "format": "html",
+            "description": "free-form text specifying special considerations in choosing or using a protocol",
+            "example": "<p>think first</p>"
+          },
+          "restrictions": {
+            "type": "string",
+            "format": "html",
+            "description": "free-form text note specifying restrictions",
+            "example": "<p>not suitable in pregnancy</p>"
+          },
+          "dothis": {
+            "type": "string",
+            "format": "html",
+            "description": "free-form text specifying actions to be completed",
+            "example": "<p>execute protocol</p>"
+          },
+          "recordthis": {
+            "type": "string",
+            "format": "html",
+            "description": "free-form text specifying data to record",
+            "example": "case data"
+          },
+          "success": {
+            "type": "string",
+            "format": "html",
+            "description": "describes a successful outcome of the protocol",
+            "example": "<p>good</p>"
+          },
+          "failure": {
+            "type": "string",
+            "format": "html",
+            "description": "describes a failure of the protocol",
+            "example": "<p>bad</p>"
+          },
+          "references": {
+            "type": "string",
+            "format": "html",
+            "description": "wip references related to the disease or treatment",
+            "example": "<a href=\"https://en.wikipedia.org/wiki/Rickrolling\">Wikipedia</a>"
+          },
+          "shareAll": {
+            "type": "boolean",
+            "default": false,
+            "example": true,
+            "description": "switch to determine whether this Protocol may be shared with all VOR users"
+          }
+        }
       },
       "Protocol": {
         "description": "a veterinary treatment protocol",
         "type": "object",
+        "required": [
+          "ownerId",
+          "name",
+          "status",
+          "instructions"
+        ],
         "properties": {
           "id": {
             "description": "key value created by the database. If zero or null a new record will be created.",
@@ -5346,14 +5703,14 @@
             "example": "consider prescribing protocol x instead"
           },
           "wtMeatHrs": {
-            "description": "number of hours that must pass between exposure and slaughter",
             "type": "number",
-            "example": 22
+            "example": 22,
+            "description": "number of hours that must pass between exposure and slaughter"
           },
           "wtMilkHrs": {
-            "description": "number of hours that must pass between exposure and extracting milk for consumption",
             "type": "number",
-            "example": 5
+            "example": 5,
+            "description": "number of hours that must pass between exposure and extracting milk for consumption"
           },
           "instructions": {
             "$ref": "#/components/schemas/Instructions"
@@ -5361,14 +5718,14 @@
           "shareAll": {
             "description": "share this protocol with all other vets using the system?",
             "type": "boolean",
-            "example": true,
-            "default": false
+            "default": false,
+            "example": true
           },
           "shareClonable": {
             "description": "when shared to another vet, may the recipient create and alter a clone?",
             "type": "boolean",
-            "example": true,
-            "default": false
+            "default": false,
+            "example": true
           },
           "caseDefinition": {
             "$ref": "#/components/schemas/CaseDefinition"
@@ -5414,51 +5771,51 @@
               "$ref": "#/components/schemas/Metadata"
             }
           }
-        },
-        "required": [
-          "ownerId",
-          "name",
-          "status",
-          "instructions"
-        ]
+        }
       },
       "Prescription": {
         "type": "object",
+        "required": [
+          "vorId",
+          "morId",
+          "protocol",
+          "status"
+        ],
         "properties": {
           "rxId": {
-            "description": "prescription identifier",
             "type": "string",
+            "description": "prescription identifier",
             "example": "gG3pBCR1GCMKm89c"
           },
           "protocol": {
             "$ref": "#/components/schemas/Protocol"
           },
           "vorId": {
-            "description": "ID of VOR user who prescribed this",
             "type": "integer",
+            "description": "ID of VOR user who prescribed this",
             "example": 1
           },
           "morId": {
-            "description": "ID of MOR this is prescribed for",
             "type": "integer",
+            "description": "ID of MOR this is prescribed for",
             "example": 2
           },
           "refills": {
-            "description": "number of repeats for this prescription",
             "type": "integer",
-            "example": 0,
-            "default": 0
+            "description": "number of repeats for this prescription",
+            "default": 0,
+            "example": 0
           },
           "expiration": {
-            "description": "expiration date",
             "type": "string",
             "format": "date-time",
+            "description": "expiration date",
             "example": "2021-01-10T10:30:37Z"
           },
           "created": {
-            "description": "description: timestamp when prescribed first saved",
             "type": "string",
             "format": "date-time",
+            "description": "description: timestamp when prescribed first saved",
             "example": "2021-08-10T10:30:37Z"
           },
           "metadata": {
@@ -5470,16 +5827,16 @@
           "status": {
             "$ref": "#/components/schemas/ProtocolStatus"
           }
-        },
-        "required": [
-          "vorId",
-          "morId",
-          "protocol",
-          "status"
-        ]
+        }
       },
       "Product": {
         "type": "object",
+        "required": [
+          "id",
+          "nada",
+          "name",
+          "companyId"
+        ],
         "properties": {
           "id": {
             "type": "integer"
@@ -5499,28 +5856,28 @@
           "insertURL": {
             "type": "string"
           }
-        },
-        "required": [
-          "id",
-          "nada",
-          "name",
-          "companyId"
-        ]
+        }
       },
       "Case": {
         "description": "A **_Case_** records use of a **_Prescription_** on an individual animal or group",
         "type": "object",
+        "required": [
+          "id",
+          "rxId",
+          "caseData",
+          "promiseData"
+        ],
         "properties": {
           "id": {
             "description": "Case ID number",
             "type": "integer",
             "format": "int64",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "rxId": {
-            "description": "UUID identifying the prescription",
             "type": "string",
+            "description": "UUID identifying the prescription",
             "example": "gG3pBCR1GCMKm89c"
           },
           "caseData": {
@@ -5533,18 +5890,11 @@
               "$ref": "#/components/schemas/Promise"
             }
           }
-        },
-        "required": [
-          "id",
-          "rxId",
-          "caseData",
-          "promiseData"
-        ]
+        }
       },
       "TaskStatus": {
-        "description": "task status",
         "type": "string",
-        "example": "REQUIRED",
+        "description": "task status",
         "enum": [
           "REQUIRED",
           "SUGGESTED",
@@ -5556,153 +5906,144 @@
           "RECALLED",
           "EXECUTED",
           "UNKNOWN"
-        ]
+        ],
+        "example": "REQUIRED"
       },
       "PDataNone": {
         "type": "object",
-        "properties": {
-          "_type": {
-            "description": "identifies subtype of PData",
-            "type": "string",
-            "example": "models.PdataNone",
-            "enum": [
-              "models.PdataNone"
-            ]
-          },
-          "promiseId": {
-            "description": "ID of promise to which this data is attached",
-            "type": "integer",
-            "example": 123,
-            "default": null
-          }
-        },
         "required": [
           "_type",
           "promiseId"
-        ]
+        ],
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of PData",
+            "enum": [
+              "models.PdataNone"
+            ],
+            "example": "models.PdataNone"
+          },
+          "promiseId": {
+            "description": "ID of promise to which this data is attached",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          }
+        }
       },
       "PDataString": {
         "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
         "properties": {
           "_type": {
-            "description": "identifies subtype of PData",
             "type": "string",
-            "example": "models.PdataString",
+            "description": "identifies subtype of PData",
             "enum": [
               "models.PdataString"
-            ]
+            ],
+            "example": "models.PdataString"
           },
           "promiseId": {
             "description": "ID of promise to which this data is attached",
             "type": "integer",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "dat": {
-            "description": "data to fulfill the Promise",
             "type": "string",
+            "description": "data to fulfill the Promise",
             "example": "full recovery"
           }
-        },
-        "required": [
-          "promiseId",
-          "dat"
-        ]
+        }
       },
       "PDataNumber": {
         "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
         "properties": {
           "_type": {
-            "description": "identifies subtype of PData",
             "type": "string",
-            "example": "models.PdataNumber",
+            "description": "identifies subtype of PData",
             "enum": [
               "models.PdataNumber"
-            ]
+            ],
+            "example": "models.PdataNumber"
           },
           "promiseId": {
             "description": "ID of promise to which this data is attached",
             "type": "integer",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "dat": {
-            "description": "data to fulfill the Promise",
             "type": "number",
+            "description": "data to fulfill the Promise",
             "example": 42
           }
-        },
-        "required": [
-          "promiseId",
-          "dat"
-        ]
+        }
       },
       "PDataBoolean": {
         "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
         "properties": {
           "_type": {
-            "description": "identifies subtype of PData",
             "type": "string",
-            "example": "models.PDataBoolean",
+            "description": "identifies subtype of PData",
             "enum": [
               "models.PDataBoolean"
-            ]
+            ],
+            "example": "models.PDataBoolean"
           },
           "promiseId": {
             "description": "ID of promise to which this data is attached",
             "type": "integer",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "dat": {
-            "description": "data to fulfill the Promise",
             "type": "boolean",
+            "description": "data to fulfill the Promise",
             "example": true
           }
-        },
-        "required": [
-          "promiseId",
-          "dat"
-        ]
+        }
       },
       "PDataMass": {
         "type": "object",
+        "required": [
+          "promiseId",
+          "dat"
+        ],
         "properties": {
           "_type": {
-            "description": "identifies subtype of PData",
             "type": "string",
-            "example": "models.PdataMass",
+            "description": "identifies subtype of PData",
             "enum": [
               "models.PdataMass"
-            ]
+            ],
+            "example": "models.PdataMass"
           },
           "promiseId": {
             "description": "id number of Promise",
             "type": "integer",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "dat": {
             "$ref": "#/components/schemas/MassQuantity"
           }
-        },
-        "required": [
-          "promiseId",
-          "dat"
-        ]
+        }
       },
       "PData": {
         "description": "a task",
-        "discriminator": {
-          "propertyName": "_type",
-          "mapping": {
-            "models.PDataNone": "#/components/schemas/PDataNone",
-            "models.PDataString": "#/components/schemas/PDataString",
-            "models.PDataNumber": "#/components/schemas/PDataNumber",
-            "models.PDataBoolean": "#/components/schemas/PDataBoolean",
-            "models.PDataMass": "#/components/schemas/PDataMass"
-          }
-        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/PDataNone"
@@ -5719,19 +6060,33 @@
           {
             "$ref": "#/components/schemas/PDataMass"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.PDataNone": "#/components/schemas/PDataNone",
+            "models.PDataString": "#/components/schemas/PDataString",
+            "models.PDataNumber": "#/components/schemas/PDataNumber",
+            "models.PDataBoolean": "#/components/schemas/PDataBoolean",
+            "models.PDataMass": "#/components/schemas/PDataMass"
+          }
+        }
       },
       "DoseByClass": {
         "description": "dose calculated by class",
+        "required": [
+          "_type",
+          "animalClasses"
+        ],
         "type": "object",
         "properties": {
           "_type": {
-            "description": "class of Dose Function",
             "type": "string",
-            "example": "models.DoseByClass",
+            "description": "class of Dose Function",
             "enum": [
               "models.DoseByClass"
-            ]
+            ],
+            "example": "models.DoseByClass"
           },
           "animalClasses": {
             "type": "array",
@@ -5740,24 +6095,20 @@
             }
           }
         },
-        "example": "{\"_type\":\"models.DoseByClass\",\"animalClasses\":[{\"animalClass\":\"Jabberwocks\",\"sizeFunction\":{\"unit\":\"mg\",\"size\":3.2,\"_type\":\"models.DrugQuantity\"}},{\"animalClass\":\"Borogoves\",\"sizeFunction\":{\"_type\":\"models.DoseRangeFunction\",\"maxDose\":{\"size\":20,\"unit\":\"ml\"},\"minDose\":{\"size\":10,\"unit\":\"ml\"}}}]}",
-        "required": [
-          "_type",
-          "animalClasses"
-        ]
+        "example": "{\"_type\":\"models.DoseByClass\",\"animalClasses\":[{\"animalClass\":\"Jabberwocks\",\"sizeFunction\":{\"unit\":\"mg\",\"size\":3.2,\"_type\":\"models.DrugQuantity\"}},{\"animalClass\":\"Borogoves\",\"sizeFunction\":{\"_type\":\"models.DoseRangeFunction\",\"maxDose\":{\"size\":20,\"unit\":\"ml\"},\"minDose\":{\"size\":10,\"unit\":\"ml\"}}}]}"
       },
       "CaseData": {
         "description": "data for an individual Case",
         "type": "object",
         "properties": {
           "id": {
-            "description": "ID number for the **_Case_**",
             "type": "integer",
-            "example": 0
+            "example": 0,
+            "description": "ID number for the **_Case_**"
           },
           "rxId": {
-            "description": "UUID identifying the prescription",
             "type": "string",
+            "description": "UUID identifying the prescription",
             "example": "gG3pBCR1GCMKm89c"
           },
           "caseData": {
@@ -5792,80 +6143,86 @@
         }
       },
       "IdData": {
-        "description": "identifies animal or group treated in the **_Case_**",
         "type": "object",
+        "description": "identifies animal or group treated in the **_Case_**",
         "properties": {
           "_type": {
-            "description": "Class of CaseData",
             "type": "string",
-            "example": "models.IdData",
+            "description": "Class of CaseData",
             "enum": [
               "models.IdData"
-            ]
+            ],
+            "example": "models.IdData"
           },
           "animalId": {
-            "description": "text description identifying the animal or group",
             "type": "string",
+            "description": "text description identifying the animal or group",
             "example": "Bossie"
           },
           "initiationTime": {
-            "description": "when the **_Case_** is initiated",
             "type": "string",
             "format": "date-time",
-            "example": "2020-01-10T10:30:37Z"
+            "example": "2020-01-10T10:30:37Z",
+            "description": "when the **_Case_** is initiated"
           }
         }
       },
       "PreferredDoseData": {
         "description": "animal identity and preferred dose",
         "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime",
+          "preferredDose"
+        ],
         "properties": {
           "_type": {
             "description": "Class of CaseData",
             "type": "string",
-            "example": "models.PrefDoseRateData",
             "enum": [
               "models.PreferredDoseData"
-            ]
+            ],
+            "example": "models.PrefDoseRateData"
           },
           "animalId": {
-            "description": "text description identifying the animal or group",
             "type": "string",
+            "description": "text description identifying the animal or group",
             "example": "Bossie"
           },
           "preferredDose": {
             "$ref": "#/components/schemas/DrugQuantity"
           },
           "initiationTime": {
-            "description": "when the **_Case_** is initiated",
             "type": "string",
             "format": "date-time",
+            "description": "when the **_Case_** is initiated",
             "example": "2020-04-10T10:30:37Z"
           }
-        },
-        "required": [
-          "animalId",
-          "initiationTime",
-          "preferredDose"
-        ]
+        }
       },
       "PrefDoseRateData": {
         "description": "weight of animal and preferred dose",
         "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime",
+          "preferredDose",
+          "weight"
+        ],
         "properties": {
           "_type": {
-            "description": "identifies subtype of CaseData",
             "type": "string",
-            "example": "models.PrefDoseRateData",
+            "description": "identifies subtype of CaseData",
             "enum": [
               "models.PrefDoseRateData"
-            ]
+            ],
+            "example": "models.PrefDoseRateData"
           },
           "animalId": {
             "description": "text description identifying the animal or group",
             "type": "integer",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "initiationTime": {
             "description": "when the **_Case_** is initiated",
@@ -5879,31 +6236,30 @@
           "preferredDose": {
             "$ref": "#/components/schemas/DrugQuantity"
           }
-        },
-        "required": [
-          "animalId",
-          "initiationTime",
-          "preferredDose",
-          "weight"
-        ]
+        }
       },
       "AnimalClassData": {
         "description": "data for a class of animals",
         "type": "object",
+        "required": [
+          "animalId",
+          "initiationTime",
+          "animalClass"
+        ],
         "properties": {
           "_type": {
             "description": "Class of CaseData",
             "type": "string",
-            "example": "models.AnimalClassData",
             "enum": [
               "models.AnimalClassData"
-            ]
+            ],
+            "example": "models.AnimalClassData"
           },
           "animalId": {
             "description": "text description identifying the animal or group",
             "type": "integer",
-            "example": 123,
-            "default": null
+            "default": null,
+            "example": 123
           },
           "initiationTime": {
             "description": "when the **_Case_** is initiated",
@@ -5914,55 +6270,50 @@
           "animalClass": {
             "$ref": "#/components/schemas/AnimalClass"
           }
-        },
-        "required": [
-          "animalId",
-          "initiationTime",
-          "animalClass"
-        ]
+        }
       },
       "AnimalClass": {
         "description": "a class of animals and a SizeFunction for dosing that class",
         "type": "object",
+        "required": [
+          "animalClass",
+          "sizeFunction"
+        ],
         "properties": {
           "animalClass": {
-            "description": "descrip",
             "type": "string",
+            "description": "descrip",
             "example": "Jabberwocks"
           },
           "sizeFunction": {
             "$ref": "#/components/schemas/SizeFunction"
           }
-        },
-        "required": [
-          "animalClass",
-          "sizeFunction"
-        ]
+        }
       },
       "WeightData": {
-        "description": "specifies animal's weight",
         "type": "object",
+        "description": "specifies animal's weight",
         "properties": {
           "_type": {
-            "description": "identifies subtype of CaseData",
             "type": "string",
-            "example": "models.WeightData",
+            "description": "identifies subtype of CaseData",
             "enum": [
               "models.WeightData"
-            ]
+            ],
+            "example": "models.WeightData"
           },
           "animalId": {
-            "description": "text description identifying the animal or group",
             "type": "string",
+            "description": "text description identifying the animal or group",
             "example": "Bossie"
           },
           "weight": {
             "$ref": "#/components/schemas/MassQuantity"
           },
           "initiationTime": {
-            "description": "when the **_Case_** is initiated",
             "type": "string",
             "format": "date-time",
+            "description": "when the **_Case_** is initiated",
             "example": "2020-01-10T10:30:37Z"
           }
         }
@@ -5970,40 +6321,6 @@
       "Withhold": {
         "description": "a time before which meat or milk may not be sold.",
         "type": "object",
-        "properties": {
-          "id": {
-            "description": "key for withhold",
-            "type": "integer"
-          },
-          "caseId": {
-            "description": "key identifying Case",
-            "type": "integer"
-          },
-          "animalId": {
-            "description": "key identifying animal or group",
-            "type": "string",
-            "example": "Bossie"
-          },
-          "initiated": {
-            "description": "when the Withhold was initiated",
-            "type": "string",
-            "format": "date-time"
-          },
-          "wtMeatUntil": {
-            "description": "when the Withhold ends for meat products",
-            "type": "string",
-            "format": "date-time"
-          },
-          "wtMilkUntil": {
-            "description": "when the Withhold ends for milk",
-            "type": "string",
-            "format": "date-time"
-          },
-          "note": {
-            "description": "note",
-            "type": "string"
-          }
-        },
         "required": [
           "id",
           "caseId",
@@ -6011,17 +6328,44 @@
           "initiated",
           "wtMeatUntil",
           "wtMilkUntil"
-        ]
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "key for withhold"
+          },
+          "caseId": {
+            "type": "integer",
+            "description": "key identifying Case"
+          },
+          "animalId": {
+            "type": "string",
+            "description": "key identifying animal or group",
+            "example": "Bossie"
+          },
+          "initiated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the Withhold was initiated"
+          },
+          "wtMeatUntil": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the Withhold ends for meat products"
+          },
+          "wtMilkUntil": {
+            "type": "string",
+            "format": "date-time",
+            "description": "when the Withhold ends for milk"
+          },
+          "note": {
+            "type": "string",
+            "description": "note"
+          }
+        }
       },
       "AnimalTask": {
         "description": "a task related to an animal or group of animals",
-        "discriminator": {
-          "propertyName": "_type",
-          "mapping": {
-            "models.PTask": "#/components/schemas/PTask",
-            "models.DoseTask": "#/components/schemas/DoseTask"
-          }
-        },
         "oneOf": [
           {
             "$ref": "#/components/schemas/PTask"
@@ -6029,15 +6373,33 @@
           {
             "$ref": "#/components/schemas/DoseTask"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "_type",
+          "mapping": {
+            "models.PTask": "#/components/schemas/PTask",
+            "models.DoseTask": "#/components/schemas/DoseTask"
+          }
+        }
       },
       "TaskBase": {
         "description": "the base data common to all the polymorphic AnimalTask subtypes",
         "type": "object",
+        "required": [
+          "_type",
+          "id",
+          "caseId",
+          "morId",
+          "vorId",
+          "promId",
+          "animalId",
+          "doAt",
+          "status"
+        ],
         "properties": {
           "_type": {
-            "description": "identifies the task subtype as shown in the AnimalTask discriminator mapping, like ` models.DoseTask`",
-            "type": "string"
+            "type": "string",
+            "description": "identifies the task subtype as shown in the AnimalTask discriminator mapping, like ` models.DoseTask`"
           },
           "id": {
             "description": "PTask ID number",
@@ -6064,8 +6426,8 @@
             "example": 123
           },
           "animalId": {
-            "description": "ID of animal to which the task applies",
             "type": "string",
+            "description": "ID of animal to which the task applies",
             "example": "this"
           },
           "doAt": {
@@ -6083,33 +6445,10 @@
           "status": {
             "$ref": "#/components/schemas/TaskStatus"
           }
-        },
-        "required": [
-          "_type",
-          "id",
-          "caseId",
-          "morId",
-          "vorId",
-          "promId",
-          "animalId",
-          "doAt",
-          "status"
-        ]
+        }
       },
       "PTask": {
         "description": "A Task required to fulfill a Promise",
-        "type": "object",
-        "properties": {
-          "promId": {
-            "description": "ID of Promise",
-            "type": "integer",
-            "format": "int64",
-            "example": 123
-          },
-          "data": {
-            "$ref": "#/components/schemas/PData"
-          }
-        },
         "allOf": [
           {
             "$ref": "#/components/schemas/TaskBase"
@@ -6126,13 +6465,46 @@
             }
           }
         ],
+        "type": "object",
         "required": [
           "promId",
           "data"
-        ]
+        ],
+        "properties": {
+          "promId": {
+            "description": "ID of Promise",
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          },
+          "data": {
+            "$ref": "#/components/schemas/PData"
+          }
+        }
       },
       "DoseTask": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TaskBase"
+          },
+          {
+            "type": "object",
+            "required": [
+              "detail"
+            ],
+            "properties": {
+              "detail": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "type": "object",
+        "required": [
+          "product",
+          "route",
+          "dose"
+        ],
         "properties": {
           "product": {
             "description": "product to be administered",
@@ -6147,108 +6519,10 @@
           "dose": {
             "$ref": "#/components/schemas/DrugQuantity"
           }
-        },
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/TaskBase"
-          },
-          {
-            "type": "object",
-            "required": [
-              "detail"
-            ],
-            "properties": {
-              "detail": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "required": [
-          "product",
-          "route",
-          "dose"
-        ]
+        }
       },
       "LabelClaim": {
         "type": "object",
-        "properties": {
-          "id": {
-            "description": "unique identifier for label",
-            "type": "integer",
-            "example": 1
-          },
-          "fdaSpecies": {
-            "$ref": "#/components/schemas/FDAspecies"
-          },
-          "diagnosis": {
-            "description": "label diagnosis",
-            "type": "string",
-            "example": "pain (colic), symptomatic treatment"
-          },
-          "dxId": {
-            "description": "id of label diagnosis",
-            "type": "integer",
-            "example": 2002
-          },
-          "product": {
-            "description": "product trade name",
-            "type": "string",
-            "example": "Prevail™ Flunixin Meglumine Injection"
-          },
-          "productId": {
-            "description": "unique identifier for the product described",
-            "type": "integer",
-            "example": 1315018
-          },
-          "_dose": {
-            "description": "free-form text note on dosage",
-            "type": "string",
-            "example": "3.0 ml per kg repeat in 6 hours and again in 24 hours"
-          },
-          "route": {
-            "description": "route of administration",
-            "type": "string",
-            "example": "intr-corporeal"
-          },
-          "sequenceFunction": {
-            "$ref": "#/components/schemas/SequenceFunction"
-          },
-          "sizeFunction": {
-            "$ref": "#/components/schemas/SizeFunction"
-          },
-          "doseNote": {
-            "description": "test note about dose",
-            "type": "string",
-            "format": "html",
-            "example": "THis can contain <b>html</b> tags"
-          },
-          "wtMeatHrs": {
-            "description": "meat withholding in hours",
-            "type": "integer",
-            "example": 22
-          },
-          "wtMilkHrs": {
-            "description": "milk withholding in hours",
-            "type": "integer",
-            "example": 5
-          },
-          "wtNote": {
-            "description": "note on withholding",
-            "type": "string",
-            "example": "not for dairy animals"
-          },
-          "ndc": {
-            "description": "FDA NADA or ANADA number",
-            "type": "string",
-            "example": "200-308"
-          },
-          "generic": {
-            "description": "generic name for product",
-            "type": "string",
-            "example": "OXYTETRACYCLINE"
-          }
-        },
         "required": [
           "id",
           "fdaSpecies",
@@ -6258,10 +6532,92 @@
           "route",
           "wtMeatHrs",
           "wtMilkHrs"
-        ]
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "unique identifier for label",
+            "example": 1
+          },
+          "fdaSpecies": {
+            "$ref": "#/components/schemas/FDAspecies"
+          },
+          "diagnosis": {
+            "type": "string",
+            "description": "label diagnosis",
+            "example": "pain (colic), symptomatic treatment"
+          },
+          "dxId": {
+            "type": "integer",
+            "description": "id of label diagnosis",
+            "example": 2002
+          },
+          "product": {
+            "type": "string",
+            "description": "product trade name",
+            "example": "Prevail™ Flunixin Meglumine Injection"
+          },
+          "productId": {
+            "type": "integer",
+            "description": "unique identifier for the product described",
+            "example": 1315018
+          },
+          "_dose": {
+            "type": "string",
+            "description": "free-form text note on dosage",
+            "example": "3.0 ml per kg repeat in 6 hours and again in 24 hours"
+          },
+          "route": {
+            "type": "string",
+            "description": "route of administration",
+            "example": "intr-corporeal"
+          },
+          "sequenceFunction": {
+            "$ref": "#/components/schemas/SequenceFunction"
+          },
+          "sizeFunction": {
+            "$ref": "#/components/schemas/SizeFunction"
+          },
+          "doseNote": {
+            "type": "string",
+            "format": "html",
+            "description": "test note about dose",
+            "example": "THis can contain <b>html</b> tags"
+          },
+          "wtMeatHrs": {
+            "description": "meat withholding in hours",
+            "type": "integer",
+            "example": 22
+          },
+          "wtMilkHrs": {
+            "type": "integer",
+            "description": "milk withholding in hours",
+            "example": 5
+          },
+          "wtNote": {
+            "type": "string",
+            "description": "note on withholding",
+            "example": "not for dairy animals"
+          },
+          "ndc": {
+            "type": "string",
+            "description": "FDA NADA or ANADA number",
+            "example": "200-308"
+          },
+          "generic": {
+            "type": "string",
+            "description": "generic name for product",
+            "example": "OXYTETRACYCLINE"
+          }
+        }
       },
       "Login": {
         "type": "object",
+        "required": [
+          "userid",
+          "message"
+        ],
+        "x-reviewed": "JLE 2022/5/30",
         "properties": {
           "userId": {
             "type": "integer",
@@ -6269,25 +6625,20 @@
             "default": null
           },
           "when": {
-            "description": "timestamp of login, entered",
             "type": "string",
             "format": "date-time",
+            "description": "timestamp of login, entered",
             "example": "2020-01-10T10:30:37Z"
           },
           "message": {
             "type": "string",
             "example": "some message"
           }
-        },
-        "required": [
-          "userid",
-          "message"
-        ],
-        "x-reviewed": "JLE 2022/5/30"
+        }
       },
       "FDAspecies": {
-        "description": "a class of animals recognized by the FDA. In FDA literature this is called a \"species\", which conflicts with the typical usage of that word. \"fdaSpecies\" in the labeling domain usually corresponds with \"Eligibility\" in the Protocol domain.",
         "type": "array",
+        "description": "a class of animals recognized by the FDA. In FDA literature this is called a \"species\", which conflicts with the typical usage of that word. \"fdaSpecies\" in the labeling domain usually corresponds with \"Eligibility\" in the Protocol domain.",
         "items": {
           "type": "string",
           "enum": [
@@ -6327,65 +6678,6 @@
         }
       },
       "GreenbookDrug": {
-        "type": "object",
-        "properties": {
-          "ndc": {
-            "description": "FDA NDC number",
-            "type": "string",
-            "example": "0010-3495"
-          },
-          "proprietery": {
-            "description": "proprietary name",
-            "type": "string",
-            "example": "Bio-Mycin 200"
-          },
-          "nonProp": {
-            "description": "generic name",
-            "type": "string",
-            "example": "OXYTETRACYCLINE"
-          },
-          "ingredients": {
-            "description": "ingredient or ingredients",
-            "type": "string",
-            "example": "OXYTETRACYCLINE"
-          },
-          "labeler": {
-            "description": "name of labeler",
-            "type": "string",
-            "example": "Boehringer Ingelheim Vetmedica, Inc."
-          },
-          "productType": {
-            "description": "type of product",
-            "type": "string",
-            "example": "OTC ANIMAL DRUG"
-          },
-          "marketCat": {
-            "description": "market category",
-            "type": "string",
-            "example": "ANADA"
-          },
-          "appNumber": {
-            "description": "application number",
-            "type": "string",
-            "example": "ANADA200008"
-          },
-          "link": {
-            "description": "public link to fda label",
-            "type": "string",
-            "example": "https://www.accessdata.fda.gov/spl/data/c9491ada-6813-4548-8872-57bb38a58feb/c9491ada-6813-4548-8872-57bb38a58feb.xml"
-          },
-          "status": {
-            "description": "FDA status",
-            "type": "integer",
-            "example": 0
-          },
-          "lastChanged": {
-            "description": "date of last label change",
-            "type": "string",
-            "format": "date-time",
-            "example": "2020-05-16T16:19:12Z"
-          }
-        },
         "required": [
           "ndc",
           "proprietery",
@@ -6398,9 +6690,72 @@
           "link",
           "status",
           "lastChanged"
-        ]
+        ],
+        "type": "object",
+        "properties": {
+          "ndc": {
+            "type": "string",
+            "description": "FDA NDC number",
+            "example": "0010-3495"
+          },
+          "proprietery": {
+            "type": "string",
+            "description": "proprietary name",
+            "example": "Bio-Mycin 200"
+          },
+          "nonProp": {
+            "description": "generic name",
+            "type": "string",
+            "example": "OXYTETRACYCLINE"
+          },
+          "ingredients": {
+            "type": "string",
+            "description": "ingredient or ingredients",
+            "example": "OXYTETRACYCLINE"
+          },
+          "labeler": {
+            "type": "string",
+            "description": "name of labeler",
+            "example": "Boehringer Ingelheim Vetmedica, Inc."
+          },
+          "productType": {
+            "type": "string",
+            "description": "type of product",
+            "example": "OTC ANIMAL DRUG"
+          },
+          "marketCat": {
+            "type": "string",
+            "description": "market category",
+            "example": "ANADA"
+          },
+          "appNumber": {
+            "type": "string",
+            "description": "application number",
+            "example": "ANADA200008"
+          },
+          "link": {
+            "type": "string",
+            "description": "public link to fda label",
+            "example": "https://www.accessdata.fda.gov/spl/data/c9491ada-6813-4548-8872-57bb38a58feb/c9491ada-6813-4548-8872-57bb38a58feb.xml"
+          },
+          "status": {
+            "type": "integer",
+            "description": "FDA status",
+            "example": 0
+          },
+          "lastChanged": {
+            "type": "string",
+            "format": "date-time",
+            "description": "date of last label change",
+            "example": "2020-05-16T16:19:12Z"
+          }
+        }
       },
       "HelpScreen": {
+        "required": [
+          "key",
+          "msg"
+        ],
         "type": "object",
         "properties": {
           "key": {
@@ -6412,14 +6767,10 @@
             "format": "html"
           },
           "lang": {
-            "description": "language code",
-            "type": "string"
+            "type": "string",
+            "description": "language code"
           }
-        },
-        "required": [
-          "key",
-          "msg"
-        ]
+        }
       }
     },
     "examples": {
@@ -6463,97 +6814,6 @@
         "value": "",
         "summary": "DimensionlessQ.example 1/7/22"
       }
-    },
-    "responses": {
-      "NoContent": {
-        "description": "There is no content to send for this request."
-      },
-      "BadRequest": {
-        "description": "The server can not understand the request due to invalid syntax.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error"
-            }
-          }
-        }
-      },
-      "Unauthorized": {
-        "description": "Authorization required"
-      },
-      "Forbidden": {
-        "description": "The user does not have access rights to the content."
-      },
-      "NotFound": {
-        "description": "The server can not find the requested resource."
-      }
-    },
-    "securitySchemes": {
-      "authToken": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "X-Auth-Token",
-        "description": "JWT token stored in request header."
-      }
     }
-  },
-  "tags": [
-    {
-      "name": "VOR",
-      "description": "available to veterinarians."
-    },
-    {
-      "name": "MOR",
-      "description": "available to farm managers."
-    },
-    {
-      "name": "ALL_USERS",
-      "description": "available to all users."
-    },
-    {
-      "name": "SAOR",
-      "description": "available to system administrators."
-    },
-    {
-      "name": "TOR",
-      "description": "available to farm employees."
-    },
-    {
-      "name": "LOR",
-      "description": "available to pharmacy curators."
-    },
-    {
-      "name": "FARM",
-      "description": "available to farm accounts."
-    },
-    {
-      "name": "CLINIC",
-      "description": "available to vet clinic accounts."
-    },
-    {
-      "name": "User",
-      "description": "Endpoints and models related to user management."
-    },
-    {
-      "name": "Protocol",
-      "description": "Endpoints and models related to protocol management."
-    },
-    {
-      "name": "Prescription",
-      "description": "Endpoints and models related to prescription management."
-    },
-    {
-      "name": "Case",
-      "description": "Endpoints and models related to case management."
-    },
-    {
-      "name": "Promise",
-      "description": "Endpoints and models related to promise management."
-    }
-  ],
-  "security": [
-    {
-      "authToken": []
-    }
-  ]
+  }
 }
