@@ -5405,24 +5405,23 @@
             ]
           },
           "id": {
-            "description": "Promise ID number",
+            "description": "database primary key",
             "type": "integer",
             "example": 2345
           },
           "name": {
-            "description": "promise name for the doctor",
+            "description": "a short name primarily for the VOR",
             "type": "string",
             "example": "ID promise"
           },
           "descrip": {
-            "description": "promise description for the client",
-            "type": "string",
+            "description": "html description describing in detail what must be done to complete the Promise",
+            "format": "html",
             "example": "You must give ID for each case enrolled"
           },
           "query": {
-            "description": "question to be answered by client",
+            "description": "A specific question to be answered in completing the promise",
             "type": "string",
-            "format": "html",
             "example": "What is the animal's name or number?"
           },
           "when": {
@@ -5436,7 +5435,7 @@
         "example": "promise"
       },
       "StringPromise": {
-        "description": "identification of animal is required to enroll a case",
+        "description": "a promise requiring a text response, which may include html",
         "allOf": [
           {
             "$ref": "#/components/schemas/Promise"
@@ -5933,6 +5932,7 @@
           "_type",
           "promiseId"
         ],
+        "description": "type used where no data is required in a response",
         "properties": {
           "_type": {
             "type": "string",
@@ -5973,6 +5973,7 @@
           },
           "dat": {
             "type": "string",
+            "format": "html",
             "description": "data to fulfill the Promise",
             "example": "full recovery"
           }
@@ -6002,7 +6003,7 @@
           "dat": {
             "type": "number",
             "description": "data to fulfill the Promise",
-            "example": 42
+            "example": 42.3
           }
         }
       },
