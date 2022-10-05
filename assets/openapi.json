@@ -168,8 +168,8 @@
         "parameters": [
           {
             "name": "usertypes",
-            "in": "path",
-            "required": true,
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "array",
               "items": {
@@ -815,9 +815,20 @@
         "tags": [
           "ALL_USERS"
         ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "single-use token required for authentication",
+            "example": "2frfgjty"
+          }
+        ],
         "responses": {
           "200": {
-            "401": null,
             "description": "OK",
             "content": {
               "text/html": {
@@ -827,7 +838,9 @@
                   "format": "html"
                 }
               }
-            },
+            }
+          },
+          "401": {
             "$ref": "#/components/responses/Unauthorized"
           }
         }
@@ -1673,7 +1686,6 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "$ref": "#/components/schemas/LabelClaim"
                 }
               }
@@ -2927,7 +2939,6 @@
         ],
         "summary": "labelclaim",
         "description": "Return specified labelclaim.",
-        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "id",
@@ -2946,61 +2957,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
                   "$ref": "#/components/schemas/LabelClaim"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "403": {
-            "$ref": "#/components/responses/Unauthorized"
-          }
-        }
-      },
-      "put": {
-        "operationId": "updateLabelClaim",
-        "tags": [
-          "SAOR"
-        ],
-        "summary": "create help screen",
-        "description": "update a labelclaim.",
-        "x-reviewed": "JLE 2022/5/31",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "schema": {
-              "type": "integer"
-            },
-            "required": true,
-            "description": "labelclaim id"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LabelClaim"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success –  labelclaim updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "protocol": {
-                      "$ref": "#/components/schemas/LabelClaim"
-                    }
-                  }
                 }
               }
             }
@@ -3222,13 +3179,14 @@
         "description": "Prescriptions are immutable except for metadata, and cannot actually be deleted. This endpoint makes a prescription unavailable for use. If called by the VOR, it sets staus to RECALLED. If called by the MOR to whom it is prescribed, it sets status to DECLINED. New cases  cannot be enrolled if either RECALLED or DECLIENED.",
         "parameters": [
           {
-            "name": "key",
+            "name": "id",
             "in": "path",
             "schema": {
               "type": "string"
             },
+            "example": "Vi1y9kbpEj7Upqy7",
             "required": true,
-            "description": "Prescription identifier"
+            "description": "Prescription ID key"
           }
         ],
         "responses": {
@@ -3325,7 +3283,7 @@
     },
     "/api/prescriptions/{rxId}/cases": {
       "get": {
-        "operationId": "myCases",
+        "operationId": "Cases",
         "tags": [
           "VOR"
         ],
@@ -4020,8 +3978,6 @@
         ],
         "discriminator": {
           "propertyName": "_type",
-          "description": "identifies the UserMessage subtype",
-          "example": "models.SimpleMessage",
           "mapping": {
             "models.SimpleMessage": "#/components/schemas/SimpleMessage",
             "models.RenewRequest": "#/components/schemas/RenewRequest"
@@ -5430,9 +5386,14 @@
             "format": "duration",
             "default": "PT0H",
             "example": "PT24H"
+          },
+          "shareAll": {
+            "description": "true if Promise is available to all users; added in db version 3.2.0",
+            "type": "boolean",
+            "default": false,
+            "example": false
           }
-        },
-        "example": "promise"
+        }
       },
       "StringPromise": {
         "description": "a promise requiring a text response, which may include html",
