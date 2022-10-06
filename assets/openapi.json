@@ -5365,6 +5365,12 @@
             "type": "integer",
             "example": 2345
           },
+          "ownerId": {
+            "description": "id of VOR user with exclusive access to this Promise. If null, Promise is available to all users.",
+            "type": "integer",
+            "default": null,
+            "example": 123
+          },
           "name": {
             "description": "a short name primarily for the VOR",
             "type": "string",
@@ -5386,12 +5392,6 @@
             "format": "duration",
             "default": "PT0H",
             "example": "PT24H"
-          },
-          "shareAll": {
-            "description": "true if Promise is available to all users; added in db version 3.2.0",
-            "type": "boolean",
-            "default": false,
-            "example": false
           }
         }
       },
