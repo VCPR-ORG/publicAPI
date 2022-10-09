@@ -4118,10 +4118,9 @@
               },
               "extend": {
                 "type": "string",
-                "format": "date-time",
-                "description": "new expiration date that is requested",
-                "default": "(current date + 6 months)",
-                "example": "2020-05-16T16:19:12Z"
+                "format": "duration",
+                "default": "PT183D",
+                "example": "PT183D"
               },
               "refill": {
                 "type": "integer",
