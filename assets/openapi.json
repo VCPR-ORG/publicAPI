@@ -3281,12 +3281,12 @@
     },
     "/api/cases": {
       "post": {
-        "operationId": "enrollCase",
+        "operationId": "depecatedEnrollCase",
         "tags": [
           "VOR",
           "MOR"
         ],
-        "summary": "enroll case",
+        "summary": "enroll case,  deprecated in favor of POST /api/cases2 which will be moved to this path eventually",
         "description": "Creates a Case linked to a prescription.",
         "requestBody": {
           "required": true,
@@ -3300,14 +3300,28 @@
         },
         "responses": {
           "200": {
-            "description": "Success – recorded Protocol",
+            "description": "Success – recorded Case",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "case": {
-                      "$ref": "#/components/schemas/Case"
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "promises": {
+                          "type": "integer"
+                        },
+                        "doses": {
+                          "type": "integer"
+                        },
+                        "withhold": {
+                          "type": "integer"
+                        }
+                      }
                     }
                   }
                 }
@@ -3338,6 +3352,169 @@
                       "items": {
                         "$ref": "#/components/schemas/Case"
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/cases2": {
+      "post": {
+        "operationId": "enrollCase",
+        "tags": [
+          "VOR",
+          "MOR"
+        ],
+        "summary": "enroll case",
+        "description": "Creates a Case linked to a prescription.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Case"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success – recorded Case",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "case": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "promises": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PTask"
+                          }
+                        },
+                        "doses": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DoseTask"
+                          }
+                        },
+                        "withhold": {
+                          "$ref": "#/components/schemas/Withhold"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/rx-cases": {
+      "get": {
+        "operationId": "myRx-Cases",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "prescriptions with cases",
+        "parameters": [
+          {
+            "name": "vorId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID number of VOR prescribing",
+            "required": false
+          },
+          {
+            "name": "morId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID number of MOR prescribed to",
+            "required": false
+          },
+          {
+            "name": "protocolId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID number of protocol",
+            "required": false
+          },
+          {
+            "name": "enrolledBefore",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "filter cases before this date",
+              "example": "2020-01-10T22:20:39Z"
+            }
+          },
+          {
+            "name": "enrolledAfter",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "description": "filter cases after this date",
+              "example": "2020-01-10T22:20:39Z"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "required": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "rxesWithCases": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RxWithCases"
+                      }
+                    },
+                    "of": {
+                      "type": "integer",
+                      "description": "total number of cases available"
                     }
                   }
                 }
@@ -3593,7 +3770,6 @@
         ],
         "summary": "greenbook drugs",
         "description": "Return GBDs.",
-        "x-reviewed": "JLE 2022/5/31",
         "parameters": [
           {
             "name": "ndcProd",
@@ -5928,6 +6104,25 @@
           }
         }
       },
+      "RxWithCases": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Prescription"
+          }
+        ],
+        "required": [
+          "cases"
+        ],
+        "properties": {
+          "cases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Case"
+            }
+          }
+        }
+      },
       "Product": {
         "type": "object",
         "required": [
@@ -5963,8 +6158,9 @@
         "required": [
           "id",
           "rxId",
-          "caseData",
-          "promiseData"
+          "animalId",
+          "initiationTime",
+          "caseData"
         ],
         "properties": {
           "id": {
@@ -5979,15 +6175,53 @@
             "description": "UUID identifying the prescription",
             "example": "gG3pBCR1GCMKm89c"
           },
+          "animalId": {
+            "type": "string",
+            "example": "Bossie34"
+          },
+          "initiationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "note": {
+            "type": "string"
+          },
+          "morId": {
+            "type": "integer"
+          },
           "caseData": {
             "$ref": "#/components/schemas/CaseData"
-          },
-          "promiseData": {
-            "description": "promises attached to this case",
+          }
+        }
+      },
+      "CaseHx": {
+        "description": "A Case History consisting of a Case plust the associated tasks",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Case"
+          }
+        ],
+        "type": "object",
+        "required": [
+          "promiseTasks",
+          "doseTasks",
+          "animalId"
+        ],
+        "properties": {
+          "doseTasks": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Promise"
+              "$ref": "#/components/schemas/DoseTask"
             }
+          },
+          "promiseTasks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PTask"
+            }
+          },
+          "Withhold": {
+            "$ref": "#/components/schemas/Withhold"
           }
         }
       },
