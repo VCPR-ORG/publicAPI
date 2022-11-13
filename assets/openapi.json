@@ -3429,6 +3429,50 @@
         }
       }
     },
+    "/api/cases/{caseId}": {
+      "get": {
+        "operationId": "getCaseHx",
+        "tags": [
+          "VOR",
+          "MOR"
+        ],
+        "summary": "get history for a single Case (with tasks)",
+        "description": "Case plus tasks generated for the Case plus any data returned on task execution",
+        "parameters": [
+          {
+            "name": "caseId",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID number of Case"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "caseHx": {
+                      "$ref": "#/components/schemas/CaseHx"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
     "/api/rx-cases": {
       "get": {
         "operationId": "rxWithCases",
@@ -3743,7 +3787,7 @@
         }
       }
     },
-    "/api/admin/spl{ndc}": {
+    "/api/admin/spl/{ndc}": {
       "get": {
         "operationId": "getSPL",
         "tags": [
