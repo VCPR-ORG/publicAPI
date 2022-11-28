@@ -1763,6 +1763,58 @@
         }
       }
     },
+    "/api/logging": {
+      "post": {
+        "operationId": "logMessage",
+        "tags": [
+          "ANY_USER"
+        ],
+        "summary": "log a message to server",
+        "description": "adds a timestamped entry to server logs",
+        "parameters": [
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "description": "logging level severity, defaulting to INFO",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INFO",
+                "ERROR",
+                "DEBUG",
+                "WARN"
+              ],
+              "default": "INFO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "message logged",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "logged": {
+                      "type": "string",
+                      "description": "the message logged"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
     "/api/messages": {
       "post": {
         "operationId": "sendMessage",
@@ -3987,6 +4039,220 @@
           }
         }
       }
+    },
+    "/api/images": {
+      "get": {
+        "operationId": "getImage",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "parameters": [
+          {
+            "name": "keywords",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "dx",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "ex",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "image": {
+                      "$ref": "#/components/schemas/Image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "operationId": "saveImage",
+        "tags": [
+          "VOR",
+          "MOR"
+        ],
+        "summary": "record an image",
+        "description": "REcords link for loading an image.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Image"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success – recorded Case",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "case": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "promises": {
+                          "type": "integer"
+                        },
+                        "doses": {
+                          "type": "integer"
+                        },
+                        "withhold": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/api/images/{id}": {
+      "get": {
+        "operationId": "getImage",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "image": {
+                      "$ref": "#/components/schemas/Image"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/imagekeywords": {
+      "get": {
+        "operationId": "getImageKeywards",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "keywords": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/imagestores": {
+      "get": {
+        "operationId": "getImageStores",
+        "tags": [
+          "ALL_USERS"
+        ],
+        "responses": {
+          "200": {
+            "description": "ImageStores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "stores": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ImageStore"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4533,17 +4799,22 @@
           "token": {
             "type": "string",
             "description": "add this token in X-Auth-Token header to authenticate future requests",
-            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleUp3Y205MmFXUmxja2xFSWpvaVkzSmxaR1Z1ZEdsaGJITWlMQ0p3Y205MmFXUmxja3RsZVNJNkluUmxjM1JXVDFJaWZRPT0iLCJpc3MiOiJwbGF5LXNpbGhvdWV0dGUiLCJle***..."
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzMmFXUmxja2xFSWpvaVkzSmxaR1Z1ZEdsp3Y205MmFXUmxja3RsZVNJNkluUmxjM1JXVDFJaWZRPT0iLCJpc3MiOiJwbGF5LXNpbGhvdWV0dGUiLCJle***..."
           },
           "filePolicy": {
             "type": "string",
             "description": "policy object for use in embedded image files, expires in 24 hr",
-            "example": "3da8c83495cb00d216369a355322078106ebc2e5eac78333eb90d00de5611d9a"
+            "example": "3da8c83495cb00d21690d00de5611d9a"
           },
           "fileSignature": {
             "type": "string",
             "description": "signature for file policy object",
-            "example": "eyJleHBpcnkiOjE1Nzg3NTY2MDIsIm1heFNpemUiOjEwMDAwMDAwfQ=="
+            "example": "eyJleHBpcnkiOjE1Nzg3NTY2MDIsIm1MDAwMDAwfQ=="
+          },
+          "wsTicket": {
+            "type": "string",
+            "description": "token to set up a websocket connection",
+            "example": "eyJleHBpcnkiOjE2MDIsIm1heFNpemUiOjEwMDAwMDAwfQ=="
           }
         },
         "x-postman-variables": [
@@ -5497,6 +5768,87 @@
             "items": {
               "$ref": "#/components/schemas/Remedy"
             }
+          }
+        }
+      },
+      "Image": {
+        "description": "Metadata for an image available in an ImageStore",
+        "type": "object",
+        "required": [
+          "id",
+          "store",
+          "link",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 888
+          },
+          "link": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "description": "description of image"
+          },
+          "store": {
+            "$ref": "#/components/schemas/ImageStore"
+          }
+        }
+      },
+      "ImageStore": {
+        "description": "An online source for images",
+        "type": "object",
+        "required": [
+          "id",
+          "uri",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 888
+          },
+          "uri": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Header"
+            }
+          }
+        }
+      },
+      "Header": {
+        "description": "An html header",
+        "type": "object",
+        "required": [
+          "key",
+          "value"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "X-Auth-Token"
+          },
+          "value": {
+            "type": "string"
           }
         }
       },
