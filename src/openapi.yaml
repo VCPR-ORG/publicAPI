@@ -46,7 +46,8 @@ tags:
   - name: Promise
     description: Endpoints and models related to promise management.
 security:
-  - authToken: []
+  - apiKey: []
+    authToken: []
 paths:
   /editor:
     get:
@@ -87,6 +88,26 @@ paths:
               schema: {}
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /signin:
+    get:
+      operationId: signin
+      description: Log in with user credentials
+      tags: [ALL_USERS]
+      parameters:
+        - name: returnPath
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            After a successful signin, the server will attempt to redirect to this path, if supplied.
+          example: /spa/editor
+      responses:
+        "303":
+          description: show user a form to supply credentials
+          content:
+            text/html:
+              schema: {}
   /api/users:
     get:
       operationId: getUsers
@@ -2708,6 +2729,13 @@ paths:
  
 components:
   securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-APIKEY
+      description:  >-
+        API key stored in request header. This identifies the application
+        consuming the API. To request a free API key contact a site administrator.
     authToken:
       type: apiKey
       in: header
