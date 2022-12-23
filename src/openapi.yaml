@@ -2849,6 +2849,7 @@ components:
         uname:
           description: username
           type: string
+          minLength: 8
           example: exampleUser
         userType:
           $ref: "#/components/schemas/UserType"
@@ -2859,10 +2860,12 @@ components:
           example: exampleUser@email.com
         firstname:
           type: string
+          minLength: 2
           description: first name
           example: Example
         lastname:
           type: string
+          minLength: 2
           description: last name
           example: User
         suffix:
