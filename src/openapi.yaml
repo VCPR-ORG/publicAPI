@@ -2842,6 +2842,7 @@ components:
     User:
       description: a User of a `UserType` class
       type: object
+      required: [id, uname, userType, firstname, lastname]
       properties:
         id:
           $ref: "#/components/schemas/UserNumber"
