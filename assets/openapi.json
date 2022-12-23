@@ -4402,6 +4402,13 @@
       "User": {
         "description": "a User of a `UserType` class",
         "type": "object",
+        "required": [
+          "id",
+          "uname",
+          "userType",
+          "firstname",
+          "lastname"
+        ],
         "properties": {
           "id": {
             "$ref": "#/components/schemas/UserNumber"
@@ -4409,6 +4416,7 @@
           "uname": {
             "description": "username",
             "type": "string",
+            "minLength": 7,
             "example": "exampleUser"
           },
           "userType": {
@@ -4422,11 +4430,13 @@
           },
           "firstname": {
             "type": "string",
+            "minLength": 2,
             "description": "first name",
             "example": "Example"
           },
           "lastname": {
             "type": "string",
+            "minLength": 2,
             "description": "last name",
             "example": "User"
           },
@@ -4435,14 +4445,7 @@
             "description": "degree or qualifier following the name",
             "example": "DVM"
           }
-        },
-        "required": [
-          "id",
-          "uname",
-          "userType",
-          "firstname",
-          "lastname"
-        ]
+        }
       },
       "Profile": {
         "description": "User data including Address and preferences",
