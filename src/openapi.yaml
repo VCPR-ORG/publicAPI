@@ -2849,7 +2849,7 @@ components:
         uname:
           description: username
           type: string
-          minLength: 8
+          minLength: 7
           example: exampleUser
         userType:
           $ref: "#/components/schemas/UserType"
@@ -2872,12 +2872,6 @@ components:
           type: string
           description: degree or qualifier following the name
           example: DVM
-      required:
-        - id
-        - uname
-        - userType
-        - firstname
-        - lastname
     Profile:
       description: User data including Address and preferences
       type: object
