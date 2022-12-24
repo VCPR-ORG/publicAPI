@@ -4119,12 +4119,7 @@ components:
       description: >-
         An act which must be executed on or after enrollment of a Case to a Prescription
       type: object
-      required:
-        - _type
-        - name
-        - descrip
-        - query
-        - when
+      required: [_type, name, query, when]
       properties:
         _type:
           description: Class of Promise
@@ -4146,17 +4141,15 @@ components:
           default: null
           example: 123
         name:
-          description: a short name primarily for the VOR
+          description: a short name 
           type: string
+          minLength: 8
           example: ID promise
         descrip:
           description: html description describing in detail what must be done to complete the Promise
+          type: string
           format: html
           example: You must give ID for each case enrolled
-        query:
-          description: A specific question to be answered in completing the promise
-          type: string
-          example: What is the animal's name or number?
         when:
           description: ISO-8601 duration from initiation when promise must be fulfilled
           type: string
@@ -4169,6 +4162,11 @@ components:
         - $ref: "#/components/schemas/Promise"
         - type: object
           properties:
+            query:
+              description: A specific question to be answered in completing the promise
+              type: string
+              minLength: 1
+              example: What is the animal's name or number?
             response:
               $ref: "#/components/schemas/PDataString"
 
@@ -4179,7 +4177,11 @@ components:
         - $ref: "#/components/schemas/Promise"
         - type: object
           properties:
+            query:
+              description: A set of query choices 
+              $ref: "#/components/schemas/MapStringString"
             response:
+              description: the key value referencing a mapped query string
               $ref: "#/components/schemas/PDataString"
     BooleanPromise:
       description: identification of animal is required to enroll a case
@@ -4188,6 +4190,11 @@ components:
         - $ref: "#/components/schemas/Promise"
         - type: object
           properties:
+            query:
+              description: A specific question to be answered in completing the promise
+              type: string
+              minLength: 1
+              example: What is the animal's name or number?
             response:
               $ref: "#/components/schemas/PDataBoolean"
     NumberPromise:
@@ -4197,6 +4204,11 @@ components:
         - $ref: "#/components/schemas/Promise"
         - type: object
           properties:
+            query:
+              description: A specific question to be answered in completing the promise
+              type: string
+              minLength: 1
+              example: What is the animal's name or number?
             response:
               $ref: "#/components/schemas/PDataNumber"
     AffirmationPromise:
@@ -4206,6 +4218,11 @@ components:
         - $ref: "#/components/schemas/Promise"
         - type: object
           properties:
+            query:
+              description: A specific question to be answered in completing the promise
+              type: string
+              minLength: 1
+              example: What is the animal's name or number?
             response:
               $ref: "#/components/schemas/PDataNone"
     MassPromise:
@@ -4215,9 +4232,13 @@ components:
         - $ref: "#/components/schemas/Promise"
         - type: object
           properties:
+            query:
+              description: A specific question to be answered in completing the promise
+              type: string
+              minLength: 1
+              example: What is the animal's name or number?
             response:
               $ref: "#/components/schemas/PDataMass"
-
     Metadata:
       type: object
       description: (for future development)
@@ -4574,6 +4595,12 @@ components:
         - EXECUTED
         - UNKNOWN
       example: REQUIRED
+    MapStringString:
+      type: object
+      description: maps a set of key names to corresponding string values
+      additionalProperties:
+        type: string
+        minLength: 1
     PDataNone:
       type: object
       required: [_type, promiseId]
