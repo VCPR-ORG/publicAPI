@@ -6084,7 +6084,6 @@
         "required": [
           "_type",
           "name",
-          "descrip",
           "query",
           "when"
         ],
@@ -6113,19 +6112,16 @@
             "example": 123
           },
           "name": {
-            "description": "a short name primarily for the VOR",
+            "description": "a short name",
             "type": "string",
+            "minLength": 8,
             "example": "ID promise"
           },
           "descrip": {
             "description": "html description describing in detail what must be done to complete the Promise",
+            "type": "string",
             "format": "html",
             "example": "You must give ID for each case enrolled"
-          },
-          "query": {
-            "description": "A specific question to be answered in completing the promise",
-            "type": "string",
-            "example": "What is the animal's name or number?"
           },
           "when": {
             "description": "ISO-8601 duration from initiation when promise must be fulfilled",
@@ -6145,6 +6141,12 @@
           {
             "type": "object",
             "properties": {
+              "query": {
+                "description": "A specific question to be answered in completing the promise",
+                "type": "string",
+                "minLength": 1,
+                "example": "What is the animal's name or number?"
+              },
               "response": {
                 "$ref": "#/components/schemas/PDataString"
               }
@@ -6162,7 +6164,12 @@
           {
             "type": "object",
             "properties": {
+              "query": {
+                "description": "A set of query choices",
+                "$ref": "#/components/schemas/MapStringString"
+              },
               "response": {
+                "description": "the key value referencing a mapped query string",
                 "$ref": "#/components/schemas/PDataString"
               }
             }
@@ -6179,6 +6186,12 @@
           {
             "type": "object",
             "properties": {
+              "query": {
+                "description": "A specific question to be answered in completing the promise",
+                "type": "string",
+                "minLength": 1,
+                "example": "What is the animal's name or number?"
+              },
               "response": {
                 "$ref": "#/components/schemas/PDataBoolean"
               }
@@ -6196,6 +6209,12 @@
           {
             "type": "object",
             "properties": {
+              "query": {
+                "description": "A specific question to be answered in completing the promise",
+                "type": "string",
+                "minLength": 1,
+                "example": "What is the animal's name or number?"
+              },
               "response": {
                 "$ref": "#/components/schemas/PDataNumber"
               }
@@ -6213,6 +6232,12 @@
           {
             "type": "object",
             "properties": {
+              "query": {
+                "description": "A specific question to be answered in completing the promise",
+                "type": "string",
+                "minLength": 1,
+                "example": "What is the animal's name or number?"
+              },
               "response": {
                 "$ref": "#/components/schemas/PDataNone"
               }
@@ -6230,6 +6255,12 @@
           {
             "type": "object",
             "properties": {
+              "query": {
+                "description": "A specific question to be answered in completing the promise",
+                "type": "string",
+                "minLength": 1,
+                "example": "What is the animal's name or number?"
+              },
               "response": {
                 "$ref": "#/components/schemas/PDataMass"
               }
@@ -6685,6 +6716,14 @@
           "UNKNOWN"
         ],
         "example": "REQUIRED"
+      },
+      "MapStringString": {
+        "type": "object",
+        "description": "maps a set of key names to corresponding string values",
+        "additionalProperties": {
+          "type": "string",
+          "minLength": 1
+        }
       },
       "PDataNone": {
         "type": "object",
