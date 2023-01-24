@@ -1,0 +1,23 @@
+{
+    "name": "Test environment",
+    "values": [
+        {
+            "key": "apikey",
+            "value": "Ei7lkIiLTIe2S2cGMz1z",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "username",
+            "value": "testVOR",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "password",
+            "value": "tVpass",
+            "type": "default",
+            "enabled": true
+        }
+    ]
+}

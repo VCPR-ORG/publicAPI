@@ -1,0 +1,23 @@
+{
+    "name": "Test environment",
+    "values": [
+        {
+            "key": "apikey",
+            "value": "Ei7lkIiLTIe2S2cGMz1z",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "username",
+            "value": "testSAOR",
+            "type": "default",
+            "enabled": true
+        },
+        {
+            "key": "password",
+            "value": "tSpass",
+            "type": "default",
+            "enabled": true
+        }
+    ]
+}

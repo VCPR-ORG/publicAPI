@@ -1,0 +1,28 @@
+---
+version: 1
+tests:
+  contractTests:
+    - openApiOperation: "*::/*"
+      statusSuccess:
+        enabled: false
+      responseTime:
+        enabled: false
+        maxMs: 500
+      contentType:
+        enabled: false
+      jsonBody:
+        enabled: false
+      schemaValidation:
+        enabled: false
+      headersPresent:
+        enabled: false
+    - openApiOperation: "*::/api/protocols/*"
+      statusSuccess:
+        enabled: true
+    - openApiOperation: "*::/api/users/*"
+      statusSuccess:
+        enabled: true
+globals:
+  stripResponseExamples: true
+  collectionPreRequestScripts:
+    - "file:./portman/pre-request.js"

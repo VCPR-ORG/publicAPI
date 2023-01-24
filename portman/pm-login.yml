@@ -1,8 +1,0 @@
-
-
-"pm.sendRequest({ url: pm.environment.get('baseUrl')+pm.environment.get('loginPath'),
-    method: 'POST',header: {'Accept': 'application/json','Content-Type': 'application/json'},
-    body: '+pm.environment.get('credentials')
-    (err, res) => {pm.environment.set('authToken', res.body.get('token'));
-    pm.environment.set('filePolicy', res.body.get('filePolicy'));
-    pm.environment.set('fileSignature', res.body.get('fileSignature')); });"
