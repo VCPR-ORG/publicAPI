@@ -2687,6 +2687,49 @@
             "$ref": "#/components/responses/Unauthorized"
           }
         }
+      },
+      "post": {
+        "operationId": "createPrescription",
+        "tags": [
+          "VOR"
+        ],
+        "summary": "Prescribe a Protocol to a client",
+        "description": "create a Prescription and email it if requested",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrescriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "prescription": {
+                      "$ref": "#/components/schemas/Prescription"
+                    },
+                    "pdfError": {
+                      "$ref": "#/components/schemas/Error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
       }
     },
     "/api/protocols/{id}/prescriptions": {
@@ -4936,6 +4979,21 @@
         ],
         "example": "PRESCRIBED"
       },
+      "PrescriptionStatus": {
+        "type": "string",
+        "description": "status markers for prescriptions, in order of normal usage flow:\n\n- UNKNOWN: initial status when a protocol is being designed\n- VALIDATED: currently not used, for use when a validation process is implemented\n- REQUESTED: \n- PRESCRIBED: after a protocol has been prescribed for at least one client\n- INITIATED: after a protocol has been initiated (i.e., has one or more Cases)\n- RECALLED: protocol may no longer be prescribed and existing prescriptions are recalled\n- DEPRECATED: protocol has been \"deleted\" by the owner\n",
+        "enum": [
+          "REQUESTED",
+          "PRESCRIBED",
+          "VALIDATED",
+          "INITIATED",
+          "DEPRECATED",
+          "RECALLED",
+          "DECLINED",
+          "UNKNOWN"
+        ],
+        "example": "PRESCRIBED"
+      },
       "Instructions": {
         "description": "instructions to execute a protocol",
         "type": "object",
@@ -6576,6 +6634,52 @@
           },
           "status": {
             "$ref": "#/components/schemas/ProtocolStatus"
+          }
+        }
+      },
+      "PrescriptionRequest": {
+        "type": "object",
+        "required": [
+          "morId",
+          "protocol"
+        ],
+        "properties": {
+          "protocol": {
+            "$ref": "#/components/schemas/Protocol"
+          },
+          "morId": {
+            "type": "integer",
+            "description": "ID of MOR this is prescribed for",
+            "example": 2
+          },
+          "refills": {
+            "type": "integer",
+            "description": "number of repeats for this prescription",
+            "default": 0,
+            "example": 0
+          },
+          "expiration": {
+            "type": "string",
+            "format": "date-time",
+            "description": "expiration date",
+            "example": "2021-01-10T10:30:37Z"
+          },
+          "emailToClient": {
+            "type": "boolean",
+            "description": "email PDF of prescription to client"
+          },
+          "emailToVOR": {
+            "type": "boolean",
+            "description": "email PDF of prescription to precribing doctor"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Metadata"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/PrescriptionStatus"
           }
         }
       },
