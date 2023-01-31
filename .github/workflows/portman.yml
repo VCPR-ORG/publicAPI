@@ -37,7 +37,7 @@ jobs:
           npm install -g newman newman-reporter-htmlextra newman-reporter-html
       - name: run Newman on portman-postman tests
         id: newmanCli
-        continue-on-error: true
+        continue-on-error: false
         run: |
           newman run "portman/postman.json" --environment "./portman/postman-testVOR.env.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
       - name: Publish to GH-pages
