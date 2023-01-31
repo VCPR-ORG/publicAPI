@@ -1,9 +1,0 @@
-{
-  "url": "https://raw.githubusercontent.com/VCPR-ORG/publicAPI/develop/src/openapi.yaml",
-  "output": "tests/portman",
-  "envFile": "portman/.env-portman",
-  "portmanConfigFile": "portman/portman-config.json",
-  "includeTests": true,
-  "syncPostman": true,
-  "runNewman": false
-}

@@ -1,2 +1,17 @@
-.idea
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+/node_modules
+/.pnp
+.pnp.js
+/coverage
+/build
+/tmp
+
+# misc
+.DS_Store
+.env
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 xopenapi.yaml

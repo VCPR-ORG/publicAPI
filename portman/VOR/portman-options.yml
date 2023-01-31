@@ -1,0 +1,10 @@
+---
+local: "./src/openapi.yaml"
+baseUrl: https://test.vcpr.org
+output: "./postman/VOR/collection.json"
+portmanConfigFile: "./portman/VOR/portman-config.yml"
+includeTests: true
+syncPostman: false
+runNewman: false
+postmanWorkspaceName: VCPR.ORG
+collectionName: VOR - PublicAPI

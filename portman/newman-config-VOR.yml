@@ -1,8 +1,0 @@
-folder: VOR
-environment: "./postman/postman-testVOR.env.yml"
-iteration-count: 1
-ignore-redirects: true
-insecure: true
-reporters: "cli,htmlextra"
-reporter-htmlextra-export: "./docs/automated-tests-vor.html"
-p: "  -r 'cli,htmlextra' --reporter-htmlextra-export: './docs/automated-tests-vor.html'  --insecure  -e './postman/postman-testVOR.env.yml'  -n 1 --ignore-redirects  --folder VOR"
