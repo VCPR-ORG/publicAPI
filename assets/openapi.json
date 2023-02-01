@@ -5185,7 +5185,8 @@
         "description": "A class of animal for which a protocol may be used. Normally the `name` field is all that is shown in the UI, but the `id` is used internally to identify each Eligibility, which should be treated as an immutable object. Changes to the array of Eligibilities in a Protocol are done by changing the array of `id` numbers. Changes to other fields will have no effect at the persistent layer.\n",
         "type": "object",
         "required": [
-          "id"
+          "name",
+          "fdaSpecies"
         ],
         "properties": {
           "id": {
@@ -6187,6 +6188,12 @@
             "format": "duration",
             "default": "PT0H",
             "example": "PT24H"
+          },
+          "query": {
+            "description": "A question the user must answer.",
+            "type": "string",
+            "format": "html",
+            "example": "What is the animal's name or ID?"
           }
         }
       },
