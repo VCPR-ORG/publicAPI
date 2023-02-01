@@ -39,9 +39,9 @@ jobs:
         id: newmanCli
         continue-on-error: false
         run: |
-          newman run "portman/VOR/postman.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
-          newman run "portman/MOR/postman.json" --environment "./postman/MOR/environment.json" -n 1 --folder MOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-mor.html"
-          newman run "portman/SAOR/postman.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
+          newman run "portman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
+          newman run "portman/MOR/collection.json" --environment "./postman/MOR/environment.json" -n 1 --folder MOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-mor.html"
+          newman run "portman/SAOR/collection.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
       - name: Publish to GH-pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
