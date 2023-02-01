@@ -1,4 +1,5 @@
-name: generate docs and publish to GH Pages
+name: generate redoc docs and publish to GH Pages
+#this triggers bot to call pages-build-deployment
 on:
   workflow_dispatch:
   push: #when changes are pushed to default branch for the file src/openapi.yml
@@ -19,7 +20,7 @@ jobs:
         id: slack
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel-id: 'C02PFCP98A1'
+          channel-id: 'public-api'
           slack-message: "generate docs, publish on ${{github.ref_name}}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -30,6 +31,8 @@ jobs:
           npx  redoc-cli bundle src/openapi.yaml -o docs/index.html
           npx  @redocly/openapi-cli bundle --output=docs/assets/openapi.json src/openapi.yaml
           npx  @redocly/openapi-cli bundle --dereferenced --output=docs/assets/dereferenced.json src/openapi.yaml
+
+
 
       - name: Publish to GH-pages
         if: success()
