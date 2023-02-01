@@ -26,12 +26,12 @@ jobs:
           npx @apideck/portman --cliOptionsFile ./portman/MOR/portman-options.yml
           npx @apideck/portman --cliOptionsFile ./portman/VOR/portman-options.yml
           npx @apideck/portman --cliOptionsFile ./portman/SAOR/portman-options.yml
-      - name: commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actions
-          message: "commit portman-generated postman collections with tests"
-          add: '["portman/VOR/postman.json","portman/MOR/postman.json","portman/SAMOR/postman.json"]'
+      # - name: commit changes
+        # uses: EndBug/add-and-commit@v9
+        # with:
+        #   default_author: github_actions
+        #   message: "commit portman-generated postman collections with tests"
+        #   add: '["portman/VOR/postman.json","portman/MOR/postman.json","portman/SAMOR/postman.json"]'
       - name: Install newman
         run: |
           npm install -g newman newman-reporter-htmlextra newman-reporter-html
@@ -55,25 +55,36 @@ jobs:
           folder: docs
           clean: false
 
-      - name: echoresults
-        run: |
-          echo ${{steps.newmanCli.conclusion }}
-          echo ${{steps.newmanCli.outcome }}
-
       - name: Notify slack success
-        if: ${{ success() && steps.newmanCli.conclusion == 'success' }}
+        if: ${{ success()}}
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: "C02PFCP98A1"
-          slack-message: ":white_check_mark: API tests passed. See https://api.vcpr.org/automated-tests-vor \n  https://api.vcpr.org/automated-tests-mor \n  https://api.vcpr.org/automated-tests-saor for reports"
+          slack-message: ":white_check_mark: API tests completed. See https://api.vcpr.org/automated-tests-vor \\n  https://api.vcpr.org/automated-tests-mor \\n  https://api.vcpr.org/automated-tests-saor for reports"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Notify slack with failed tests
-        if: ${{ success() && steps.newmanCli.conclusion == 'failure' }}
+      - name: Notify failed VOR tests
+        if: ${{ success() && steps.newmanVOR.conclusion == 'failure' }}
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: "C02PFCP98A1"
-          slack-message: ":red_check_mark: some API tests FAILED. See https://api.vcpr.org/automated-tests for report"
+          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-vor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Notify failed MOR tests
+        if: ${{ success() && steps.newmanMOR.conclusion == 'failure' }}
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: "C02PFCP98A1"
+          slack-message: ":red_check_mark: some MOR tests FAILED. See https://api.vcpr.org/automated-tests-mor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Notify failed SAOR tests
+        if: ${{ success() && steps.newmanSAOR.conclusion == 'failure' }}
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: "C02PFCP98A1"
+          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-saor"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Notify slack failure
