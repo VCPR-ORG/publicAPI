@@ -1069,18 +1069,18 @@ paths:
                     items:
                       $ref: "#/components/schemas/Promise"
   /api/protocols/publicPromises:
-     post:
+    post:
       operationId: createPublicPromise
       tags: [SAOR]
       summary: create a public Promise
       description: >-
-       REcord a Promise type that will be public (available to all VORs)
+        REcord a Promise type that will be public (available to all VORs)
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Promise"    
+              $ref: "#/components/schemas/Promise"
       responses:
         "200":
           description: OK
@@ -1095,18 +1095,18 @@ paths:
         "403":
           $ref: "#/components/responses/Unauthorized"
   /api/protocols/privatePromises:
-     post:
+    post:
       operationId: createPrivatePromise
       tags: [VOR]
       summary: create a private Promise
       description: >-
-       Create a Promise type that will be private (available only to the VOR recording it)
+        Create a Promise type that will be private (available only to the VOR recording it)
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Promise"    
+              $ref: "#/components/schemas/Promise"
       responses:
         "200":
           description: OK
@@ -1143,7 +1143,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/LabelClaim"
   /api/logging:
-   post:
+    post:
       operationId: logMessage
       tags: [ANY_USER]
       summary: log a message to server
@@ -1154,7 +1154,7 @@ paths:
           required: false
           description: >-
             logging level severity, defaulting to INFO
-          schema:  
+          schema:
             type: string
             enum:
               - INFO
@@ -1178,7 +1178,7 @@ paths:
         "403":
           $ref: "#/components/responses/Unauthorized"
   /api/messages:
-   post:
+    post:
       operationId: sendMessage
       tags: [VOR, MOR, SAOR]
       summary: send a message to another user
@@ -1216,7 +1216,7 @@ paths:
         "403":
           $ref: "#/components/responses/Unauthorized"
   /messages/ok/{token}/:
-    get:  
+    get:
       operationId: okMessage
       security: []
       tags: [ALL_USERS]
@@ -1254,7 +1254,7 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "403":
           $ref: "#/components/responses/Unauthorized"
-        "404":  
+        "404":
           $ref: "#/components/responses/NotFound"
   /api/protocols:
     get:
@@ -1728,13 +1728,13 @@ paths:
       tags: [VOR]
       summary: Prescribe a Protocol to a client
       description: >-
-       create a Prescription and email it if requested
+        create a Prescription and email it if requested
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PrescriptionRequest"    
+              $ref: "#/components/schemas/PrescriptionRequest"
       responses:
         "201":
           description: Created
@@ -2156,7 +2156,7 @@ paths:
       operationId: deletePrescription
       tags: [VOR, MOR]
       summary: recall or decline a prescription
-      description:  >-
+      description: >-
         Prescriptions are immutable except for metadata, and cannot actually be deleted. This endpoint
         makes a prescription unavailable for use. If called by the VOR, it sets staus to RECALLED.
         If called by the MOR to whom it is prescribed, it sets status to DECLINED. New cases 
@@ -2206,11 +2206,11 @@ paths:
                       id:
                         type: integer
                       promises:
-                        type: integer  
+                        type: integer
                       doses:
                         type: integer
                       withhold:
-                        type: integer                 
+                        type: integer
         "400":
           $ref: "#/components/responses/BadRequest"
     get:
@@ -2220,7 +2220,7 @@ paths:
       description: Get all current cases for this user
       responses:
         "200":
-          description: Success 
+          description: Success
           content:
             application/json:
               schema:
@@ -2256,7 +2256,7 @@ paths:
                     properties:
                       id:
                         type: integer
-                        description: Case ID  
+                        description: Case ID
                       promises:
                         type: array
                         description: Promise tasks to be completed
@@ -2269,7 +2269,7 @@ paths:
                           $ref: "#/components/schemas/DoseTask"
                       withhold:
                         description: Meat or milk withholding, if required
-                        $ref: "#/components/schemas/Withhold"                 
+                        $ref: "#/components/schemas/Withhold"
         "400":
           $ref: "#/components/responses/BadRequest"
   /api/cases/{caseId}:
@@ -2315,7 +2315,7 @@ paths:
           in: query
           schema:
             type: integer
-          description: ID number of MOR prescribed to 
+          description: ID number of MOR prescribed to
           required: false
         - name: protocolId
           in: query
@@ -2325,17 +2325,17 @@ paths:
           required: false
         - name: enrolledBefore
           in: query
-          schema: 
+          schema:
             type: string
             format: date-time
             example: 2020-01-10T22:20:39Z
           description: last date limit for Case enrollment
         - name: enrolledAfter
           in: query
-          schema: 
+          schema:
             type: string
             format: date-time
-            example: 2019-01-10T22:20:39Z    
+            example: 2019-01-10T22:20:39Z
           description: earliest date limit for Case enrollment
         - name: offset
           in: query
@@ -2353,7 +2353,7 @@ paths:
           required: false
       responses:
         "200":
-          description: Success 
+          description: Success
           content:
             application/json:
               schema:
@@ -2362,7 +2362,7 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/RxWithCases"
-                  of:    
+                  of:
                     type: integer
                     description: total number of cases available
         "401":
@@ -2502,9 +2502,9 @@ paths:
               schema:
                 type: string
   /api/admin/spl/{ndc}:
-     get:
+    get:
       operationId: getSPL
-      tags: [VOR,MOR,SAOR]
+      tags: [VOR, MOR, SAOR]
       parameters:
         - name: ndc
           in: path
@@ -2688,11 +2688,11 @@ paths:
                       id:
                         type: integer
                       promises:
-                        type: integer  
+                        type: integer
                       doses:
                         type: integer
                       withhold:
-                        type: integer                 
+                        type: integer
         "400":
           $ref: "#/components/responses/BadRequest"
 
@@ -2754,14 +2754,14 @@ paths:
                       $ref: "#/components/schemas/ImageStore"
         "401":
           $ref: "#/components/responses/Unauthorized"
- 
+
 components:
   securitySchemes:
     apiKey:
       type: apiKey
       in: header
       name: X-APIKEY
-      description:  >-
+      description: >-
         API key stored in request header. This identifies the application
         consuming the API. To request a free API key contact a site administrator.
     authToken:
@@ -2864,7 +2864,7 @@ components:
         - REMOVED
       example: VOR
     UserNumber:
-      description: Long integer key to a User 
+      description: Long integer key to a User
       type: integer
       example: 99
     User:
@@ -2975,7 +2975,7 @@ components:
         - address2
         - town
         - state
-        - zip  
+        - zip
     Relationship:
       type: string
       description: >
@@ -3047,7 +3047,7 @@ components:
       required: [_type, subject, message, prescription]
       allOf:
         - $ref: "#/components/schemas/SimpleMessage"
-        - properties:            
+        - properties:
             prescription:
               type: string
               description: identifier of prescription requested for renewal
@@ -3272,7 +3272,7 @@ components:
         implemented
 
         - REQUESTED: 
- 
+
         - PRESCRIBED: after a protocol has been prescribed for at least one
         client
 
@@ -3283,7 +3283,7 @@ components:
         prescriptions are recalled
 
         - DEPRECATED: protocol has been "deleted" by the owner
-      enum:  
+      enum:
         - REQUESTED
         - PRESCRIBED
         - VALIDATED
@@ -3469,8 +3469,7 @@ components:
         changing the array of `id` numbers. Changes to other fields will have no
         effect at the persistent layer.
       type: object
-      required:
-        - id
+      required: [name, fdaSpecies]
       properties:
         id:
           description: Eligibility ID number
@@ -3989,7 +3988,7 @@ components:
           type: string
         keywords:
           type: array
-          items: 
+          items:
             type: string
         name:
           type: string
@@ -4011,9 +4010,9 @@ components:
           type: string
           maxLength: 80
         headers:
-           type: array
-           items: 
-             $ref: "#/components/schemas/Header"
+          type: array
+          items:
+            $ref: "#/components/schemas/Header"
     Header:
       description: An html header
       type: object
@@ -4202,7 +4201,7 @@ components:
           default: null
           example: 123
         name:
-          description: a short name 
+          description: a short name
           type: string
           minLength: 8
           example: ID promise
@@ -4217,6 +4216,11 @@ components:
           format: duration
           default: PT0H
           example: PT24H
+        query:
+          description: A question the user must answer.
+          type: string
+          format: html
+          example: "What is the animal's name or ID?"
     StringPromise:
       description: a promise requiring a text response, which may include html
       allOf:
@@ -4239,7 +4243,7 @@ components:
         - type: object
           properties:
             query:
-              description: A set of query choices 
+              description: A set of query choices
               $ref: "#/components/schemas/MapStringString"
             response:
               description: the key value referencing a mapped query string
@@ -4676,7 +4680,7 @@ components:
           items:
             $ref: "#/components/schemas/PTask"
         Withhold:
-          $ref: "#/components/schemas/Withhold"    
+          $ref: "#/components/schemas/Withhold"
     TaskStatus:
       type: string
       description: task status
