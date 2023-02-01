@@ -35,13 +35,19 @@ jobs:
       - name: Install newman
         run: |
           npm install -g newman newman-reporter-htmlextra newman-reporter-html
-      - name: run Newman on portman-postman tests
+      - name: run VOR tests
         id: newmanCli
         continue-on-error: true
-        run: |
-          newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
-          newman run "postman/MOR/collection.json" --environment "./postman/MOR/environment.json" -n 1 --folder MOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-mor.html"
-          newman run "postman/SAOR/collection.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
+        run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
+      - name: run MOR postman tests
+        id: newmanCli
+        continue-on-error: true
+        run: newman run "postman/MOR/collection.json" --environment "./postman/MOR/environment.json" -n 1 --folder MOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-mor.html"
+      - name: run SAOR postman tests
+        id: newmanCli
+        continue-on-error: true
+        run: newman run "postman/SAOR/collection.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
+
       - name: Publish to GH-pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
@@ -59,7 +65,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: "C02PFCP98A1"
-          slack-message: ":white_check_mark: API tests passed. See https://api.vcpr.org/automated-tests for report"
+          slack-message: ":white_check_mark: API tests passed. See https://api.vcpr.org/automated-tests-vor \n  https://api.vcpr.org/automated-tests-mor \n  https://api.vcpr.org/automated-tests-saor for reports"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Notify slack with failed tests
