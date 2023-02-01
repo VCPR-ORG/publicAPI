@@ -26,12 +26,7 @@ jobs:
           npx @apideck/portman --cliOptionsFile ./portman/MOR/portman-options.yml
           npx @apideck/portman --cliOptionsFile ./portman/VOR/portman-options.yml
           npx @apideck/portman --cliOptionsFile ./portman/SAOR/portman-options.yml
-      # - name: commit changes
-        # uses: EndBug/add-and-commit@v9
-        # with:
-        #   default_author: github_actions
-        #   message: "commit portman-generated postman collections with tests"
-        #   add: '["portman/VOR/postman.json","portman/MOR/postman.json","portman/SAMOR/postman.json"]'
+
       - name: Install newman
         run: |
           npm install -g newman newman-reporter-htmlextra newman-reporter-html
@@ -39,14 +34,40 @@ jobs:
         id: newmanVOR
         continue-on-error: true
         run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
+      - name: Notify failed VOR tests
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: "C02PFCP98A1"
+          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-vor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  
       - name: run MOR postman tests
         id: newmanMOR
         continue-on-error: true
         run: newman run "postman/MOR/collection.json" --environment "./postman/MOR/environment.json" -n 1 --folder MOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-mor.html"
+      - name: Notify failed MOR tests
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: "C02PFCP98A1"
+          slack-message: ":red_check_mark: some MOR tests FAILED. See https://api.vcpr.org/automated-tests-mor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
       - name: run SAOR postman tests
         id: newmanSAOR
         continue-on-error: true
         run: newman run "postman/SAOR/collection.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
+      - name: Notify failed SAOR tests
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: "C02PFCP98A1"
+          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-saor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Publish to GH-pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
@@ -60,31 +81,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: "C02PFCP98A1"
-          slack-message: ":white_check_mark: API tests completed. See https://api.vcpr.org/automated-tests-vor \\n  https://api.vcpr.org/automated-tests-mor \\n  https://api.vcpr.org/automated-tests-saor for reports"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Notify failed VOR tests
-        if: ${{ success() && steps.newmanVOR.conclusion == 'failure' }}
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          channel-id: "C02PFCP98A1"
-          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-vor"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Notify failed MOR tests
-        if: ${{ success() && steps.newmanMOR.conclusion == 'failure' }}
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          channel-id: "C02PFCP98A1"
-          slack-message: ":red_check_mark: some MOR tests FAILED. See https://api.vcpr.org/automated-tests-mor"
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Notify failed SAOR tests
-        if: ${{ success() && steps.newmanSAOR.conclusion == 'failure' }}
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          channel-id: "C02PFCP98A1"
-          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-saor"
+          slack-message: ":white_check_mark: API tests completed. See https://api.vcpr.org/automated-tests-vor \n  https://api.vcpr.org/automated-tests-mor \n  https://api.vcpr.org/automated-tests-saor for reports"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Notify slack failure
