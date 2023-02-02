@@ -713,7 +713,7 @@ paths:
         "403":
           $ref: "#/components/responses/Unauthorized"
 
-  /api/protocols/prescriptions/by:
+  /api/protocols/prescriptionsByMe:
     get:
       operationId: getRxBy
       tags: [VOR]
@@ -735,11 +735,11 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "403":
           $ref: "#/components/responses/Unauthorized"
-  /api/protocols/prescriptions/to:
+  /api/protocols/prescriptionsToMe:
     get:
       operationId: getRxTo
       tags: [VOR]
-      summary: get my prescriptions
+      summary: get prescriptions prescribed to me
       description: get prescriptions prescribed to the current User.
       responses:
         "200":
