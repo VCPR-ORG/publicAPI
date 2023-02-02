@@ -50,8 +50,16 @@ jobs:
         id: newmanVOR
         continue-on-error: true
         run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
+      - name: t1
+        run: echo  ${{failure()}}
+      - name: t2
+        run: echo  ${{jobs.build.outputs.newmanVOR}}
+      - name: t3
+        run: echo  ${{jobs.build.outputs.newmanVOR.outcome}}
+      - name: t4
+        run: echo  ${{jobs.build.outputs.newmanVOR.outcome}} == 'failure'
       - name: Notify failed VOR tests
-        if: failure()
+        if: ${{failure()}}
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: public-api
@@ -74,7 +82,7 @@ jobs:
 
       - name: run SAOR postman tests
         id: newmanSAOR
-        continue-on-error: false
+        continue-on-error: true
         run: newman run "postman/SAOR/collection.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
       - name: Notify failed SAOR tests
         if: failure()
