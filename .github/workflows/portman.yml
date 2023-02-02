@@ -8,15 +8,16 @@ jobs:
   portman:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Post to a Slack channel
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel-id: "C02PFCP98A1"
+          channel-id: PUBLIC-API
           slack-message: "creating automated API tests for ${{github.ref_name}} "
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Checkout
-        uses: actions/checkout@v2
+
       - name: Install node
         uses: actions/setup-node@v1
         with:
@@ -39,7 +40,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel-id: "C02PFCP98A1"
+          channel-id: public-api
           slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-vor"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -52,7 +53,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel-id: "C02PFCP98A1"
+          channel-id: public-api
           slack-message: ":red_check_mark: some MOR tests FAILED. See https://api.vcpr.org/automated-tests-mor"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -65,7 +66,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel-id: "C02PFCP98A1"
+          channel-id: public-api
           slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-saor"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
