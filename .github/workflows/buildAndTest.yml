@@ -24,10 +24,68 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-      - name: portman #generate and run postman tests
-        uses: ./.github/workflows/portman.yml
+      - name: Post to a Slack channel
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: PUBLIC-API
+          slack-message: "creating automated API tests for ${{github.ref_name}} "
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-      - name: build # generate redoc web page and JSON version of schema
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16"
+      - name: Generate Postman tests
+        id: runPortman
+        run: |
+          npx @apideck/portman --cliOptionsFile ./portman/MOR/portman-options.yml
+          npx @apideck/portman --cliOptionsFile ./portman/VOR/portman-options.yml
+          npx @apideck/portman --cliOptionsFile ./portman/SAOR/portman-options.yml
+
+      - name: Install newman
+        run: |
+          npm install -g newman newman-reporter-htmlextra newman-reporter-html
+      - name: run VOR tests
+        id: newmanVOR
+        continue-on-error: true
+        run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
+      - name: Notify failed VOR tests
+        if: failure()
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: public-api
+          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-vor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  
+      - name: run MOR postman tests
+        id: newmanMOR
+        continue-on-error: true
+        run: newman run "postman/MOR/collection.json" --environment "./postman/MOR/environment.json" -n 1 --folder MOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-mor.html"
+      - name: Notify failed MOR tests
+        if: failure()
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: public-api
+          slack-message: ":red_check_mark: some MOR tests FAILED. See https://api.vcpr.org/automated-tests-mor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: run SAOR postman tests
+        id: newmanSAOR
+        continue-on-error: true
+        run: newman run "postman/SAOR/collection.json" --environment "./postman/SAOR/environment.json" -n 1 --folder SAOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-saor.html"
+      - name: Notify failed SAOR tests
+        if: failure()
+        uses: slackapi/slack-github-action@v1.16.0
+        with:
+          channel-id: public-api
+          slack-message: ":red_check_mark: some VOR tests FAILED. See https://api.vcpr.org/automated-tests-saor"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}  
+  
+      - name: build docs # generate redoc web page and JSON version of schema
         run: |
           npx  redoc-cli bundle src/openapi.yaml -o docs/index.html
           npx  @redocly/openapi-cli bundle --output=docs/assets/openapi.json src/openapi.yaml
