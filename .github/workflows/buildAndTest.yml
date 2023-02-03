@@ -52,12 +52,12 @@ jobs:
         run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
 
       - name: t2
-        run: echo  ${{jobs.build.outputs.newmanVOR}}
+        run: echo  ${{outputs.newmanVOR}}
       - name: t3
-        run: echo  ${{jobs.build.outputs.newmanVOR.outcome}}
+        run: echo  ${{outputs.newmanVOR.outcome}}
 
       - name: Notify failed VOR tests
-        if: jobs.build.outputs.newmanVOR.outcome == 'failure'
+        if: outputs.newmanVOR.outcome == 'failure'
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: public-api
