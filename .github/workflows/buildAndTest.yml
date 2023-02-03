@@ -51,10 +51,10 @@ jobs:
         continue-on-error: true
         run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
 
-      - name: t2
-        run: echo  ${{outputs.newmanVOR}}
-      - name: t3
-        run: echo  ${{outputs.newmanVOR.outcome}}
+      # - name: t2
+      #   run: echo  ${{outputs.newmanVOR}}
+      # - name: t3
+      #   run: echo  ${{outputs.newmanVOR.outcome}}
 
       - name: Notify failed VOR tests
         if: outputs.newmanVOR.outcome == 'failure'
