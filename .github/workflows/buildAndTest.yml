@@ -57,7 +57,7 @@ jobs:
       #   run: echo  ${{outputs.newmanVOR.outcome}}
 
       - name: Notify failed VOR tests
-        if: outputs.newmanVOR.outcome == 'failure'
+        if: steps.newmanVOR.outcome == 'failure'
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel-id: public-api
