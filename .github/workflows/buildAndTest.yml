@@ -50,8 +50,7 @@ jobs:
         id: newmanVOR
         continue-on-error: true
         run: newman run "postman/VOR/collection.json" --environment "./postman/VOR/environment.json" -n 1 --folder VOR -r cli,htmlextra --reporter-htmlextra-export="./docs/automated-tests-vor.html"
-      - name: t1
-        run: echo  ${{failure()}}
+
       - name: t2
         run: echo  ${{jobs.build.outputs.newmanVOR}}
       - name: t3
