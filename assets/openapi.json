@@ -7036,6 +7036,9 @@
         "description": "data for an individual Case",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/NoData"
+          },
+          {
             "$ref": "#/components/schemas/WeightData"
           },
           {
@@ -7051,10 +7054,25 @@
         "discriminator": {
           "propertyName": "_type",
           "mapping": {
+            "models.NoData": "#/components/schemas/NoData",
             "models.WeightData": "#/components/schemas/WeightData",
             "models.PreferredDoseData": "#/components/schemas/PreferredDoseData",
             "models.PrefDoseRateData": "#/components/schemas/PrefDoseRateData",
             "models.AnimalClassData": "#/components/schemas/AnimalClassData"
+          }
+        }
+      },
+      "NoData": {
+        "type": "object",
+        "description": "empty data object",
+        "properties": {
+          "_type": {
+            "type": "string",
+            "description": "identifies subtype of CaseData",
+            "enum": [
+              "models.NoData"
+            ],
+            "example": "models.NoData"
           }
         }
       },
