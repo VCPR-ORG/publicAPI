@@ -4848,7 +4848,7 @@ components:
     CaseData:
       description: data for an individual Case
       oneOf:
-        - $ref: "#/components/schemas/NoData
+        - $ref: "#/components/schemas/NoData"
         - $ref: "#/components/schemas/WeightData"
         - $ref: "#/components/schemas/PreferredDoseData"
         - $ref: "#/components/schemas/PrefDoseRateData"
@@ -4856,10 +4856,21 @@ components:
       discriminator:
         propertyName: _type
         mapping:
+          models.NoData: "#/components/schemas/NoData"
           models.WeightData: "#/components/schemas/WeightData"
           models.PreferredDoseData: "#/components/schemas/PreferredDoseData"
           models.PrefDoseRateData: "#/components/schemas/PrefDoseRateData"
           models.AnimalClassData: "#/components/schemas/AnimalClassData"
+    NoData:
+      type: object
+      description: empty data object
+      properties:
+        _type:
+          type: string
+          description: identifies subtype of CaseData
+          enum:
+            - models.NoData
+          example: models.NoData
     PreferredDoseData:
       description: animal identity and preferred dose
       type: object
@@ -4914,16 +4925,6 @@ components:
           example: Jabberwocks
         sizeFunction:
           $ref: "#/components/schemas/SizeFunction"
-    NoData:
-      type: object
-      description: empty data object
-      properties:
-        _type:
-          type: string
-          description: identifies subtype of CaseData
-          enum:
-            - models.NoData
-          example: models.NoData
     WeightData:
       type: object
       description: specifies animal's weight
