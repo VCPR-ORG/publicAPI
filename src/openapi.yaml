@@ -1288,6 +1288,21 @@ paths:
             tags listed.
           schema:
             type: string
+            example: ORGANIC
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+          description: page start
+          required: false
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+          description: maximum page length
+          required: false
       responses:
         "200":
           description: OK
