@@ -465,7 +465,6 @@ paths:
   /api/users/profiles:
     put:
       operationId: updateProfile
-      x-reviewed: JLE 2022/5/31
       tags: [ALL_USERS]
       summary: update profile
       description: >-
@@ -481,16 +480,17 @@ paths:
                   $ref: "#/components/schemas/Profile"
       responses:
         "200":
-          description: User updated
+          description: Profile updated
           content:
             application/json:
               schema:
                 properties:
-                  updated-records:
-                    type: integer
-                    description: number of db records altered
+                  profile:
+                    $ref: "#/components/schemas/Profile"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/Conflict"
     post:
       operationId: createProfile
       summary: create profile
@@ -1266,7 +1266,7 @@ paths:
         current User. The default excludes deleted (status DEPRECATED)
         protocols.
       parameters:
-        - name: status
+        - name: statuses
           in: query
           required: false
           style: pipeDelimited
@@ -1276,9 +1276,18 @@ paths:
             this parameter is omitted, the query defaults to all status values
             **except** DEPRECATED.
           schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/ProtocolStatus"
+            type: string
+            example: "VALIDATED|PRESCRIBED"
+        - name: tags
+          in: query
+          required: false
+          style: pipeDelimited
+          explode: false
+          description: >-
+            filter Protocols to include only Protocols with at least one of the 
+            tags listed.
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -2816,6 +2825,18 @@ components:
             description: web page warning
             type: string
             format: html
+    Conflict: #409
+      description:  request conflicts with the current state of the target resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+        text/html:
+          schema:
+            description: web page warning
+            type: string
+            format: html
+
   schemas:
     UserType:
       type: string
@@ -3187,26 +3208,24 @@ components:
     Error:
       type: object
       description: error response per RFC 7807
-      required:
-        - title
-        - status
+      required: [title, status]
       properties:
         errorType:
           type: string
-          description: a URI identifier that categorizes the error
-          example: /errors/incorrect-user-pass
+          description: the type of error
+          example: Duplicate entry 'testVOR2' for key 'userid.uname_idx'
         title:
           type: string
           description: A brief, human-readable message about the error
-          example: incorrect username or password
+          example: Processing Error
         status:
           type: integer
           description: HTTP status code
-          example: 404
+          example: 400
         detail:
           type: string
           description: a human-readable description of the specific error
-          example: Authentication failed due to incorrect username or password.
+          example: java.sql.SQLIntegrityConstraintViolationException
         instance:
           type: string
           description: a URI that identifies the specific occurrence of the error
@@ -3438,33 +3457,33 @@ components:
         type: string
         enum:
           - BeefCattle
-          - Calves, 
-          - CalvesNotVeal, 
-          - Cats, 
-          - Chickens, 
-          - ChickensBroilers, 
+          - Calves,
+          - CalvesNotVeal,
+          - Cats,
+          - Chickens,
+          - ChickensBroilers,
           - ChickensNotLaying,
-          - ChickensReplacements, 
-          - DairyCalves, 
-          - DairyHeifers, 
-          - DairyCattle, 
-          - DairyCattleNonLactating, 
-          - Dogs, 
-          - Fish, 
-          - Goats, 
-          - Horses, 
-          - Sheep, 
-          - Swine, 
-          - SwineBreeding, 
-          - Turkeys, 
-          - TurkeysGrowing,  
-          - TurkeysMeatProducing, 
-          - TurkeysNotLaying, 
-          - Catfish, 
-          - Gamebirds, 
-          - Llamas, 
-          - Salmon, 
-          - Emus, 
+          - ChickensReplacements,
+          - DairyCalves,
+          - DairyHeifers,
+          - DairyCattle,
+          - DairyCattleNonLactating,
+          - Dogs,
+          - Fish,
+          - Goats,
+          - Horses,
+          - Sheep,
+          - Swine,
+          - SwineBreeding,
+          - Turkeys,
+          - TurkeysGrowing,
+          - TurkeysMeatProducing,
+          - TurkeysNotLaying,
+          - Catfish,
+          - Gamebirds,
+          - Llamas,
+          - Salmon,
+          - Emus,
           - Bison
         example: BeefCattle
 
