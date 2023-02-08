@@ -720,7 +720,6 @@
     "/api/users/profiles": {
       "put": {
         "operationId": "updateProfile",
-        "x-reviewed": "JLE 2022/5/31",
         "tags": [
           "ALL_USERS"
         ],
@@ -743,14 +742,13 @@
         },
         "responses": {
           "200": {
-            "description": "User updated",
+            "description": "Profile updated",
             "content": {
               "application/json": {
                 "schema": {
                   "properties": {
-                    "updated-records": {
-                      "type": "integer",
-                      "description": "number of db records altered"
+                    "profile": {
+                      "$ref": "#/components/schemas/Profile"
                     }
                   }
                 }
@@ -759,6 +757,9 @@
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
           }
         }
       },
@@ -1974,18 +1975,48 @@
         "description": "Retrieve all Protocols owned by, or shared with, the current User. The default excludes deleted (status DEPRECATED) protocols.",
         "parameters": [
           {
-            "name": "status",
+            "name": "statuses",
             "in": "query",
             "required": false,
             "style": "pipeDelimited",
             "explode": false,
             "description": "filter Protocols to include only Protocols with listed statuses. If this parameter is omitted, the query defaults to all status values **except** DEPRECATED.",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/ProtocolStatus"
-              }
+              "type": "string",
+              "example": "VALIDATED|PRESCRIBED"
             }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "style": "pipeDelimited",
+            "explode": false,
+            "description": "filter Protocols to include only Protocols with at least one of the  tags listed.",
+            "schema": {
+              "type": "string",
+              "example": "ORGANIC"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "description": "page start",
+            "required": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            },
+            "description": "maximum page length",
+            "required": false
           }
         ],
         "responses": {
@@ -4416,6 +4447,23 @@
             }
           }
         }
+      },
+      "Conflict": {
+        "description": "request conflicts with the current state of the target resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "text/html": {
+            "schema": {
+              "description": "web page warning",
+              "type": "string",
+              "format": "html"
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -4918,23 +4966,23 @@
         "properties": {
           "errorType": {
             "type": "string",
-            "description": "a URI identifier that categorizes the error",
-            "example": "/errors/incorrect-user-pass"
+            "description": "the type of error",
+            "example": "Duplicate entry 'testVOR2' for key 'userid.uname_idx'"
           },
           "title": {
             "type": "string",
             "description": "A brief, human-readable message about the error",
-            "example": "incorrect username or password"
+            "example": "Processing Error"
           },
           "status": {
             "type": "integer",
             "description": "HTTP status code",
-            "example": 404
+            "example": 400
           },
           "detail": {
             "type": "string",
             "description": "a human-readable description of the specific error",
-            "example": "Authentication failed due to incorrect username or password."
+            "example": "java.sql.SQLIntegrityConstraintViolationException"
           },
           "instance": {
             "type": "string",
