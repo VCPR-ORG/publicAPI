@@ -5120,6 +5120,7 @@ components:
         - route
         - wtMeatHrs
         - wtMilkHrs
+        - isRx
       properties:
         id:
           type: integer
@@ -5180,6 +5181,10 @@ components:
           type: string
           description: generic name for product
           example: OXYTETRACYCLINE
+        isRx:
+          type: boolean
+          description: Is this a prescription drug?
+          default: true
     Login:
       type: object
       required: [userid, message]
