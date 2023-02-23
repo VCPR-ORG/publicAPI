@@ -7437,7 +7437,8 @@
           "product",
           "route",
           "wtMeatHrs",
-          "wtMilkHrs"
+          "wtMilkHrs",
+          "isRx"
         ],
         "properties": {
           "id": {
@@ -7514,6 +7515,11 @@
             "type": "string",
             "description": "generic name for product",
             "example": "OXYTETRACYCLINE"
+          },
+          "isRx": {
+            "type": "boolean",
+            "description": "Is this a prescription drug?",
+            "default": true
           }
         }
       },
