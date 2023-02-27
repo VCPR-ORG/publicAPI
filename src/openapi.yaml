@@ -5021,8 +5021,6 @@ components:
         - caseId
         - morId
         - vorId
-        - promId
-        - animalId
         - doAt
         - status
       properties:
@@ -5072,13 +5070,7 @@ components:
       description: A Task required to fulfill a Promise
       allOf:
         - $ref: "#/components/schemas/TaskBase"
-        - type: object
-          required: [detail]
-          properties:
-            detail:
-              type: string
-      type: object
-      required: [promId, data]
+      required: [promId]
       properties:
         promId:
           description: ID of Promise
@@ -5090,12 +5082,6 @@ components:
     DoseTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
-        - type: object
-          required: [detail]
-          properties:
-            detail:
-              type: string
-      type: object
       required: [product, route, dose]
       properties:
         product:
