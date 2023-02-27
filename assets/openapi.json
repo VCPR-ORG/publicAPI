@@ -7296,8 +7296,6 @@
           "caseId",
           "morId",
           "vorId",
-          "promId",
-          "animalId",
           "doAt",
           "status"
         ],
@@ -7358,23 +7356,10 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/TaskBase"
-          },
-          {
-            "type": "object",
-            "required": [
-              "detail"
-            ],
-            "properties": {
-              "detail": {
-                "type": "string"
-              }
-            }
           }
         ],
-        "type": "object",
         "required": [
-          "promId",
-          "data"
+          "promId"
         ],
         "properties": {
           "promId": {
@@ -7392,20 +7377,8 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/TaskBase"
-          },
-          {
-            "type": "object",
-            "required": [
-              "detail"
-            ],
-            "properties": {
-              "detail": {
-                "type": "string"
-              }
-            }
           }
         ],
-        "type": "object",
         "required": [
           "product",
           "route",
