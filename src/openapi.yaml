@@ -1594,8 +1594,11 @@ paths:
                 properties:
                   protocols:
                     type: array
-                    items:
+                    items:                 
                       $ref: "#/components/schemas/Protocol"
+                  of:
+                    type: integer
+                    description: ntotal number of prescriptions available
   /api/protocols/exclusivestubs:
     get:
       operationId: getExclusivestubs
