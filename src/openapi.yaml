@@ -733,7 +733,7 @@ paths:
                       $ref: "#/components/schemas/Prescription"
                   of:
                     type: integer
-                    description: ntotal number of prescriptions available
+                    description: total number of prescriptions available
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -758,7 +758,7 @@ paths:
                       $ref: "#/components/schemas/Prescription"
                   of:
                     type: integer
-                    description: ntotal number of prescriptions available
+                    description: total number of prescriptions available
   /api/protocols/shares:
     get:
       operationId: getMyProtocolShares
@@ -1324,7 +1324,7 @@ paths:
                       $ref: "#/components/schemas/Protocol"
                   of:
                     type: integer
-                    description: ntotal number of prescriptions available
+                    description: total number of prescriptions available
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -1598,7 +1598,7 @@ paths:
                       $ref: "#/components/schemas/Protocol"
                   of:
                     type: integer
-                    description: ntotal number of prescriptions available
+                    description: total number of prescriptions available
   /api/protocols/exclusivestubs:
     get:
       operationId: getExclusivestubs
