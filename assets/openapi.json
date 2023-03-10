@@ -1132,7 +1132,7 @@
                     },
                     "of": {
                       "type": "integer",
-                      "description": "ntotal number of prescriptions available"
+                      "description": "total number of prescriptions available"
                     }
                   }
                 }
@@ -1172,7 +1172,7 @@
                     },
                     "of": {
                       "type": "integer",
-                      "description": "ntotal number of prescriptions available"
+                      "description": "total number of prescriptions available"
                     }
                   }
                 }
@@ -2044,7 +2044,7 @@
                     },
                     "of": {
                       "type": "integer",
-                      "description": "ntotal number of prescriptions available"
+                      "description": "total number of prescriptions available"
                     }
                   }
                 }
@@ -2473,6 +2473,10 @@
                       "items": {
                         "$ref": "#/components/schemas/Protocol"
                       }
+                    },
+                    "of": {
+                      "type": "integer",
+                      "description": "total number of prescriptions available"
                     }
                   }
                 }
