@@ -731,6 +731,9 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Prescription"
+                  of:
+                    type: integer
+                    description: ntotal number of prescriptions available
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
@@ -753,6 +756,9 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Prescription"
+                  of:
+                    type: integer
+                    description: ntotal number of prescriptions available
   /api/protocols/shares:
     get:
       operationId: getMyProtocolShares
@@ -1316,6 +1322,9 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Protocol"
+                  of:
+                    type: integer
+                    description: ntotal number of prescriptions available
         "400":
           $ref: "#/components/responses/BadRequest"
         "403":
