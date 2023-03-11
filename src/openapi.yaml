@@ -1129,7 +1129,7 @@ paths:
   /api/protocols/promises/{id}:
     get:
       operationId: getPromise
-      tags: [VOR]
+      tags: [VOR, MOR, TOR]
       summary: get a  Promise
       description: get a  Promise
       parameters:
