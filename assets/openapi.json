@@ -1773,7 +1773,9 @@
       "get": {
         "operationId": "getPromise",
         "tags": [
-          "VOR"
+          "VOR",
+          "MOR",
+          "TOR"
         ],
         "summary": "get a  Promise",
         "description": "get a  Promise",
