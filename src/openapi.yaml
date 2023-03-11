@@ -1128,18 +1128,17 @@ paths:
           $ref: "#/components/responses/Unauthorized"
   /api/protocols/promises/{id}:
     get:
-      operationId: getProtocolPromisess
+      operationId: getPromise
       tags: [VOR]
-      summary: Promises in a Protocol
-      description: Return Promises contained within a Protocol.
-      x-reviewed: JLE 2022/5/31
+      summary: get a  Promise
+      description: get a  Promise
       parameters:
         - name: id
           in: path
           schema:
             type: integer
           required: true
-          description: protocol  ID
+          description: promise  ID
           example: 32
       responses:
         "200":
@@ -1147,7 +1146,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LabelClaim"
+                $ref: "#/components/schemas/Promise"
   /api/logging:
     post:
       operationId: logMessage
