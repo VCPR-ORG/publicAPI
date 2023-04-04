@@ -4551,6 +4551,11 @@
             "type": "string",
             "description": "degree or qualifier following the name",
             "example": "DVM"
+          },
+          "phone": {
+            "type": "string",
+            "format": "string",
+            "description": "phone number"
           }
         }
       },
@@ -5012,12 +5017,12 @@
         "description": "share a protocol with another VOR User",
         "type": "object",
         "properties": {
-          "px-id": {
+          "pxId": {
             "type": "integer",
             "description": "the `id` identifier of a Protocol",
             "example": 1
           },
-          "share-to": {
+          "shareTo": {
             "type": "integer",
             "description": "ID f a VOR User who may use the Protocol identified by pxId",
             "example": 2
@@ -5111,13 +5116,16 @@
         "description": "information used at the time of case selection to determine whether a particular protocol may be enrolled and the protocol initiated for a particular animal or group of animals (the Case). The Case may be enrolled with the Protocol **only** if the Case meets all requirements of the CaseDefinition and none of the prohibitions. Other information may be advisory, and used at the discretion of the person doing enrollment.",
         "type": "object",
         "properties": {
-          "requireId": {
+          "pxId": {
+            "type": "number"
+          },
+          "requireID": {
             "type": "boolean",
             "description": "the Case must include specific ID/s of animal/s to be enrolled",
             "default": false,
             "example": false
           },
-          "requireMor": {
+          "requireMOR": {
             "type": "boolean",
             "description": "if true, the MOR enrolling the Case must be identified with a Signature",
             "default": false,
@@ -5729,9 +5737,9 @@
           "_type": {
             "type": "string",
             "description": "class of Dose Function",
-            "example": "DoseByWeightFunction",
+            "example": "LoadingDoseByWeightFunction",
             "enum": [
-              "models.DoseByWeightFunction"
+              "models.LoadingDoseByWeightFunction"
             ]
           },
           "firstDose": {
@@ -6051,6 +6059,11 @@
             "type": "integer",
             "example": 0
           },
+          "labelId": {
+            "description": "the `id` key of the label",
+            "type": "integer",
+            "example": 0
+          },
           "description": {
             "description": "description of Treatment",
             "type": "string",
@@ -6094,6 +6107,10 @@
           "sizeFunction": {
             "$ref": "#/components/schemas/SizeFunction"
           },
+          "wtNote": {
+            "type": "string",
+            "description": "withhold note"
+          },
           "wtMeatHrs": {
             "type": "integer",
             "description": "number of hours that must pass between exposure and slaughter",
@@ -6104,7 +6121,7 @@
             "description": "number of hours that must pass between exposure and extracting milk for consumption",
             "example": "wip"
           },
-          "nada": {
+          "ndc": {
             "description": "NADA or ANADA as specified by the FDA",
             "type": "string",
             "example": "wip"
@@ -6226,6 +6243,7 @@
               "models.AffirmationPromise",
               "models.BooleanPromise",
               "models.StringPromise",
+              "models.NumberPromise",
               "models.MassPromise",
               "models.CategoryPromise"
             ]
@@ -6544,7 +6562,8 @@
           "ownerId",
           "name",
           "status",
-          "instructions"
+          "instructions",
+          "ownerName"
         ],
         "properties": {
           "id": {
@@ -6556,6 +6575,11 @@
           "ownerId": {
             "description": "the `id` key of the VOR User who owns the protocol.",
             "type": "integer",
+            "example": 1
+          },
+          "ownerName": {
+            "description": "the name of the VOR User who owns the protocol.",
+            "type": "string",
             "example": 1
           },
           "name": {
@@ -6668,6 +6692,15 @@
           "status"
         ],
         "properties": {
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "mor": {
+            "$ref": "#/components/schemas/User"
+          },
+          "vor": {
+            "$ref": "#/components/schemas/User"
+          },
           "rxId": {
             "type": "string",
             "description": "prescription identifier",
@@ -7280,6 +7313,11 @@
             "format": "date-time",
             "description": "when the Withhold ends for milk"
           },
+          "wtNote": {
+            "type": "string",
+            "description": "note on withholding",
+            "example": "not for dairy animals"
+          },
           "note": {
             "type": "string",
             "description": "note"
@@ -7582,7 +7620,7 @@
       "GreenbookDrug": {
         "required": [
           "ndc",
-          "proprietery",
+          "proprietary",
           "nonProp",
           "ingredients",
           "labeler",
@@ -7600,7 +7638,7 @@
             "description": "FDA NDC number",
             "example": "0010-3495"
           },
-          "proprietery": {
+          "proprietary": {
             "type": "string",
             "description": "proprietary name",
             "example": "Bio-Mycin 200"
